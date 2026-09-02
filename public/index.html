@@ -50,8 +50,21 @@
   --surface-3:#DFEAF5;
   --card-shadow:0 1px 2px rgba(10,37,64,0.025), 0 3px 9px rgba(10,37,64,0.028);
   --card-shadow-hover:0 2px 5px rgba(10,37,64,0.035), 0 10px 24px rgba(10,37,64,0.055);
-  --accent:#3A8DDE;          /* brand blue */
+  --accent:#3A8DDE;          /* brand blue — rules, borders, large/decorative use */
   --accent-2:#3DA6F1;        /* bright blue — rail block / highlights */
+  /* Label blue: same hue (210deg) and saturation as --accent, darkened so the
+     11px uppercase kickers clear WCAG AA. --accent is 3.23:1 on the page bg,
+     which fails at label sizes; this is 5.01:1 on bg and 5.40:1 on cards. */
+  --accent-text:#1F6CB7;
+  /* Rail summary panel. The brand bright blue (#3DA6F1) gave the rail
+     paragraph only 2.46:1 against white text — below even the large-text
+     threshold. Same hue, deepened to clear AA at 4.56:1. Revert to
+     var(--accent-2) here to restore the original panel colour. */
+  --rail-blue:#2572B4;
+  /* Graded band tints for grouped table sections */
+  --band-a:rgba(58,141,222,0.10);
+  --band-b:rgba(58,141,222,0.055);
+  --band-c:rgba(10,37,64,0.035);
   --accent-hover:#2B79C7;
   --accent-wash:rgba(58,141,222,0.06);
   --accent-wash-2:rgba(58,141,222,0.12);
@@ -74,6 +87,12 @@
   --line-strong:rgba(234,241,248,0.24);
   --bg:#04141D; --surface:#071E2A; --surface-2:#0A2231; --surface-3:#0E2A3B;
   --accent:#56A6F0; --accent-2:#62B4F5; --accent-hover:#7DBEF5;
+  /* already 7.22:1 on the dark ground — no darkening needed */
+  --accent-text:#6FB3F3;
+  --rail-blue:#2572B4;
+  --band-a:rgba(86,166,240,0.14);
+  --band-b:rgba(86,166,240,0.075);
+  --band-c:rgba(234,241,248,0.045);
   --accent-wash:rgba(86,166,240,0.10); --accent-wash-2:rgba(86,166,240,0.18);
   --card-shadow:0 1px 2px rgba(0,0,0,0.16), 0 3px 11px rgba(0,0,0,0.20);
   --card-shadow-hover:0 2px 6px rgba(0,0,0,0.22), 0 12px 28px rgba(0,0,0,0.30);
@@ -144,10 +163,10 @@ em{font-style:italic;}
 /* AGM logomark anchored at the foot of the navy block */
 .rail-mark{position:relative; z-index:1; margin-top:auto; padding-top:44px; display:flex; align-items:center;}
 .rail-mark img{display:block; height:40px; width:auto;}
-.rail-blue{background:var(--accent-2); color:#fff; padding:50px 56px 34px; position:relative; overflow:hidden; display:flex; flex-direction:column; min-height:42%;}
-.rail-lead{position:relative; z-index:1; font-size:13px; line-height:1.6; color:rgba(255,255,255,0.92); margin:0;}
+.rail-blue{background:var(--rail-blue); color:#fff; padding:50px 56px 34px; position:relative; overflow:hidden; display:flex; flex-direction:column; min-height:42%;}
+.rail-lead{position:relative; z-index:1; font-size:13px; line-height:1.66; color:#fff; margin:0;}
 .rail-foot{position:relative; z-index:1; margin-top:auto; padding-top:34px;}
-.rail-label{font-size:10.5px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,0.82);}
+.rail-label{font-size:10.5px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,0.95);}
 /* section ticker */
 .rail-ticker{display:flex; gap:4px; margin-top:18px;}
 .rail-ticker .seg{flex:1; height:3px; border-radius:2px; background:rgba(255,255,255,0.26); cursor:pointer; transition:background .35s var(--ease), height .25s var(--ease);}
@@ -155,7 +174,7 @@ em{font-style:italic;}
 .rail-ticker .seg.done{background:rgba(255,255,255,0.62);}
 .rail-ticker .seg.cur{height:6px; margin-top:-1.5px; background:#fff;}
 .rail-ticker .seg:focus-visible{outline:2px solid #fff; outline-offset:3px;}
-.rail-num{font-size:11px; font-weight:600; letter-spacing:.1em; color:rgba(255,255,255,0.85); font-variant-numeric:tabular-nums; margin-top:14px;}
+.rail-num{font-size:11px; font-weight:600; letter-spacing:.1em; color:rgba(255,255,255,0.95); font-variant-numeric:tabular-nums; margin-top:14px;}
 
 /* RIGHT COLUMN */
 .main{min-width:0; display:flex; flex-direction:column;}
@@ -167,11 +186,14 @@ em{font-style:italic;}
 @media(prefers-reduced-motion:reduce){.page.active{animation:none;}}
 
 /* page intro / leads */
-.lead{font-size:14.5px; line-height:1.72; color:var(--ink-80); max-width:none; margin:0 0 34px;}
+/* Reading measure. Was max-width:none, which at the 1040px content width put
+   ~130 characters on a line — roughly double a comfortable measure. */
+.lead{font-size:14.5px; line-height:1.72; color:var(--ink-80); max-width:74ch; margin:0 0 34px;}
+.lead.wide{max-width:none;}
 .lead.with-statute{margin-bottom:20px;}
 /* tabular figures for all numeric content */
 .m-value, .fc-amount, .fc-amt, .fee-card .fc-amount, .rail-num{font-variant-numeric:tabular-nums;}
-.eyebrow{font-size:11.5px; font-weight:600; text-transform:uppercase; letter-spacing:.16em; color:var(--accent); margin:0 0 14px;}
+.eyebrow{font-size:11.5px; font-weight:600; text-transform:uppercase; letter-spacing:.16em; color:var(--accent-text); margin:0 0 14px;}
 
 /* statute / regulatory note */
 .statute-note{font-size:12px; line-height:1.7; color:var(--ink-72); margin:0 0 34px; padding:15px 20px; border-left:3px solid var(--accent); background:var(--surface-2); border-radius:0 var(--radius) var(--radius) 0;}
@@ -203,7 +225,7 @@ em{font-style:italic;}
 .cell::before{content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--accent); transform:scaleY(0); transform-origin:top; transition:transform .25s var(--ease);}
 .cell:hover{background:var(--surface-2);}
 .cell:hover::before{transform:scaleY(1);}
-.kicker{font-size:11px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); margin-bottom:16px; padding-right:30px;}
+.kicker{font-size:11px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--accent-text); margin-bottom:16px; padding-right:30px;}
 .cell-title{font-family:var(--sans); font-size:15.5px; font-weight:600; color:var(--ink); margin-bottom:16px; line-height:1.32; letter-spacing:-.01em;}
 .cell-desc{font-size:13px; line-height:1.7; color:var(--ink-72);}
 .cell-desc em{color:var(--ink-65);}
@@ -228,7 +250,7 @@ em{font-style:italic;}
 
 /* highlight row (full width callout) */
 .highlight{display:grid; grid-template-columns:230px 1fr; gap:36px; align-items:baseline; margin-top:36px; padding:38px 40px; background:var(--surface-2); border:1px solid var(--line); border-left:3px solid var(--accent); border-radius:var(--radius);}
-.highlight .h-label{font-size:11px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--accent);}
+.highlight .h-label{font-size:11px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--accent-text);}
 .highlight .h-value{font-size:14px; font-weight:500; color:var(--ink); line-height:1.55;}
 @media(max-width:680px){.highlight{grid-template-columns:1fr; gap:12px;}}
 
@@ -239,7 +261,10 @@ em{font-style:italic;}
 .metric{padding:30px 28px; border-right:1px solid var(--line-soft); display:flex; flex-direction:column; gap:10px; transition:background .18s var(--ease);}
 .metric:last-child{border-right:none;}
 .metric:hover{background:var(--surface-2);}
-.metric .m-label{font-size:10.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--accent);}
+/* min-height reserves two label lines so the serif figures sit on a common
+   baseline across the strip whether a label wraps or not */
+.metric .m-label{font-size:10.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-text); line-height:1.45; min-height:2.9em;}
+@media(max-width:460px){.metric .m-label{min-height:0;}}
 .metric .m-value{font-family:var(--serif); font-weight:600; font-size:29px; color:var(--ink); line-height:1; letter-spacing:-.01em;}
 .metric .m-unit{font-size:12.5px; color:var(--ink-65); font-family:var(--sans); line-height:1.5;}
 @media(max-width:820px){.metrics{grid-template-columns:repeat(2,1fr);} .metric:nth-child(2){border-right:none;}}
@@ -254,7 +279,7 @@ em{font-style:italic;}
 .milestone-dot{position:absolute; top:0; left:0; width:15px; height:15px; border-radius:50%; background:var(--bg); border:2px solid var(--line-strong); z-index:1; transition:all .2s var(--ease);}
 .milestone:hover .milestone-dot{border-color:var(--accent);}
 .milestone.on .milestone-dot{background:var(--accent); border-color:var(--accent); box-shadow:0 0 0 5px var(--accent-wash-2);}
-.milestone-year{font-size:10.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin-bottom:9px;}
+.milestone-year{font-size:10.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-text); margin-bottom:9px;}
 .milestone-title{font-size:14px; font-weight:600; color:var(--ink); margin-bottom:11px; line-height:1.3; font-family:var(--sans);}
 .milestone-desc{font-size:12.5px; line-height:1.6; color:var(--ink-72);}
 @media(max-width:820px){.timeline{grid-template-columns:1fr; gap:8px;} .timeline-rule,.timeline-fill{display:none;} .milestone{display:grid; grid-template-columns:80px 1fr; gap:16px; padding:14px 0; border-top:1px solid var(--line-soft); align-items:start;} .milestone-dot{display:none;}}
@@ -271,7 +296,7 @@ em{font-style:italic;}
 
 /* footprint */
 .footprint{display:grid; grid-template-columns:230px 1fr; gap:30px; padding-top:26px; margin-top:34px; border-top:1px solid var(--line-strong);}
-.footprint .fp-label{font-size:11px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--accent);}
+.footprint .fp-label{font-size:11px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--accent-text);}
 .footprint .fp-text{font-size:13px; line-height:1.7; color:var(--ink-80);}
 .footprint .fp-text strong{font-weight:600; color:var(--ink);}
 @media(max-width:680px){.footprint{grid-template-columns:1fr; gap:12px;}}
@@ -282,7 +307,7 @@ em{font-style:italic;}
 .fee-cards{border-top:1px solid var(--line-strong);}
 .fee-card{display:grid; grid-template-columns:1fr auto; gap:48px; align-items:start; padding:52px 40px; border-bottom:1px solid var(--line); transition:background .16s var(--ease);}
 .fee-card:hover{background:var(--surface-2);}
-.fee-card .fc-label{font-size:11px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin-bottom:16px;}
+.fee-card .fc-label{font-size:11px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--accent-text); margin-bottom:16px;}
 .fee-card .fc-title{font-family:var(--sans); font-size:19px; font-weight:600; color:var(--ink); line-height:1.3; margin-bottom:14px; letter-spacing:-.01em;}
 .fee-card .fc-desc{font-size:13px; line-height:1.7; color:var(--ink-72); max-width:540px;}
 .fee-card .fc-foot{font-style:italic; font-size:12px; color:var(--ink-55); margin-top:18px;}
@@ -310,7 +335,7 @@ em{font-style:italic;}
 .funnel-stage::after{content:""; position:absolute; top:50%; right:-8px; transform:translateY(-50%) rotate(45deg); width:14px; height:14px; border-top:1px solid var(--accent); border-right:1px solid var(--accent); background:var(--bg); z-index:2;}
 .funnel-stage:last-child::after{display:none;}
 .funnel-num{font-family:var(--serif); font-size:26px; font-weight:600; color:var(--accent); line-height:1; font-variant-numeric:tabular-nums;}
-.funnel-stage-label{font-size:11px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--accent); margin-bottom:4px;}
+.funnel-stage-label{font-size:11px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--accent-text); margin-bottom:4px;}
 .funnel-stage-title{font-size:13px; font-weight:600; color:var(--ink); line-height:1.3;}
 .funnel-grid{display:grid; grid-template-columns:1fr 1fr 1fr; border-bottom:1px solid var(--line-soft);}
 .funnel-col{padding:30px 26px 34px; border-right:1px solid var(--line-soft);}
@@ -324,7 +349,7 @@ em{font-style:italic;}
 
 /* Bullet list — statements of scope */
 .mp-list{margin:0 0 8px; padding:0; list-style:none;}
-.mp-list li{position:relative; padding-left:22px; margin-bottom:14px; font-size:13.5px; line-height:1.65; color:var(--ink-80);}
+.mp-list li{position:relative; padding-left:22px; margin-bottom:16px; font-size:13.5px; line-height:1.7; color:var(--ink-80); max-width:80ch;}
 .mp-list li::before{content:""; position:absolute; left:3px; top:9px; width:5px; height:5px; border-radius:50%; background:var(--accent);}
 .mp-list li strong{color:var(--ink); font-weight:600;}
 
@@ -334,7 +359,7 @@ em{font-style:italic;}
 .spec-table th,.spec-table td{text-align:left;}
 .spec-table thead .group-row th{font-size:10px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; padding:0 14px 8px;}
 .spec-table thead .colhead-row th{font-size:10px; font-weight:600; color:var(--ink-55); letter-spacing:.12em; text-transform:uppercase; padding:10px 14px; border-bottom:1px solid var(--line-strong); white-space:nowrap;}
-.spec-table tbody td{padding:15px 14px; color:var(--ink-80); border-bottom:1px solid var(--line-soft); vertical-align:top; line-height:1.6;}
+.spec-table tbody td{padding:18px 16px; color:var(--ink-80); border-bottom:1px solid var(--line-soft); vertical-align:top; line-height:1.62;}
 .spec-table tbody td.sys{font-weight:600; color:var(--ink); white-space:nowrap;}
 .spec-table tbody td.num{font-variant-numeric:tabular-nums; white-space:nowrap;}
 .spec-table tbody tr:hover{background:var(--surface-2);}
@@ -343,7 +368,7 @@ em{font-style:italic;}
 .spec-table .grp-b{color:var(--ink-55);}
 .spec-table .tint-a{background:var(--accent-wash);}
 .spec-table .tint-b{background:var(--surface-2);}
-.table-note{font-size:11.5px; font-style:italic; line-height:1.6; color:var(--ink-55); margin:18px 0 0;}
+.table-note{font-size:11.5px; font-style:italic; line-height:1.65; color:var(--ink-65); max-width:82ch; margin:20px 0 0;}
 
 /* Compact fee grid (detailed fee schedule) */
 .fee-compact-grid{display:grid; grid-template-columns:1fr 1fr; border-top:1px solid var(--line-strong); border-bottom:1px solid var(--line-strong);}
@@ -351,7 +376,7 @@ em{font-style:italic;}
 .fee-compact-cell.left{border-right:1px solid var(--line-soft);}
 .fee-compact-cell.full{grid-column:1 / -1; border-right:none;}
 .fee-compact-cell.no-bottom{border-bottom:none;}
-.fee-compact-cell .fc-k{font-size:10.5px; font-weight:600; color:var(--accent); letter-spacing:.16em; text-transform:uppercase; margin-bottom:8px;}
+.fee-compact-cell .fc-k{font-size:10.5px; font-weight:600; color:var(--accent-text); letter-spacing:.16em; text-transform:uppercase; margin-bottom:8px;}
 .fee-compact-cell .fc-n{font-size:13px; font-weight:600; color:var(--ink-72); line-height:1.3; margin-bottom:14px;}
 .fee-compact-cell .fc-a{font-family:var(--serif); font-size:30px; font-weight:600; color:var(--ink); line-height:1.05; letter-spacing:-.015em; margin-bottom:10px; font-variant-numeric:tabular-nums;}
 .fee-compact-cell .fc-a .u{font-family:var(--sans); font-size:13px; color:var(--ink-55); font-weight:400; margin-left:8px; letter-spacing:0;}
@@ -367,7 +392,7 @@ em{font-style:italic;}
 .snapshot-facts .sfact{padding:22px 24px; border-bottom:1px solid var(--line-soft); border-right:1px solid var(--line-soft); display:flex; flex-direction:column; gap:8px; transition:background .18s var(--ease);}
 .snapshot-facts .sfact:hover{background:var(--surface-2);}
 .snapshot-facts .sfact:nth-child(even){border-right:none;}
-.snapshot-facts .sf-label{font-size:10px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--accent);}
+.snapshot-facts .sf-label{font-size:10px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-text);}
 .snapshot-facts .sf-value{font-family:var(--serif); font-weight:600; font-size:21px; color:var(--ink); line-height:1.1; letter-spacing:-.01em; font-variant-numeric:tabular-nums;}
 .snapshot-facts .sf-note{font-size:11.5px; color:var(--ink-65); line-height:1.45;}
 @media(max-width:900px){.snapshot{grid-template-columns:1fr;} .snapshot-facts{border-left:none; border-top:1px solid var(--line-strong);} .snapshot-media{min-height:240px;}}
@@ -388,13 +413,114 @@ em{font-style:italic;}
 .step:hover{background:var(--surface-2);}
 .step::before{content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--accent); transform:scaleY(0); transform-origin:top; transition:transform .25s var(--ease);}
 .step:hover::before{transform:scaleY(1);}
-.step .st-when{font-size:11px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); padding-top:3px;}
+.step .st-when{font-size:11px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--accent-text); padding-top:3px;}
 .step .st-title{font-family:var(--sans); font-size:15.5px; font-weight:600; color:var(--ink); margin-bottom:14px; line-height:1.32; letter-spacing:-.01em;}
-.step .st-desc{font-size:13px; line-height:1.7; color:var(--ink-72);}
+.step .st-desc{font-size:13px; line-height:1.72; color:var(--ink-72); max-width:76ch;}
 @media(max-width:820px){.step{grid-template-columns:1fr; gap:14px; padding:26px 24px 28px;}}
 
 /* single-column card grid (e.g. technology platforms) — no right hairline */
 .cellgrid.cols-1 .cell{border-right:none;}
+
+/* ============================================================
+   AUDIT PASS — components that break up long uniform blocks
+   ============================================================ */
+/* Grouped table bands. A 12-row register reads as three chunks
+   instead of one wall; the tint carries the grouping, so no extra
+   headings are needed. */
+.spec-table tbody tr.band td{
+  background:var(--band-a);
+  padding:11px 16px;
+  border-bottom:1px solid var(--line-strong);
+  border-top:1px solid var(--line-strong);
+}
+.spec-table tbody tr.band:first-child td{border-top:none;}
+.spec-table tbody tr.band .band-l{
+  font-size:10px; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--accent-text); display:flex; align-items:baseline; gap:10px;
+}
+.spec-table tbody tr.band .band-n{
+  font-weight:500; letter-spacing:.06em; color:var(--ink-55);
+  font-variant-numeric:tabular-nums;
+}
+.spec-table tbody tr.band:hover td{background:var(--band-a);}
+.spec-table tbody tr.b-alt td{background:var(--band-b);}
+.spec-table tbody tr.b-neutral td{background:var(--band-c);}
+
+/* Cadence chips — the frequency column as a graded scale rather than
+   plain text, so the compliance calendar can be scanned by rhythm. */
+.freq{
+  display:inline-block; font-size:10.5px; font-weight:600;
+  letter-spacing:.1em; text-transform:uppercase; white-space:nowrap;
+  padding:4px 9px; border-radius:3px; border:1px solid transparent;
+}
+/* the strongest tint darkens the ground, so the high chip takes a darker
+   ink than --accent-text to stay above 4.5:1 (5.33 on bg, 5.69 on card) */
+.freq-high{background:rgba(58,141,222,0.16); color:#1A5D9D; border-color:rgba(58,141,222,0.30);}
+.freq-mid{background:rgba(58,141,222,0.08); color:var(--accent-text); border-color:rgba(58,141,222,0.18);}
+.freq-low{background:var(--surface-2); color:var(--ink-65); border-color:var(--line);}
+[data-theme="dark"] .freq-high{background:rgba(111,179,243,0.22); color:#A6D0F9; border-color:rgba(111,179,243,0.38);}
+[data-theme="dark"] .freq-mid{background:rgba(111,179,243,0.11); color:#8CC2F6; border-color:rgba(111,179,243,0.22);}
+[data-theme="dark"] .freq-low{background:var(--surface-2); color:var(--ink-65); border-color:var(--line);}
+
+/* Feature cell — promotes one or two items out of a uniform grid so
+   the eye has an entry point instead of eight equal cards. */
+.cellgrid.has-feature{border-top:none;}
+.feature-row{
+  display:grid; grid-template-columns:1fr 1fr; gap:0;
+  border-top:1px solid var(--line-strong);
+  border-bottom:1px solid var(--line-strong);
+  background:var(--surface-2);
+}
+.feature-row .fcell{padding:34px 40px 36px; border-right:1px solid var(--line-soft); position:relative;}
+.feature-row .fcell:last-child{border-right:none;}
+.feature-row .fcell::before{
+  content:""; position:absolute; left:0; top:0; bottom:0; width:3px;
+  background:var(--accent); transform:scaleY(0); transform-origin:top;
+  transition:transform .25s var(--ease);
+}
+.feature-row .fcell:hover::before{transform:scaleY(1);}
+.feature-row .f-title{
+  font-family:var(--sans); font-size:17px; font-weight:600; color:var(--ink);
+  margin-bottom:12px; line-height:1.3; letter-spacing:-.012em;
+}
+.feature-row .f-desc{font-size:13.5px; line-height:1.72; color:var(--ink-72); max-width:54ch;}
+@media(max-width:820px){
+  .feature-row{grid-template-columns:1fr;}
+  .feature-row .fcell{border-right:none; border-bottom:1px solid var(--line-soft); padding:26px 24px 28px;}
+  .feature-row .fcell:last-child{border-bottom:none;}
+}
+
+/* Compact cell — shorter descriptions, tighter rhythm, for the
+   supporting items below a feature row. */
+.cellgrid.compact .cell{padding:28px 40px 30px;}
+.cellgrid.compact .cell-desc{font-size:12.5px; line-height:1.65;}
+.cellgrid.compact .kicker{margin-bottom:11px;}
+.cellgrid.compact .cell-title{margin-bottom:11px; font-size:14.5px;}
+@media(max-width:560px){.cellgrid.compact .cell{padding:24px 24px 26px;}}
+
+/* Numbered phase markers for the transition steps — a real sequence,
+   so the numeral carries information rather than decoration. */
+.step{grid-template-columns:56px 168px 1fr; gap:0 28px;}
+.step .st-num{
+  font-family:var(--serif); font-weight:600; font-size:26px; line-height:1;
+  color:var(--accent); opacity:.42; font-variant-numeric:tabular-nums; padding-top:1px;
+}
+.step:hover .st-num{opacity:.72;}
+@media(max-width:820px){
+  .step{grid-template-columns:auto 1fr; gap:6px 16px;}
+  .step .st-num{grid-row:1; font-size:20px;}
+  .step .st-when{grid-row:1;}
+  .step > div:last-child{grid-column:1 / -1;}
+}
+
+/* Measure caps so single-column card text does not run to full width */
+.cellgrid.cols-1 .cell-desc{max-width:88ch;}
+.mp-list.two-col{
+  columns:2; column-gap:56px; max-width:none;
+}
+.mp-list.two-col li{break-inside:avoid; max-width:none;}
+@media(max-width:900px){.mp-list.two-col{columns:1;}}
+
 /* fee footnote */
 .fee-footnote{font-size:11.5px; font-style:italic; line-height:1.6; color:var(--ink-55); margin:22px 0 0;}
 
@@ -407,7 +533,7 @@ em{font-style:italic;}
 .portal-shot img{display:block; width:100%; height:auto;}
 .portal-shot figcaption{font-size:10.5px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-55); padding:12px 18px; border-top:1px solid var(--line-soft); background:var(--surface);}
 .portal-shot .ph{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; text-align:center; min-height:300px; padding:36px 30px;}
-.portal-shot .ph .ph-k{font-size:11px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--accent);}
+.portal-shot .ph .ph-k{font-size:11px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--accent-text);}
 .portal-shot .ph .ph-name{font-family:var(--serif); font-style:italic; font-size:17px; color:var(--ink);}
 .portal-shot .ph code{font-size:12px; color:var(--ink-72); background:var(--surface); padding:5px 10px; border-radius:4px; border:1px solid var(--line); font-variant-numeric:tabular-nums;}
 .portal-feats{display:flex; flex-direction:column; gap:30px;}
@@ -422,7 +548,7 @@ em{font-style:italic;}
 .pager button:hover:not(:disabled){border-color:var(--accent); transform:translateY(-2px);}
 .pager button:disabled{opacity:.3; cursor:default;}
 .pager button.next{align-items:flex-end; text-align:right; margin-left:auto;}
-.pager .pg-dir{font-size:10.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--accent);}
+.pager .pg-dir{font-size:10.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-text);}
 .pager .pg-name{font-size:13.5px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;}
 
 /* ============================================================
@@ -469,6 +595,60 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
 @media(prefers-reduced-motion:reduce){
   .reveal, .cellgrid.reveal > .cell{opacity:1; transform:none; transition:none;}
   html{scroll-behavior:auto;}
+}
+
+
+/* ============================================================
+   PRINT / PDF
+   ------------------------------------------------------------
+   reveal-on-scroll parks elements at opacity:0 until the
+   IntersectionObserver fires. On paper the observer never runs,
+   so without this block every un-scrolled section prints blank.
+   A proposal gets printed and PDF'd, so this is required, not
+   a nicety.
+   ============================================================ */
+@media print{
+  /* Everything meant to be read is visible, unconditionally and instantly.
+     transition:none matters as much as opacity here — without it the value
+     animates from 0 over 0.6s and a print capture can land mid-fade. */
+  *, *::before, *::after{transition:none !important; animation:none !important;}
+  .reveal, .cellgrid.reveal > .cell{opacity:1 !important; transform:none !important;}
+  .page{display:none !important;}
+  .page.active{display:block !important; animation:none !important;}
+
+  /* screen furniture off */
+  .topbar, .pager, .progress, .theme-toggle, .hamburger, .skip{display:none !important;}
+
+  /* single column: the sticky navy rail becomes a header block */
+  .shell{display:block !important;}
+  .rail{border-right:none !important; border-bottom:1px solid #ccc; break-after:avoid;}
+  .rail-stick{position:static !important; height:auto !important; overflow:visible !important;}
+  .rail-navy{min-height:0 !important; padding:26px 30px !important;}
+  .rail-blue{min-height:0 !important; padding:20px 30px !important;}
+  .rail-watermark, .rail-ticker{display:none !important;}
+  .rail-title{font-size:26px !important;}
+  .content{padding:26px 30px 0 !important;}
+  .content-inner{max-width:none !important;}
+
+  /* print on white, keep the brand accents as ink */
+  body{background:#fff !important; color:#1a1a1a !important; font-size:10.5pt;}
+  .cell:hover, .metric:hover, .fee-card:hover, .step:hover,
+  .spec-table tbody tr:hover{background:transparent !important;}
+
+  /* keep related material together */
+  .cell, .metric, .fee-card, .step, .change, .feature-row .fcell,
+  .highlight, .snapshot, .funnel-stage, .portal, figure{break-inside:avoid;}
+  .sec-head, h3, h4{break-after:avoid;}
+  .spec-table tr{break-inside:avoid;}
+  .spec-table thead{display:table-header-group;}   /* repeat headers across pages */
+  .spec-table tbody tr.band{break-before:auto; break-after:avoid;}
+
+  /* images: let them print but never dominate a page */
+  .gallery .g-tile{max-height:2in;}
+  .snapshot-media{min-height:2.4in !important;}
+
+  a{text-decoration:none !important;}
+  @page{margin:14mm;}
 }
 
 /* ============================================================
@@ -777,156 +957,188 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
 
       <!-- ============ SLIDE 4 · BUILDING SYSTEMS & ENGINEERING ============ -->
       <div class="page" id="page-systems">
-        <p class="lead reveal">A 1969 high-rise carries its risk in the plant. Plaza 600 is served by a central chilled-water plant, district steam heat, a building automation system, five passenger elevators, an addressable fire alarm with a recently installed standpipe, and emergency power &mdash; each with its own service interval, compliance test, and replacement horizon. AGM manages these as a single documented program: one equipment record, one preventive maintenance schedule, one compliance calendar, and one accountable engineer.</p>
+        <p class="lead reveal">A 1969 high-rise carries its risk in the plant. AGM manages these systems as one documented program: a single equipment record, one preventive maintenance schedule, one compliance calendar, and one accountable engineer.</p>
 
-        <div class="sec-head reveal"><h3>Systems Under Management</h3><span class="pipe">|</span><span class="kick">Plant &amp; Life Safety Inventory</span></div>
-        <div class="spec-wrap reveal">
-          <table class="spec-table">
-            <thead>
-              <tr class="colhead-row">
-                <th class="sys">System</th>
-                <th>Configuration at Plaza 600</th>
-                <th>AGM Management Scope</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="sys">Heating</td>
-                <td>District steam loop delivering radiated heat to perimeter zones through induction boxes with local zone control</td>
-                <td>Steam trap and strainer service, valve packing, freeze protection, single-source utility rate and contract oversight</td>
-              </tr>
-              <tr>
-                <td class="sys">Cooling</td>
-                <td>Water-cooled centrifugal chillers in the mechanical penthouse with paired cooling towers, north and south machine rooms</td>
-                <td>Seasonal start-up and shutdown, water treatment, tube punching and eddy-current testing on cycle, tower service, refrigerant compliance</td>
-              </tr>
-              <tr>
-                <td class="sys">Air Distribution</td>
-                <td>Integrated variable air volume duct network with individual zone controls; supply and return fans in both machine rooms</td>
-                <td>Quarterly and annual fan maintenance, belt and bearing service, outside air damper cleaning and lubrication, filter program</td>
-              </tr>
-              <tr>
-                <td class="sys">Building Automation</td>
-                <td>Building automation system upgraded in 2025, controlling scheduling, zone setpoints, and after-hours conditioning</td>
-                <td>Schedule and setpoint management, alarm response, trend review, and the monthly after-hours HVAC billing run</td>
-              </tr>
-              <tr>
-                <td class="sys">Vertical Transportation</td>
-                <td>Five passenger cabs with interiors refinished in 2023, plus a floor-20 accessibility lift installed in 2024</td>
-                <td>Service contract oversight, state operating permits, annual inspection, monthly recall and quarterly telephone testing, entrapment response</td>
-              </tr>
-              <tr>
-                <td class="sys">Fire &amp; Life Safety</td>
-                <td>Addressable fire alarm control panel with emergency communications; wet standpipe and electric fire pump installed 2023; garage sprinkler coverage</td>
-                <td>Monthly, quarterly, and annual device testing; extinguisher and smoke-head confidence tests; damper testing; shaft pressurization; dry trip testing on cycle</td>
-              </tr>
-              <tr>
-                <td class="sys">Emergency Power</td>
-                <td>Emergency generator serving building safety and support systems</td>
-                <td>Monthly load test, annual confidence test, fuel management, transfer switch verification, run-log documentation</td>
-              </tr>
-              <tr>
-                <td class="sys">Plumbing</td>
-                <td>Mixed PVC, steel, copper, and cast-iron distribution; sump pumps at sub-basement; domestic hot water circulation</td>
-                <td>Sump pump start-up and testing, backflow preventer testing and certification, pump bearing lubrication, leak and water-intrusion response</td>
-              </tr>
-              <tr>
-                <td class="sys">Electrical</td>
-                <td>Three-phase 277/480-volt service with 6,000-amp capacity</td>
-                <td>Panel and switchgear inspection, capacity confirmation against planned tenant loads, lighting and emergency lighting program</td>
-              </tr>
-              <tr>
-                <td class="sys">Envelope &amp; Roof</td>
-                <td>Precast column covers with bronze anodized aluminum curtain wall; single-ply PVC membrane roof over main roof, parapet, and generator room</td>
-                <td>Roof and parapet inspection, sealant and glazing condition tracking, water-intrusion investigation, warranty administration</td>
-              </tr>
-              <tr>
-                <td class="sys">Security &amp; Access</td>
-                <td>Card-key access control with camera server infrastructure upgraded in 2020</td>
-                <td>Credential administration, camera and recording verification, patrol contract oversight, after-hours access protocols</td>
-              </tr>
-              <tr>
-                <td class="sys">Parking &amp; Garage</td>
-                <td>Two subterranean levels with garage exhaust fans and revenue control equipment</td>
-                <td>Exhaust fan service, life-safety ventilation verification, revenue equipment maintenance, stall and license administration</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="table-note reveal">System configuration reflects the building information available to AGM at the time of this proposal. AGM verifies make, model, and location on site for every major asset and reconciles the equipment record against service history as part of onboarding.</p>
-
-        <div class="sec-head reveal" style="margin-top:56px;"><h3>Preventive Maintenance Program</h3><span class="pipe">|</span><span class="kick">Recurring, Scheduled, Documented</span></div>
-        <p class="lead reveal">The building operates today on a recurring engineering task list &mdash; every task with its equipment reference, frequency, next-due date, and labor hours. AGM does not rebuild that program from scratch. It is loaded into AGM&rsquo;s system on day one, task for task, so that nothing lapses through the management transition, and then extended where coverage gaps exist.</p>
-        <div class="funnel-rail reveal stages-4">
-          <div class="funnel-stage"><div class="funnel-num">01</div><div><div class="funnel-stage-label">Inventory</div><div class="funnel-stage-title">Equipment Record</div></div></div>
-          <div class="funnel-stage"><div class="funnel-num">02</div><div><div class="funnel-stage-label">Schedule</div><div class="funnel-stage-title">Task &amp; Frequency Load</div></div></div>
-          <div class="funnel-stage"><div class="funnel-num">03</div><div><div class="funnel-stage-label">Execute</div><div class="funnel-stage-title">Rounds &amp; Service</div></div></div>
-          <div class="funnel-stage"><div class="funnel-num">04</div><div><div class="funnel-stage-label">Evidence</div><div class="funnel-stage-title">Documentation &amp; Reporting</div></div></div>
-        </div>
-        <div class="funnel-grid reveal stages-4">
-          <div class="funnel-col">
-            <div class="fn-desc">Every chiller, tower, fan, pump, generator, and panel verified on site and recorded with make, model, location, and service history</div>
-            <div class="pills"><span class="pill">Asset Tagging</span><span class="pill">Nameplate Verification</span><span class="pill">Photographic Record</span><span class="pill">Useful Life</span></div>
+        <div class="metrics block reveal">
+          <div class="metric">
+            <span class="m-label">Systems Managed</span>
+            <span class="m-value">12</span>
+            <span class="m-unit">major building systems</span>
           </div>
-          <div class="funnel-col">
-            <div class="fn-desc">Daily, weekly, monthly, quarterly, semi-annual, annual, and multi-year tasks loaded with frequencies and next-due dates carried forward</div>
-            <div class="pills"><span class="pill">Task Migration</span><span class="pill">Next-Due Continuity</span><span class="pill">Labor Hour Planning</span><span class="pill">Vendor Scope Mapping</span></div>
+          <div class="metric">
+            <span class="m-label">Preventive Maintenance</span>
+            <span class="m-value">64</span>
+            <span class="m-unit">recurring scheduled tasks</span>
           </div>
-          <div class="funnel-col">
-            <div class="fn-desc">Rounds performed on schedule by the on-site engineering team, with vendor-performed work dispatched, supervised, and verified against scope</div>
-            <div class="pills"><span class="pill">Engineering Rounds</span><span class="pill">Vendor Dispatch</span><span class="pill">Scope Verification</span><span class="pill">Coverage Plan</span></div>
+          <div class="metric">
+            <span class="m-label">Vertical Transportation</span>
+            <span class="m-value">5</span>
+            <span class="m-unit">passenger cabs &middot; plus floor-20 lift</span>
           </div>
-          <div class="funnel-col">
-            <div class="fn-desc">Completion, findings, and deferred items recorded against each asset and reported to Ownership with the monthly package</div>
-            <div class="pills"><span class="pill">Completion Records</span><span class="pill">Deferred Item Log</span><span class="pill">Certificates on File</span><span class="pill">Owner Reporting</span></div>
+          <div class="metric">
+            <span class="m-label">Coverage</span>
+            <span class="m-value">24/7</span>
+            <span class="m-unit">on-call engineering response</span>
           </div>
         </div>
 
-        <div class="sec-head reveal" style="margin-top:56px;"><h3>Engineering Operations</h3><span class="pipe">|</span><span class="kick">Staffing, Response &amp; Revenue</span></div>
-        <div class="cellgrid reveal">
-          <div class="cell">
-            <div class="kicker">Staffing</div>
-            <div class="cell-title">On-Site Engineering &amp; Coverage</div>
-            <div class="cell-desc">A chief building engineer accountable for the plant, supported by scheduled coverage so the daily and weekly rounds, the compliance calendar, and emergency response never rest on one individual&rsquo;s availability</div>
-            <div class="pills"><span class="pill">Chief Engineer</span><span class="pill">Scheduled Coverage</span><span class="pill">Cross-Training</span><span class="pill">Escalation Path</span></div>
-            <div class="sub-note"><strong>Continuity:</strong> The equipment record and task schedule live in AGM&rsquo;s platform rather than with an individual, so operating knowledge transfers with the program</div>
+        <div class="block reveal">
+          <div class="sec-head"><h3>Systems Under Management</h3><span class="pipe">|</span><span class="kick">Plant &amp; Life Safety Inventory</span></div>
+          <div class="spec-wrap">
+            <table class="spec-table">
+              <thead>
+                <tr class="colhead-row">
+                  <th class="sys">System</th>
+                  <th>Configuration at Plaza 600</th>
+                  <th>AGM Management Scope</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="band"><td colspan="3"><div class="band-l">Mechanical &amp; Environmental <span class="band-n">4 systems</span></div></td></tr>
+                <tr>
+                  <td class="sys">Heating</td>
+                  <td>District steam loop feeding perimeter zones through induction boxes with local zone control</td>
+                  <td>Steam trap and strainer service, valve packing, freeze protection, single-source utility oversight</td>
+                </tr>
+                <tr>
+                  <td class="sys">Cooling</td>
+                  <td>Water-cooled centrifugal chillers in the mechanical penthouse with paired cooling towers</td>
+                  <td>Seasonal start-up and shutdown, water treatment, tube punching and eddy-current testing on cycle, refrigerant compliance</td>
+                </tr>
+                <tr>
+                  <td class="sys">Air Distribution</td>
+                  <td>Variable air volume duct network with individual zone controls; supply and return fans in both machine rooms</td>
+                  <td>Quarterly and annual fan maintenance, belt and bearing service, damper cleaning, filter program</td>
+                </tr>
+                <tr>
+                  <td class="sys">Building Automation</td>
+                  <td>Automation system upgraded in 2025 &mdash; scheduling, zone setpoints, after-hours conditioning</td>
+                  <td>Schedule and setpoint management, alarm response, trend review, monthly after-hours HVAC billing run</td>
+                </tr>
+
+                <tr class="band b-alt"><td colspan="3"><div class="band-l">Life Safety &amp; Power <span class="band-n">3 systems</span></div></td></tr>
+                <tr>
+                  <td class="sys">Fire &amp; Life Safety</td>
+                  <td>Addressable panel with emergency communications; wet standpipe and electric fire pump installed 2023; garage sprinkler coverage</td>
+                  <td>Monthly, quarterly and annual device testing; extinguisher and smoke-head confidence tests; damper testing; shaft pressurization</td>
+                </tr>
+                <tr>
+                  <td class="sys">Emergency Power</td>
+                  <td>Emergency generator serving building safety and support systems</td>
+                  <td>Monthly load test, annual confidence test, fuel management, transfer switch verification</td>
+                </tr>
+                <tr>
+                  <td class="sys">Vertical Transportation</td>
+                  <td>Five passenger cabs, interiors refinished 2023, plus a floor-20 accessibility lift installed 2024</td>
+                  <td>Contract oversight, state operating permits, annual inspection, monthly recall and quarterly telephone testing, entrapment response</td>
+                </tr>
+
+                <tr class="band b-neutral"><td colspan="3"><div class="band-l">Fabric, Access &amp; Site <span class="band-n">5 systems</span></div></td></tr>
+                <tr>
+                  <td class="sys">Plumbing</td>
+                  <td>Mixed PVC, steel, copper and cast-iron distribution; sub-basement sump pumps</td>
+                  <td>Sump pump testing, backflow preventer certification, leak and water-intrusion response</td>
+                </tr>
+                <tr>
+                  <td class="sys">Electrical</td>
+                  <td>Three-phase 277/480-volt service, 6,000-amp capacity</td>
+                  <td>Panel and switchgear inspection, capacity confirmation against planned tenant loads, emergency lighting</td>
+                </tr>
+                <tr>
+                  <td class="sys">Envelope &amp; Roof</td>
+                  <td>Precast column covers with bronze anodized curtain wall; single-ply PVC membrane roof</td>
+                  <td>Roof and parapet inspection, sealant and glazing condition tracking, warranty administration</td>
+                </tr>
+                <tr>
+                  <td class="sys">Security &amp; Access</td>
+                  <td>Card-key access control; camera server infrastructure upgraded 2020</td>
+                  <td>Credential administration, recording verification, patrol contract oversight</td>
+                </tr>
+                <tr>
+                  <td class="sys">Parking &amp; Garage</td>
+                  <td>Two subterranean levels with exhaust fans and revenue control equipment</td>
+                  <td>Exhaust fan service, life-safety ventilation verification, stall and license administration</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <div class="cell">
-            <div class="kicker">Response</div>
-            <div class="cell-title">24/7 System Event Response</div>
-            <div class="cell-desc">After-hours alarms, elevator entrapments, water intrusion, HVAC failures, and power events routed to on-call engineering for immediate assessment, vendor dispatch, and Ownership notification under authorized protocols</div>
-            <div class="pills"><span class="pill">On-Call Engineering</span><span class="pill">Alarm Response</span><span class="pill">Entrapment Protocol</span><span class="pill">Vendor Dispatch</span><span class="pill">Owner Call Tree</span></div>
-            <div class="sub-note"><strong>Authorization:</strong> Aligned with management agreement scope &middot; Owner call tree for major incidents</div>
+          <p class="table-note">Configuration reflects the building information available at the time of this proposal. AGM verifies make, model and location on site for every major asset during onboarding.</p>
+        </div>
+
+        <div class="block reveal">
+          <div class="sec-head"><h3>Preventive Maintenance Program</h3><span class="pipe">|</span><span class="kick">Recurring &middot; Scheduled &middot; Documented</span></div>
+          <p class="lead">The building already runs on a recurring engineering task list. AGM does not rebuild it &mdash; it is loaded task for task on day one, so nothing lapses through the transition, then extended where coverage gaps exist.</p>
+          <div class="funnel-rail stages-4">
+            <div class="funnel-stage"><div class="funnel-num">01</div><div><div class="funnel-stage-label">Inventory</div><div class="funnel-stage-title">Equipment Record</div></div></div>
+            <div class="funnel-stage"><div class="funnel-num">02</div><div><div class="funnel-stage-label">Schedule</div><div class="funnel-stage-title">Task &amp; Frequency Load</div></div></div>
+            <div class="funnel-stage"><div class="funnel-num">03</div><div><div class="funnel-stage-label">Execute</div><div class="funnel-stage-title">Rounds &amp; Service</div></div></div>
+            <div class="funnel-stage"><div class="funnel-num">04</div><div><div class="funnel-stage-label">Evidence</div><div class="funnel-stage-title">Documentation</div></div></div>
           </div>
-          <div class="cell">
-            <div class="kicker">Revenue</div>
-            <div class="cell-title">After-Hours HVAC &amp; Tenant Services</div>
-            <div class="cell-desc">After-hours conditioning requests captured through the building automation system, billed monthly against lease terms, and reconciled to the general ledger &mdash; treated as a managed revenue line rather than an unbilled operating cost</div>
-            <div class="pills"><span class="pill">BAS Run Reports</span><span class="pill">Monthly Billing</span><span class="pill">Lease Rate Verification</span><span class="pill">Ledger Reconciliation</span></div>
-          </div>
-          <div class="cell">
-            <div class="kicker">Utilities</div>
-            <div class="cell-title">Energy &amp; Utility Management</div>
-            <div class="cell-desc">Meter reading, consumption tracking, and utility invoice review across electricity, water and sewer, and district steam &mdash; the largest single category in the operating budget and the one most responsive to schedule and setpoint discipline</div>
-            <div class="pills"><span class="pill">Meter Readings</span><span class="pill">Consumption Tracking</span><span class="pill">Invoice Audit</span><span class="pill">Schedule Optimization</span><span class="pill">Benchmarking</span></div>
-            <div class="sub-note"><strong>Single-Source Exposure:</strong> District steam is a single-source utility; AGM tracks rate history and escalation against budget and reports movement to Ownership</div>
-          </div>
-          <div class="cell">
-            <div class="kicker">Vendors</div>
-            <div class="cell-title">Service Contract Oversight</div>
-            <div class="cell-desc">Each recurring task mapped to the vendor agreement or in-house scope that performs it, with tasks carrying no agreement behind them identified and placed under contract</div>
-            <div class="pills"><span class="pill">Scope-to-Task Mapping</span><span class="pill">Coverage Gaps</span><span class="pill">Performance Review</span><span class="pill">Competitive Rebid</span></div>
-          </div>
-          <div class="cell">
-            <div class="kicker">Records</div>
-            <div class="cell-title">Warranties, Permits &amp; Service History</div>
-            <div class="cell-desc">Warranties from the recent capital program, operating permits, inspection certificates, and service records collected, filed by system, and tracked against expiration so warranty coverage is used before it lapses</div>
-            <div class="pills"><span class="pill">Warranty Register</span><span class="pill">Permit Currency</span><span class="pill">Inspection Certificates</span><span class="pill">Service History</span></div>
+          <div class="funnel-grid stages-4">
+            <div class="funnel-col">
+              <div class="fn-desc">Every chiller, tower, fan, pump and panel verified on site with make, model, location and service history.</div>
+              <div class="pills"><span class="pill">Asset Tagging</span><span class="pill">Useful Life</span></div>
+            </div>
+            <div class="funnel-col">
+              <div class="fn-desc">Daily through multi-year tasks loaded with frequencies and next-due dates carried forward intact.</div>
+              <div class="pills"><span class="pill">Next-Due Continuity</span><span class="pill">Vendor Scope Mapping</span></div>
+            </div>
+            <div class="funnel-col">
+              <div class="fn-desc">Rounds performed on schedule in house; vendor work dispatched, supervised and verified against scope.</div>
+              <div class="pills"><span class="pill">Engineering Rounds</span><span class="pill">Coverage Plan</span></div>
+            </div>
+            <div class="funnel-col">
+              <div class="fn-desc">Completion, findings and deferred items recorded against each asset and reported monthly.</div>
+              <div class="pills"><span class="pill">Deferred Item Log</span><span class="pill">Certificates on File</span></div>
+            </div>
           </div>
         </div>
+
+        <div class="block reveal">
+          <div class="sec-head"><h3>Engineering Operations</h3><span class="pipe">|</span><span class="kick">Staffing, Response &amp; Revenue</span></div>
+          <div class="feature-row reveal">
+            <div class="fcell">
+              <div class="kicker">Staffing</div>
+              <div class="f-title">On-Site Engineering &amp; Coverage</div>
+              <div class="f-desc">A chief building engineer accountable for the plant, supported by scheduled coverage so the daily rounds, the compliance calendar and emergency response never rest on one individual&rsquo;s availability.</div>
+            </div>
+            <div class="fcell">
+              <div class="kicker">Response</div>
+              <div class="f-title">24/7 System Event Response</div>
+              <div class="f-desc">After-hours alarms, elevator entrapments, water intrusion, HVAC failures and power events routed to on-call engineering for immediate assessment, vendor dispatch and Ownership notification.</div>
+            </div>
+          </div>
+          <div class="cellgrid compact no-num has-feature reveal">
+            <div class="cell">
+              <div class="kicker">Revenue</div>
+              <div class="cell-title">After-Hours HVAC</div>
+              <div class="cell-desc">Conditioning requests captured through the automation system, billed monthly against lease terms, and reconciled to the ledger &mdash; a managed revenue line rather than an unbilled cost.</div>
+              <div class="pills"><span class="pill">BAS Run Reports</span><span class="pill">Ledger Reconciliation</span></div>
+            </div>
+            <div class="cell">
+              <div class="kicker">Utilities</div>
+              <div class="cell-title">Energy &amp; Utility Management</div>
+              <div class="cell-desc">The largest category in the operating budget, and the one most responsive to schedule and setpoint discipline. District steam is single-source; AGM tracks rate movement against budget.</div>
+              <div class="pills"><span class="pill">Consumption Tracking</span><span class="pill">Invoice Audit</span><span class="pill">Benchmarking</span></div>
+            </div>
+            <div class="cell">
+              <div class="kicker">Vendors</div>
+              <div class="cell-title">Service Contract Oversight</div>
+              <div class="cell-desc">Each recurring task mapped to the agreement or in-house scope that performs it. Tasks with no agreement behind them are identified and placed under contract.</div>
+              <div class="pills"><span class="pill">Coverage Gaps</span><span class="pill">Competitive Rebid</span></div>
+            </div>
+            <div class="cell">
+              <div class="kicker">Records</div>
+              <div class="cell-title">Warranties &amp; Permits</div>
+              <div class="cell-desc">Warranties from the recent capital program, operating permits and inspection certificates filed by system and tracked against expiration &mdash; so coverage is used before it lapses.</div>
+              <div class="pills"><span class="pill">Warranty Register</span><span class="pill">Permit Currency</span></div>
+            </div>
+          </div>
+        </div>
+
         <div class="highlight reveal">
           <span class="h-label">Operating Objective</span>
-          <span class="h-value">Building systems managed as a documented program &mdash; every asset inventoried, every task scheduled, every compliance test evidenced &mdash; so that plant reliability supports leasing execution rather than threatening it</span>
+          <span class="h-value">Building systems managed as a documented program &mdash; every asset inventoried, every task scheduled, every compliance test evidenced &mdash; so plant reliability supports leasing execution rather than threatening it</span>
         </div>
       </div>
 
@@ -987,7 +1199,7 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
 
       <!-- ============ SLIDE 6 · COMPLIANCE, LIFE SAFETY & RISK ============ -->
       <div class="page" id="page-compliance">
-        <p class="lead reveal">A downtown high-rise built in 1969 carries a compliance calendar that a newer asset does not: state and city energy performance requirements, elevator permitting, fire and life-safety testing across multiple frequencies, accessibility obligations, and the hazardous-material management that comes with the era of construction. AGM runs this as a dated, owned calendar &mdash; each requirement with the test or filing that satisfies it, the date it is due, and the certificate that evidences it.</p>
+        <p class="lead reveal">A 1969 downtown high-rise carries a compliance calendar a newer asset does not. AGM runs it as a dated, owned calendar &mdash; each requirement paired with the test or filing that satisfies it, the date it is due, and the certificate that evidences it.</p>
 
         <div class="sec-head reveal"><h3>Compliance Calendar</h3><span class="pipe">|</span><span class="kick">Requirement, Frequency &amp; Evidence</span></div>
         <div class="spec-wrap reveal">
@@ -996,28 +1208,33 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
               <tr class="colhead-row">
                 <th class="sys">Category</th>
                 <th>Requirement</th>
-                <th class="num">Frequency</th>
+                <th class="num">Cadence</th>
                 <th>Evidence on File</th>
               </tr>
             </thead>
             <tbody>
-              <tr><td class="sys">Fire Alarm</td><td>Addressable panel certification and device testing; smoke detector maintenance</td><td class="num">Monthly</td><td>Test report &amp; panel certification</td></tr>
-              <tr><td class="sys">Fire Alarm</td><td>Smoke-head confidence testing</td><td class="num">Quarterly</td><td>Confidence test record</td></tr>
-              <tr><td class="sys">Suppression</td><td>Standpipe, fire pump, and sprinkler air compressor service; dry trip testing on cycle</td><td class="num">Annual / multi-year</td><td>Service and trip test records</td></tr>
-              <tr><td class="sys">Extinguishers</td><td>Monthly confidence check and annual certification</td><td class="num">Monthly &amp; annual</td><td>Tag and certification record</td></tr>
-              <tr><td class="sys">Life Safety</td><td>Fire and smoke damper testing; elevator shaft pressurization; exit sign inspection</td><td class="num">Annual / cyclical</td><td>Vendor test reports</td></tr>
-              <tr><td class="sys">Elevators</td><td>State operating permits; annual inspection; monthly recall and quarterly telephone testing</td><td class="num">Monthly to annual</td><td>Permits &amp; inspection certificates</td></tr>
-              <tr><td class="sys">Pressure Vessels</td><td>Annual pressure vessel and refrigeration inspection</td><td class="num">Annual</td><td>State inspection certificates</td></tr>
-              <tr><td class="sys">Emergency Power</td><td>Monthly generator load test and annual confidence test</td><td class="num">Monthly &amp; annual</td><td>Run logs &amp; confidence test</td></tr>
-              <tr><td class="sys">Plumbing</td><td>Backflow preventer testing and certification</td><td class="num">Annual</td><td>Certified tester report</td></tr>
-              <tr><td class="sys">Energy</td><td>Washington Clean Buildings Performance Standard &mdash; benchmarking, energy management plan, and performance compliance for a covered building of this size</td><td class="num">Per statute</td><td>Filings &amp; benchmarking reports</td></tr>
-              <tr><td class="sys">Accessibility</td><td>Path of travel, entries, restrooms, and elevator accessibility, including the floor-20 lift</td><td class="num">Ongoing</td><td>Review &amp; barrier-removal list</td></tr>
-              <tr><td class="sys">Hazardous Materials</td><td>Asbestos-containing material register and operations and maintenance plan appropriate to a 1969 building; PCB ballast survey</td><td class="num">Ongoing</td><td>Register &amp; O&amp;M plan</td></tr>
-              <tr><td class="sys">Permits &amp; Citations</td><td>Open citation, violation, and permit register maintained against city and state records</td><td class="num">Ongoing</td><td>Agency search results</td></tr>
+              <tr class="band"><td colspan="4"><div class="band-l">Fire &amp; Life Safety <span class="band-n">5 requirements</span></div></td></tr>
+              <tr><td class="sys">Fire Alarm</td><td>Addressable panel certification, device testing and smoke detector maintenance</td><td class="num"><span class="freq freq-high">Monthly</span></td><td>Test report &amp; panel certification</td></tr>
+              <tr><td class="sys">Fire Alarm</td><td>Smoke-head confidence testing</td><td class="num"><span class="freq freq-mid">Quarterly</span></td><td>Confidence test record</td></tr>
+              <tr><td class="sys">Suppression</td><td>Standpipe, fire pump and sprinkler air compressor service; dry trip testing on cycle</td><td class="num"><span class="freq freq-mid">Annual +</span></td><td>Service &amp; trip test records</td></tr>
+              <tr><td class="sys">Extinguishers</td><td>Confidence check and annual certification</td><td class="num"><span class="freq freq-high">Monthly</span></td><td>Tag &amp; certification record</td></tr>
+              <tr><td class="sys">Life Safety</td><td>Fire and smoke damper testing, elevator shaft pressurization, exit sign inspection</td><td class="num"><span class="freq freq-mid">Annual</span></td><td>Vendor test reports</td></tr>
+
+              <tr class="band b-alt"><td colspan="4"><div class="band-l">Mechanical &amp; Equipment <span class="band-n">4 requirements</span></div></td></tr>
+              <tr><td class="sys">Elevators</td><td>State operating permits, annual inspection, recall and telephone testing</td><td class="num"><span class="freq freq-high">Monthly</span></td><td>Permits &amp; inspection certificates</td></tr>
+              <tr><td class="sys">Pressure Vessels</td><td>Pressure vessel and refrigeration inspection</td><td class="num"><span class="freq freq-mid">Annual</span></td><td>State inspection certificates</td></tr>
+              <tr><td class="sys">Emergency Power</td><td>Generator load test and annual confidence test</td><td class="num"><span class="freq freq-high">Monthly</span></td><td>Run logs &amp; confidence test</td></tr>
+              <tr><td class="sys">Plumbing</td><td>Backflow preventer testing and certification</td><td class="num"><span class="freq freq-mid">Annual</span></td><td>Certified tester report</td></tr>
+
+              <tr class="band b-neutral"><td colspan="4"><div class="band-l">Building &amp; Regulatory <span class="band-n">4 requirements</span></div></td></tr>
+              <tr><td class="sys">Energy</td><td>Washington Clean Buildings Performance Standard &mdash; benchmarking, energy management plan and performance compliance</td><td class="num"><span class="freq freq-low">Per statute</span></td><td>Filings &amp; benchmarking reports</td></tr>
+              <tr><td class="sys">Accessibility</td><td>Path of travel, entries, restrooms and elevator accessibility</td><td class="num"><span class="freq freq-low">Ongoing</span></td><td>Review &amp; barrier-removal list</td></tr>
+              <tr><td class="sys">Hazardous Materials</td><td>Asbestos-containing material register and O&amp;M plan; PCB ballast survey</td><td class="num"><span class="freq freq-low">Ongoing</span></td><td>Register &amp; O&amp;M plan</td></tr>
+              <tr><td class="sys">Permits &amp; Citations</td><td>Open citation, violation and permit register against city and state records</td><td class="num"><span class="freq freq-low">Ongoing</span></td><td>Agency search results</td></tr>
             </tbody>
           </table>
         </div>
-        <p class="table-note reveal">Frequencies reflect the recurring program in place at the building and applicable regulatory requirements. AGM confirms current certification against each line at onboarding and reports any lapse to Ownership with a remediation date.</p>
+        <p class="table-note reveal">Cadence reflects the recurring program in place at the building and applicable regulatory requirements. AGM confirms current certification against each line at onboarding and reports any lapse with a remediation date.</p>
 
         <div class="sec-head reveal" style="margin-top:56px;"><h3>Risk Management</h3><span class="pipe">|</span><span class="kick">Regulatory, Physical &amp; Operational</span></div>
         <div class="cellgrid reveal">
@@ -1037,13 +1254,13 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
           <div class="cell">
             <div class="kicker">Vendors</div>
             <div class="cell-title">Vendor Compliance &amp; Insurance</div>
-            <div class="cell-desc">No vendor works in the building without current insurance, licensing, and an executed agreement on file. Certificates are tracked to expiration and coverage is verified against the scope of work performed</div>
+            <div class="cell-desc">No vendor works in the building without current insurance, licensing and an executed agreement on file. Certificates tracked to expiration.</div>
             <div class="pills"><span class="pill">Certificate Tracking</span><span class="pill">License Verification</span><span class="pill">Additional Insured</span><span class="pill">Scope-Appropriate Limits</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Tenants</div>
             <div class="cell-title">Tenant Insurance &amp; Lease Compliance</div>
-            <div class="cell-desc">Tenant certificates of insurance collected, verified against lease requirements, and tracked to renewal, alongside enforcement of use, alteration, and building rule provisions across the roster</div>
+            <div class="cell-desc">Certificates collected, verified against lease requirements and tracked to renewal &mdash; alongside enforcement of use, alteration and building rule provisions.</div>
             <div class="pills"><span class="pill">COI Collection</span><span class="pill">Lease Requirement Match</span><span class="pill">Renewal Tracking</span><span class="pill">Rules Enforcement</span></div>
           </div>
           <div class="cell">
@@ -1055,7 +1272,7 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
           <div class="cell">
             <div class="kicker">Structural</div>
             <div class="cell-title">Seismic, Envelope &amp; Water Intrusion</div>
-            <div class="cell-desc">Condition monitoring across structure, curtain wall, sealant, and roof, with water-intrusion events investigated to source and documented rather than patched, and findings carried into the capital plan</div>
+            <div class="cell-desc">Water-intrusion events investigated to source and documented rather than patched, with findings carried into the capital plan.</div>
             <div class="pills"><span class="pill">Condition Monitoring</span><span class="pill">Envelope Tracking</span><span class="pill">Intrusion Investigation</span><span class="pill">Capital Plan Feed</span></div>
           </div>
         </div>
@@ -1067,57 +1284,57 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
 
       <!-- ============ SLIDE 7 · TENANT EXPERIENCE & BUILDING OPERATIONS ============ -->
       <div class="page" id="page-tenants">
-        <p class="lead reveal">A multi-tenant office tower with a diversified roster of smaller tenants is retained on service, not on rent alone. Plaza 600 carries a repositioned lobby, a tenant conference center, bike storage, showers and lockers, and plaza-level retail &mdash; amenities that only produce retention if they are staffed, scheduled, and maintained. AGM operates the tenant-facing side of the building as a defined service program with response standards Ownership can hold us to.</p>
+        <p class="lead reveal">A roster of smaller tenants is retained on service, not on rent alone. The repositioned lobby, conference center, bike room and showers only produce retention if they are staffed, scheduled and maintained &mdash; so AGM runs the tenant-facing side of the building as a defined service program with standards Ownership can hold us to.</p>
 
         <div class="sec-head reveal"><h3>Tenant Service Program</h3><span class="pipe">|</span><span class="kick">Daily Operations</span></div>
-        <div class="cellgrid reveal">
-          <div class="cell">
+        <div class="feature-row reveal">
+          <div class="fcell">
             <div class="kicker">Requests</div>
-            <div class="cell-title">Work Orders &amp; Service Requests</div>
-            <div class="cell-desc">Tenant requests submitted through the tenant portal, acknowledged and triaged on a defined standard, assigned to engineering or a vendor, and closed with the tenant notified &mdash; with the full history retained against the suite</div>
-            <div class="pills"><span class="pill">Portal Submission</span><span class="pill">Acknowledgement Standard</span><span class="pill">Assignment &amp; Dispatch</span><span class="pill">Closure Confirmation</span><span class="pill">Request History</span></div>
+            <div class="f-title">Work Orders &amp; Service Requests</div>
+            <div class="f-desc">Submitted through the tenant portal, acknowledged and triaged on a defined standard, assigned to engineering or a vendor, and closed with the tenant notified &mdash; full history retained against the suite.</div>
           </div>
+          <div class="fcell">
+            <div class="kicker">Retention</div>
+            <div class="f-title">Tenant Relations &amp; Retention</div>
+            <div class="f-desc">Regular contact with each tenant independent of a service issue, expansion and contraction intentions tracked well ahead of expiration, and satisfaction treated as the leading indicator of renewal probability.</div>
+          </div>
+        </div>
+        <div class="cellgrid compact no-num has-feature reveal">
           <div class="cell">
             <div class="kicker">Access</div>
-            <div class="cell-title">Access Control &amp; Building Security</div>
-            <div class="cell-desc">Card credentials issued, modified, and revoked on tenant instruction with an auditable record; after-hours access, visitor procedures, and patrol coverage administered against building rules and lease terms</div>
-            <div class="pills"><span class="pill">Credential Administration</span><span class="pill">Audit Trail</span><span class="pill">After-Hours Access</span><span class="pill">Visitor Procedures</span><span class="pill">Patrol Coordination</span></div>
+            <div class="cell-title">Access Control &amp; Security</div>
+            <div class="cell-desc">Credentials issued, modified and revoked on tenant instruction with an auditable record. After-hours access, visitor procedures and patrol coverage administered against building rules.</div>
+            <div class="pills"><span class="pill">Credential Administration</span><span class="pill">Audit Trail</span><span class="pill">Patrol Coordination</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Amenities</div>
-            <div class="cell-title">Conference Center &amp; Amenity Management</div>
-            <div class="cell-desc">The tenant conference center, bike room, and shower and locker facilities scheduled, cleaned, stocked, and maintained &mdash; presented to prospective tenants as a working amenity rather than a photograph</div>
-            <div class="pills"><span class="pill">Conference Scheduling</span><span class="pill">Bike Room</span><span class="pill">Showers &amp; Lockers</span><span class="pill">Amenity Standard</span><span class="pill">Tour Readiness</span></div>
+            <div class="cell-title">Conference Center &amp; Amenities</div>
+            <div class="cell-desc">The conference center, bike room and shower facilities scheduled, cleaned, stocked and maintained &mdash; presented to prospective tenants as a working amenity rather than a photograph.</div>
+            <div class="pills"><span class="pill">Conference Scheduling</span><span class="pill">Amenity Standard</span><span class="pill">Tour Readiness</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Comfort</div>
-            <div class="cell-title">HVAC Comfort &amp; After-Hours Requests</div>
-            <div class="cell-desc">Zone comfort complaints investigated at the system rather than the thermostat, and after-hours conditioning requests processed through the building automation system and billed against lease terms</div>
-            <div class="pills"><span class="pill">Zone Diagnosis</span><span class="pill">Setpoint Management</span><span class="pill">After-Hours Requests</span><span class="pill">Billing Accuracy</span></div>
+            <div class="cell-title">HVAC Comfort &amp; After-Hours</div>
+            <div class="cell-desc">Zone complaints investigated at the system rather than the thermostat. After-hours requests processed through the automation system and billed against lease terms.</div>
+            <div class="pills"><span class="pill">Zone Diagnosis</span><span class="pill">Billing Accuracy</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Moves</div>
-            <div class="cell-title">Move Coordination &amp; Build-Out Support</div>
-            <div class="cell-desc">Tenant moves, deliveries, and contractor access coordinated around building operations &mdash; freight scheduling, protection, after-hours windows, and insurance verification &mdash; so occupancy events do not disrupt the building</div>
-            <div class="pills"><span class="pill">Freight Scheduling</span><span class="pill">Contractor Access</span><span class="pill">Building Protection</span><span class="pill">Insurance Verification</span></div>
+            <div class="cell-title">Moves &amp; Build-Out Support</div>
+            <div class="cell-desc">Freight scheduling, contractor access, building protection and insurance verification &mdash; so occupancy events do not disrupt the building.</div>
+            <div class="pills"><span class="pill">Freight Scheduling</span><span class="pill">Contractor Access</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Housekeeping</div>
-            <div class="cell-title">Janitorial &amp; Common Area Standard</div>
-            <div class="cell-desc">Janitorial scope, day porter coverage, window washing, and waste and recycling managed to a written standard and inspected, with scope scaled as the building absorbs vacancy</div>
-            <div class="pills"><span class="pill">Written Scope</span><span class="pill">Day Porter</span><span class="pill">Inspection Program</span><span class="pill">Waste &amp; Recycling</span><span class="pill">Occupancy Scaling</span></div>
+            <div class="cell-title">Janitorial &amp; Common Areas</div>
+            <div class="cell-desc">Scope, day porter coverage, window washing and waste managed to a written standard and inspected, scaled as the building absorbs vacancy.</div>
+            <div class="pills"><span class="pill">Written Scope</span><span class="pill">Inspection Program</span><span class="pill">Occupancy Scaling</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Communication</div>
             <div class="cell-title">Tenant Communication</div>
-            <div class="cell-desc">Scheduled notices for maintenance, testing, and construction activity; a single point of contact for the roster; and proactive notification ahead of any work affecting occupancy or building access</div>
-            <div class="pills"><span class="pill">Advance Notices</span><span class="pill">Single Point of Contact</span><span class="pill">Testing Notification</span><span class="pill">Construction Advisories</span></div>
-          </div>
-          <div class="cell">
-            <div class="kicker">Retention</div>
-            <div class="cell-title">Tenant Relations &amp; Retention</div>
-            <div class="cell-desc">Regular contact with each tenant independent of a service issue, expansion and contraction intentions tracked well ahead of expiration, and satisfaction treated as the leading indicator of renewal probability</div>
-            <div class="pills"><span class="pill">Scheduled Check-Ins</span><span class="pill">Expansion Tracking</span><span class="pill">Renewal Intelligence</span><span class="pill">Satisfaction Review</span></div>
+            <div class="cell-desc">Scheduled notices for maintenance, testing and construction activity, with a single point of contact for the roster.</div>
+            <div class="pills"><span class="pill">Advance Notices</span><span class="pill">Single Point of Contact</span></div>
           </div>
         </div>
         <div class="highlight reveal">
@@ -1127,8 +1344,8 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
 
         <div class="block reveal" style="margin-top:60px;">
           <div class="sec-head"><h3>Plaza-Level Retail Operations</h3><span class="pipe">|</span><span class="kick">Mixed-Use Coordination</span></div>
-          <p class="lead">Ground-floor retail operates on different hours, different service needs, and different lease economics than the office floors above it. AGM manages the interface deliberately: retail hours of operation and access, delivery and waste routing, shared-system responsibility, percentage rent and sales reporting where leases require it, and a retail presence that supports rather than competes with the office tenant experience.</p>
-          <ul class="mp-list reveal">
+          <p class="lead">Ground-floor retail runs on different hours, service needs and lease economics than the office floors above it. AGM manages that interface deliberately.</p>
+          <ul class="mp-list two-col reveal">
             <li><strong>Operating Interface:</strong> Hours of operation, plaza and lobby access, delivery routing, waste and grease handling, and venting or exhaust obligations administered against the retail lease and building rules.</li>
             <li><strong>Shared Systems:</strong> Clear allocation of responsibility for shared mechanical, plumbing, electrical, and life-safety systems serving both retail and office use, so repair responsibility is settled before an event rather than after it.</li>
             <li><strong>Lease Economics:</strong> Triple-net retail administration alongside full-service office leases &mdash; separate recovery mechanics, separate reconciliation, and sales reporting and percentage rent collection where the lease provides for it.</li>
@@ -1146,7 +1363,7 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
 
       <!-- ============ SLIDE 8 · OFFICE & RETAIL LEASING SUPPORT ============ -->
       <div class="page" id="page-leasing">
-        <p class="lead reveal">Leasing is executed by the brokerage team Ownership appoints. AGM&rsquo;s role is to make that team&rsquo;s job easier and their deals close faster &mdash; a building that shows well, space that can be toured on demand, accurate and current information in every prospect&rsquo;s hands, and build-outs delivered on the schedule the lease commits to. On an asset with substantial vacancy to absorb, that support is a primary management deliverable, not an ancillary one.</p>
+        <p class="lead reveal">Leasing is executed by the brokerage team Ownership appoints. AGM&rsquo;s role is to make their deals close faster &mdash; a building that shows well, accurate information in every prospect&rsquo;s hands, and build-outs delivered on the schedule the lease commits to. With substantial vacancy to absorb, that is a primary management deliverable, not an ancillary one.</p>
 
         <div class="sec-head reveal"><h3>Leasing Support Cycle</h3><span class="pipe">|</span><span class="kick">Prospect to Rent Commencement</span></div>
         <div class="funnel-rail reveal">
@@ -1157,15 +1374,15 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
         <div class="funnel-grid reveal">
           <div class="funnel-col">
             <div class="fn-desc">Vacant suites cleaned, lit, conditioned, and maintained in tour condition; common areas and amenities presented to a Class A standard on every tour</div>
-            <div class="pills"><span class="pill">Vacant Suite Standard</span><span class="pill">Lighting &amp; Conditioning</span><span class="pill">Amenity Presentation</span><span class="pill">Signage &amp; Wayfinding</span><span class="pill">Broker Access</span></div>
+            <div class="pills"><span class="pill">Vacant Suite Standard</span><span class="pill">Amenity Presentation</span><span class="pill">Broker Access</span></div>
           </div>
           <div class="funnel-col">
             <div class="fn-desc">Accurate stacking plans, availability, and operating expense information supplied to the brokerage team, with prospect diligence questions answered from the operating record</div>
-            <div class="pills"><span class="pill">Stacking Plan Currency</span><span class="pill">Availability Reporting</span><span class="pill">OpEx &amp; Base Year Data</span><span class="pill">Prospect Diligence Support</span><span class="pill">Lease Abstraction</span></div>
+            <div class="pills"><span class="pill">Stacking Plan Currency</span><span class="pill">OpEx &amp; Base Year Data</span><span class="pill">Prospect Diligence</span></div>
           </div>
           <div class="funnel-col">
             <div class="fn-desc">Tenant improvements bid, contracted, and managed to the delivery date the lease commits to, with allowance draws documented and rent commencement confirmed</div>
-            <div class="pills"><span class="pill">TI Bid &amp; Award</span><span class="pill">Schedule Management</span><span class="pill">Allowance Draws</span><span class="pill">Punch &amp; Closeout</span><span class="pill">Rent Commencement</span></div>
+            <div class="pills"><span class="pill">TI Bid &amp; Award</span><span class="pill">Allowance Draws</span><span class="pill">Rent Commencement</span></div>
           </div>
         </div>
 
@@ -1175,37 +1392,37 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
             <div class="kicker">Segment</div>
             <div class="cell-title">Small-Tenant Office Demand</div>
             <div class="cell-desc">The Seattle CBD leasing market is dominated by requirements under 10,000 square feet, and the building&rsquo;s floor plate and existing roster are already matched to that segment. AGM supports a strategy built for that demand rather than for full-floor users alone</div>
-            <div class="pills"><span class="pill">Sub-10,000 SF Requirements</span><span class="pill">Divisible Floor Plates</span><span class="pill">Multi-Tenant Corridors</span><span class="pill">Existing Roster Fit</span></div>
+            <div class="pills"><span class="pill">Sub-10,000 SF Requirements</span><span class="pill">Divisible Floor Plates</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Product</div>
             <div class="cell-title">Spec Suite Program</div>
-            <div class="cell-desc">Pre-built suites delivered in the sizes the market is actually transacting, reducing time from tour to occupancy and removing the build-out delay that loses smaller tenants to move-in-ready alternatives</div>
-            <div class="pills"><span class="pill">Pre-Built Inventory</span><span class="pill">Standard Finish Package</span><span class="pill">Cost per Suite</span><span class="pill">Time to Occupancy</span></div>
+            <div class="cell-desc">Pre-built suites in the sizes the market is actually transacting &mdash; removing the build-out delay that loses smaller tenants to move-in-ready alternatives.</div>
+            <div class="pills"><span class="pill">Pre-Built Inventory</span><span class="pill">Time to Occupancy</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Retail</div>
             <div class="cell-title">Plaza-Level Retail Merchandising</div>
             <div class="cell-desc">Vacant retail positioned by analyzing what the surrounding blocks and the building&rsquo;s own daytime population are underserved by, and developing a target operator profile from space specifications, foot traffic, and Ownership objectives</div>
-            <div class="pills"><span class="pill">Neighborhood Gap Analysis</span><span class="pill">Operator Profile</span><span class="pill">Foot Traffic</span><span class="pill">Ownership Objectives</span></div>
+            <div class="pills"><span class="pill">Neighborhood Gap Analysis</span><span class="pill">Operator Profile</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Retention</div>
             <div class="cell-title">Renewal &amp; Rollover Management</div>
             <div class="cell-desc">A rollover calendar maintained tenant by tenant, with renewal outreach beginning well ahead of expiration and prioritized by the tenants rolling soonest &mdash; retention of in-place income being materially cheaper than replacing it</div>
-            <div class="pills"><span class="pill">Rollover Calendar</span><span class="pill">Early Outreach</span><span class="pill">Option Tracking</span><span class="pill">Downtime Avoidance</span></div>
+            <div class="pills"><span class="pill">Rollover Calendar</span><span class="pill">Early Outreach</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Digital</div>
             <div class="cell-title">Property Website &amp; Online Presence</div>
             <div class="cell-desc">A branded property website carrying availability, floor plans, amenities, and building information, serving as the central destination for brokerage traffic and the access point for the tenant and owner portals</div>
-            <div class="pills"><span class="pill">Branded Website</span><span class="pill">Availability &amp; Floor Plans</span><span class="pill">Amenity Presentation</span><span class="pill">Portal Access Point</span><span class="pill">Google Business Profile</span></div>
+            <div class="pills"><span class="pill">Branded Website</span><span class="pill">Availability &amp; Floor Plans</span><span class="pill">Google Business Profile</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Reporting</div>
             <div class="cell-title">Leasing Activity Reporting</div>
-            <div class="cell-desc">Tour activity, proposals outstanding, leases in negotiation, absorption against plan, and leasing cost per square foot reported to Ownership monthly alongside the financial package</div>
-            <div class="pills"><span class="pill">Tour &amp; Proposal Activity</span><span class="pill">Absorption vs. Plan</span><span class="pill">Leasing Cost per SF</span><span class="pill">Pipeline Reporting</span></div>
+            <div class="cell-desc">Tours, proposals, absorption against plan and leasing cost per square foot, reported monthly alongside the financial package.</div>
+            <div class="pills"><span class="pill">Absorption vs. Plan</span><span class="pill">Leasing Cost per SF</span></div>
           </div>
         </div>
         <div class="highlight reveal">
@@ -1464,56 +1681,62 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
 
       <!-- ============ SLIDE 12 · MANAGEMENT TRANSITION ============ -->
       <div class="page" id="page-transition">
-        <p class="lead reveal">Management transitions fail in predictable ways: a preventive maintenance task lapses, a service contract auto-renews on unfavorable terms, a compliance certificate expires unnoticed, a tenant receivable goes unreconciled, or a vendor arrives on site with no one to direct them. AGM treats transition as a scheduled program with named deliverables at fixed intervals &mdash; and on this asset, much of the underlying work is already complete.</p>
+        <p class="lead reveal">Transitions fail in predictable ways: a maintenance interval lapses, a contract auto-renews on bad terms, a certificate expires unnoticed, a receivable goes unreconciled. AGM treats transition as a scheduled program with named deliverables &mdash; and on this asset much of the underlying work is already complete.</p>
 
         <div class="sec-head reveal"><h3>Transition Schedule</h3><span class="pipe">|</span><span class="kick">From Closing Forward</span></div>
         <div class="steps reveal">
           <div class="step">
+            <div class="st-num">00</div>
             <div class="st-when">Before Closing</div>
             <div>
               <div class="st-title">Preparation Against the Diligence Record</div>
-              <div class="st-desc">Lease abstracts, the vendor and contract register, the equipment record, and the recurring engineering program are already assembled from the diligence work delivered to Ownership. Banking, accounting setup, insurance placement, tenant notice packages, and the emergency response plan are prepared ahead of the closing date rather than after it.</div>
+              <div class="st-desc">Lease abstracts, the vendor register, the equipment record and the recurring engineering program are already assembled. Banking, accounting setup, insurance, tenant notices and the emergency response plan are prepared ahead of the closing date rather than after it.</div>
             </div>
           </div>
           <div class="step">
+            <div class="st-num">01</div>
             <div class="st-when">Day 1</div>
             <div>
               <div class="st-title">Operational Takeover</div>
-              <div class="st-desc">Vendor introductions and site walk-throughs, tenant notices issued with the new points of contact, utility and access control transfers completed, banking and accounts receivable live, keys and credentials assumed, and 24/7 emergency response and the on-call engineering path in place at close.</div>
+              <div class="st-desc">Vendor introductions, tenant notices with new points of contact, utility and access transfers, banking and receivables live, and 24/7 emergency response in place at close.</div>
             </div>
           </div>
           <div class="step">
+            <div class="st-num">02</div>
             <div class="st-when">First 30 Days</div>
             <div>
               <div class="st-title">Contracts, Leases &amp; Receivables</div>
-              <div class="st-desc">Every service agreement reviewed against the register, cancellation and notice windows calendared so nothing auto-renews into Ownership&rsquo;s tenure, rebids launched where pricing is off market, all lease files abstracted into the live system with recovery terms captured, tenant certificates of insurance collected, and opening receivable balances reconciled.</div>
+              <div class="st-desc">Every service agreement reviewed against the register and cancellation windows calendared so nothing auto-renews into Ownership&rsquo;s tenure. Lease files abstracted with recovery terms captured; opening balances reconciled.</div>
             </div>
           </div>
           <div class="step">
+            <div class="st-num">03</div>
             <div class="st-when">First 60 Days</div>
             <div>
-              <div class="st-title">Systems, Compliance &amp; Preventive Maintenance</div>
-              <div class="st-desc">The preventive maintenance schedule stood up from the equipment record with next-due dates carried forward, every major asset verified and photographed on site, the compliance calendar confirmed certificate by certificate, the Clean Buildings compliance path established with a cost and a deadline, and any open citation or permit item closed out.</div>
+              <div class="st-title">Systems, Compliance &amp; Maintenance</div>
+              <div class="st-desc">Preventive maintenance stood up from the equipment record with next-due dates carried forward, every major asset verified on site, the compliance calendar confirmed certificate by certificate, and the Clean Buildings path established with a cost and a deadline.</div>
             </div>
           </div>
           <div class="step">
+            <div class="st-num">04</div>
             <div class="st-when">First 90 Days</div>
             <div>
               <div class="st-title">Leasing and Capital in Motion</div>
-              <div class="st-desc">Brokerage team supported with current availability, stacking plans, and operating expense data; vacant suites brought to tour standard; the spec suite strategy set for the sizes the market is transacting; renewal outreach underway with the tenants rolling soonest; and the first-pass five-year capital plan and reserve recommendation delivered.</div>
+              <div class="st-desc">Brokerage team supported with current availability and operating expense data, vacant suites brought to tour standard, renewal outreach underway, and the first-pass five-year capital plan delivered.</div>
             </div>
           </div>
           <div class="step">
-            <div class="st-when">Monthly Thereafter</div>
+            <div class="st-num">05</div>
+            <div class="st-when">Monthly</div>
             <div>
               <div class="st-title">Owner Reporting on a Fixed Calendar</div>
-              <div class="st-desc">Financial package, operations summary, compliance status, capital progress, and leasing activity delivered on a fixed monthly calendar with every variance explained, consolidated with the other Seattle assets AGM manages for Ownership.</div>
+              <div class="st-desc">Financial package, operations summary, compliance status, capital progress and leasing activity, with every variance explained and consolidated with the other Seattle assets.</div>
             </div>
           </div>
         </div>
 
         <div class="sec-head reveal" style="margin-top:56px;"><h3>What Reduces the Risk Here</h3><span class="pipe">|</span><span class="kick">Position at Closing</span></div>
-        <div class="cellgrid reveal">
+        <div class="cellgrid reveal no-num">
           <div class="cell">
             <div class="kicker">Head Start</div>
             <div class="cell-title">Diligence Already Performed</div>
@@ -1529,13 +1752,13 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
           <div class="cell">
             <div class="kicker">Program</div>
             <div class="cell-title">Maintenance Program Carried Forward</div>
-            <div class="cell-desc">The incumbent recurring task program is adopted task for task with its frequencies and next-due dates intact, then extended where coverage gaps exist &mdash; so no interval resets and no compliance test falls into a gap at changeover</div>
+            <div class="cell-desc">The incumbent task program is adopted task for task with frequencies and next-due dates intact &mdash; so no interval resets and no test falls into a gap at changeover.</div>
             <div class="pills"><span class="pill">Task-for-Task Migration</span><span class="pill">Next-Due Continuity</span><span class="pill">Gap Extension</span><span class="pill">No Lapse</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Local</div>
             <div class="cell-title">Local Team and Vendor Market</div>
-            <div class="cell-desc">Puget Sound property and asset management headquartered in Bellevue, with a current read on downtown vendor pricing, fit-out cost, and leasing conditions &mdash; principals available on site rather than an account team in another market</div>
+            <div class="cell-desc">Headquartered in Bellevue, with a current read on downtown vendor pricing and fit-out cost. Principals on site rather than an account team in another market.</div>
             <div class="pills"><span class="pill">Bellevue Headquarters</span><span class="pill">Local Vendor Market</span><span class="pill">On-Site Principals</span><span class="pill">Current Cost Data</span></div>
           </div>
         </div>
