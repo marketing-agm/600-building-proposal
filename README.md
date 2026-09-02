@@ -89,6 +89,12 @@ npx wrangler deploy
 There is no "build output directory" setting for a Worker — the output directory is declared as
 `assets.directory` in `wrangler.jsonc`. Leave the build command empty; there is no build step.
 
+Either field can carry `npx wrangler deploy` and the deploy will succeed; what matters is that the
+*other* field is genuinely empty. A stray value there is executed as a shell command after the
+deploy has already completed — e.g. a leftover `/` produces `/bin/sh: 1: /: Permission denied` and
+marks the build failed even though the Worker went live. Check the log for
+`Deployed <name> triggers` and a Version ID before believing a red build badge.
+
 ### `run_worker_first` is load-bearing
 `wrangler.jsonc` sets `assets.run_worker_first: true`. This is what makes the Worker see every
 request before Cloudflare's asset server answers it.
@@ -108,18 +114,51 @@ Cloudflare secret, never in the code or the client.
 This replaces the standard Zero Trust login screen with AGM's own branded page.
 
 ### One-time setup (required before the site will unlock)
+
+| Name | Value | Type |
+|------|-------|------|
+| `SITE_PASSWORD` | the shared password you give recipients | **Secret** |
+| `GATE_SECRET` | any long random string (40+ chars) — signs the session cookie | **Secret** |
+
+Generate the signing key with `openssl rand -hex 32`.
+
+**Via the CLI** (unambiguous, writes to the runtime store by definition):
 ```bash
-npx wrangler secret put SITE_PASSWORD    # the shared password you give recipients
-npx wrangler secret put GATE_SECRET      # any long random string, 40+ chars
+npx wrangler secret put SITE_PASSWORD
+npx wrangler secret put GATE_SECRET
+npx wrangler secret list          # confirms what is actually bound at runtime
 ```
 
-Or via the dashboard → **Workers & Pages → this Worker → Settings → Variables and Secrets**, both
-marked **Secret**, then redeploy:
+**Via the dashboard** — read the two traps below first. They cost an hour on the first deploy.
 
-| Name | Value | Mark as |
-|------|-------|---------|
-| `SITE_PASSWORD` | the shared password you give recipients | **Secret** |
-| `GATE_SECRET` | any long random string (40+ chars) — used to sign the session cookie | **Secret** |
+#### Trap 1 — there are TWO "Variables and secrets" sections on one page
+Worker → **Settings** has a section list in the right-hand sidebar:
+
+```
+Variables and secrets   ← RUNTIME. Use this one. Your Worker reads these as env.X
+Observability
+Runtime
+Builds
+  └─ Variables and secrets   ← BUILD-TIME. Only the build command sees these.
+Trigger events
+General
+Danger zone
+```
+
+Both cards are labelled identically and look identical (Type dropdown, "Value encrypted",
+Rotate). The build-time one is nested inside the **Builds** section, among Git repository, Build
+configuration, Branch control, API token and Deploy Hooks. Secrets placed there never reach the
+running Worker, and the gate stays stuck on "Access is not configured yet". Use the sidebar to
+confirm which section you are in before typing.
+
+#### Trap 2 — Type must be Secret, not Text
+Plain **Text** variables set only in the dashboard are **wiped by `npx wrangler deploy`**, because
+wrangler treats `wrangler.jsonc` as the source of truth for `vars` and this config declares none.
+Since the build command *is* `npx wrangler deploy`, a Text variable survives until the next push
+and then silently breaks the gate. Encrypted **Secrets** are preserved across deploys.
+
+Saving a runtime secret creates a new Worker *version*. Check **Deployments** to confirm the newest
+version is the one taking traffic — a saved change is not necessarily a live one.
 
 - Until `SITE_PASSWORD` is set, the site fails closed (shows a "not configured yet" notice).
 - **Change the password** anytime by editing `SITE_PASSWORD` (existing links keep working; open
