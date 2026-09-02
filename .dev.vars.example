@@ -1,6 +1,8 @@
-# Local preview secrets for `npx wrangler pages dev .`
+# Local preview secrets for `npx wrangler dev`
 # Copy this file to `.dev.vars` (which is git-ignored) and fill in real values.
-# In production these are set in the Cloudflare Pages dashboard, NOT from this file.
+# In production these are Cloudflare secrets on the Worker, NOT from this file:
+#   npx wrangler secret put SITE_PASSWORD
+#   npx wrangler secret put GATE_SECRET
 
 SITE_PASSWORD="choose-a-shared-password"
 GATE_SECRET="paste-any-long-random-string-here-40-plus-characters"

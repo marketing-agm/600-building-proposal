@@ -1,0 +1,34 @@
+{
+  // ==========================================================================
+  // AGM PROPOSAL — PLAZA 600  ·  Cloudflare Worker with static assets
+  // --------------------------------------------------------------------------
+  // The static proposal lives in ./public and is served through the Worker in
+  // ./src/index.js, which enforces the password gate.
+  //
+  // "run_worker_first": true is LOAD-BEARING. Without it Cloudflare's asset
+  // server answers requests for ./public files directly and the Worker never
+  // runs — which would publish the proposal with no password screen at all.
+  // Do not remove it.
+  // ==========================================================================
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "600-building-proposal",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-02",
+
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+
+  "observability": {
+    "enabled": true
+  }
+
+  // Secrets are NOT set here — they are encrypted Cloudflare secrets.
+  //   npx wrangler secret put SITE_PASSWORD
+  //   npx wrangler secret put GATE_SECRET
+  // Optional analytics (plain vars are fine):
+  //   POSTHOG_KEY, POSTHOG_HOST
+  // For local development put all of them in .dev.vars (git-ignored).
+}

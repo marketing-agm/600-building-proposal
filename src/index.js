@@ -1,18 +1,23 @@
 /* ============================================================================
- * AGM PROPOSAL — PASSWORD GATE  (Cloudflare Pages Functions middleware)
+ * AGM PROPOSAL — PASSWORD GATE  (Cloudflare Worker + static assets)
  * ----------------------------------------------------------------------------
- * Runs in front of every request to this Pages project. Until a visitor submits
- * the correct password, they only ever receive the custom cover/login page
- * below — the real proposal (index.html) is never sent to the browser. The
+ * Runs in front of every request to this Worker. Until a visitor submits the
+ * correct password, they only ever receive the custom cover/login page below —
+ * the real proposal (public/index.html) is never sent to the browser. The
  * password itself lives ONLY as an encrypted Cloudflare secret, never in this
  * code or in the client.
  *
- * ── ONE-TIME SETUP (Cloudflare dashboard) ──────────────────────────────────
- *   Workers & Pages → this project → Settings → Variables and Secrets →
- *   add, for BOTH Production and Preview:
- *     SITE_PASSWORD  = the shared password you give recipients   (mark Secret)
- *     GATE_SECRET    = any long random string, e.g. 40+ chars    (mark Secret)
- *   Then redeploy (or push a commit). That's it.
+ * The static site is bound as env.ASSETS (see wrangler.jsonc). This Worker is
+ * configured with `run_worker_first: true`, so it sees every request before
+ * the asset server does. If that setting is ever removed, Cloudflare serves
+ * public/index.html directly and this gate is bypassed entirely.
+ *
+ * ── ONE-TIME SETUP ─────────────────────────────────────────────────────────
+ *   npx wrangler secret put SITE_PASSWORD    # password given to recipients
+ *   npx wrangler secret put GATE_SECRET      # any long random string, 40+ chars
+ *
+ *   Or: Cloudflare dashboard → Workers & Pages → this Worker → Settings →
+ *   Variables and Secrets. Add both as Secret, then redeploy.
  *
  *   • Change the password anytime by editing SITE_PASSWORD (old links keep
  *     working; existing sessions stay valid because GATE_SECRET is unchanged).
@@ -20,10 +25,19 @@
  *
  * ── LOCAL PREVIEW ───────────────────────────────────────────────────────────
  *   Put SITE_PASSWORD / GATE_SECRET in a `.dev.vars` file (git-ignored) and run
- *   `npx wrangler pages dev .`  — see .dev.vars.example.
+ *   `npx wrangler dev`  — see .dev.vars.example.
  * ========================================================================== */
 
 const COOKIE = "agm_gate";
+
+/* Paths served WITHOUT authentication. Deliberately an explicit allowlist and
+ * not a prefix like "/assets/": the cover page needs the AGM wordmark before
+ * sign-in, but everything else under /assets/ — including the Plaza 600
+ * building photography — stays behind the password. */
+const PUBLIC_PATHS = new Set([
+  "/assets/agm-logo-black.svg",
+  "/assets/agm-logo-white.svg"
+]);
 const TOKEN_VERSION = "v1";                 // bump to invalidate every session
 const MAX_AGE = 60 * 60 * 24 * 7;           // session length: 7 days
 const enc = new TextEncoder();
@@ -68,6 +82,19 @@ function htmlHeaders(extra) {
     "X-Content-Type-Options": "nosniff",
     "Referrer-Policy": "no-referrer"
   }, extra || {});
+}
+
+/* Apply the security headers to a static-asset response. public/_headers is
+ * also honoured by the asset server, but the Worker sits in front of every
+ * response so setting them here makes the guarantee unconditional. Caching
+ * headers are left as the asset server set them. */
+function withSecurityHeaders(res) {
+  const headers = new Headers(res.headers);
+  headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
+  headers.set("X-Content-Type-Options", "nosniff");
+  headers.set("Referrer-Policy", "no-referrer");
+  headers.set("Content-Security-Policy", "frame-ancestors *");
+  return new Response(res.body, { status: res.status, statusText: res.statusText, headers });
 }
 
 /* ── PostHog analytics ─────────────────────────────────────────────────────
@@ -122,19 +149,28 @@ async function withProposalAnalytics(res, env) {
   return new Response(body, { status: res.status, statusText: res.statusText, headers });
 }
 
-export async function onRequest(context) {
-  const { request, env, next } = context;
+export default {
+  async fetch(request, env, ctx) {
+    return handle(request, env);
+  }
+};
+
+async function handle(request, env) {
   const url = new URL(request.url);
 
-  // Public assets (logos, favicons, etc.) are served without authentication,
-  // so the cover/login page can display them before sign-in.
-  if (url.pathname.startsWith("/assets/")) return next();
+  // Serve the static site from the assets binding. In Pages Functions this was
+  // context.next(); under Workers it is an explicit fetch against the binding.
+  const asset = () => env.ASSETS.fetch(request);
+
+  // The AGM wordmark is served without authentication so the cover/login page
+  // can display it before sign-in. Nothing else is public.
+  if (PUBLIC_PATHS.has(url.pathname)) return withSecurityHeaders(await asset());
 
   // Fail closed if the operator hasn't configured a password yet.
   if (!env.SITE_PASSWORD) {
     return new Response(
       coverHTML({
-        error: "Access is not configured yet. Set the SITE_PASSWORD secret in the Cloudflare Pages project settings, then redeploy.",
+        error: "Access is not configured yet. Set the SITE_PASSWORD secret on this Cloudflare Worker, then redeploy.",
         analytics: posthogSnippet(env.POSTHOG_KEY, posthogHost(env), "gate")
       }),
       { status: 503, headers: htmlHeaders() }
@@ -168,7 +204,7 @@ export async function onRequest(context) {
   // switched on if a PostHog key is configured.
   const token = readCookie(request.headers.get("Cookie"), COOKIE);
   if (token && safeEqual(token, await expectedToken(env))) {
-    return withProposalAnalytics(await next(), env);
+    return withSecurityHeaders(await withProposalAnalytics(await asset(), env));
   }
 
   // Otherwise, show the cover/login screen for any path.
