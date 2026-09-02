@@ -23,7 +23,16 @@
 
   "observability": {
     "enabled": true
-  }
+  },
+
+  // The *.workers.dev URL. Explicit so the deployment does not depend on a
+  // Cloudflare default. Set false once a custom domain is attached.
+  "workers_dev": true,
+
+  // Per-version Preview URLs are OFF. The gate applies to them, but a
+  // confidential proposal should not accumulate additional live endpoints.
+  // Set true if you want a reviewable URL per deployed version.
+  "preview_urls": false
 
   // Secrets are NOT set here — they are encrypted Cloudflare secrets.
   //   npx wrangler secret put SITE_PASSWORD
