@@ -1,0 +1,13 @@
+# Local preview secrets for `npx wrangler dev`
+# Copy this file to `.dev.vars` (which is git-ignored) and fill in real values.
+# In production these are Cloudflare secrets on the Worker, NOT from this file:
+#   npx wrangler secret put SITE_PASSWORD
+#   npx wrangler secret put GATE_SECRET
+
+SITE_PASSWORD="choose-a-shared-password"
+GATE_SECRET="paste-any-long-random-string-here-40-plus-characters"
+
+# Optional — PostHog analytics (covers both the cover page and the proposal).
+# Leave unset to keep analytics off.
+POSTHOG_KEY="phc_your_project_api_key"
+POSTHOG_HOST="https://us.i.posthog.com"   # or https://eu.i.posthog.com
