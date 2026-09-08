@@ -95,6 +95,39 @@ deploy has already completed — e.g. a leftover `/` produces `/bin/sh: 1: /: Pe
 marks the build failed even though the Worker went live. Check the log for
 `Deployed <name> triggers` and a Version ID before believing a red build badge.
 
+### Previewing a branch before it reaches production
+Pages gives every branch an automatic preview URL. Workers does not; it uses
+**versions** instead, and the distinction matters:
+
+| | What it does |
+|---|---|
+| `npx wrangler versions upload` | Uploads a new **version** and returns its own preview URL. Production traffic is untouched. This is the branch-preview equivalent. |
+| `npx wrangler deploy` | Uploads a version **and** points production traffic at it. |
+
+To preview any branch locally:
+```bash
+git checkout <branch>
+npx wrangler versions upload      # prints a preview URL
+```
+
+`preview_urls` must be `true` in `wrangler.jsonc` for those URLs to be issued.
+The gate applies to them exactly as it does to production, because
+`run_worker_first` makes the Worker handle every request on every hostname.
+
+#### Build settings for automatic branch previews
+Workers Builds runs a different command depending on the branch. Both must be
+set correctly, or non-production branches deploy to production:
+
+| Field | Value | Runs on |
+|-------|-------|---------|
+| Build command | *(empty)* | every build |
+| Deploy command | `npx wrangler deploy` | the production branch only |
+| Version command | `npx wrangler versions upload` | non-production branches |
+
+**Do not put `npx wrangler deploy` in the Build command.** The build command runs
+on every branch, so a deploy there publishes any pushed branch straight to
+production and the version command never gets the chance to make a preview.
+
 ### `run_worker_first` is load-bearing
 `wrangler.jsonc` sets `assets.run_worker_first: true`. This is what makes the Worker see every
 request before Cloudflare's asset server answers it.
