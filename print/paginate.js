@@ -50,10 +50,14 @@
   }
 
   function railHTML(p, i, continued) {
+    /* The wordmark is a sibling of both panels, not a child of the navy one, so
+       it spans the full rail and carries through the blue block below — as on
+       the site, where .rail-watermark is a child of .rail-stick. Nested inside
+       the navy panel it would be clipped at the colour break by that panel's
+       own overflow:hidden. It is emitted last so it paints over both grounds. */
     return (
       '<div class="p-rail">' +
         '<div class="p-rail-navy">' +
-          '<div class="p-watermark" aria-hidden="true"><span>AGM</span></div>' +
           iconSVG(p.nav) +
           '<p class="p-eyebrow">' + p.eyebrow + "</p>" +
           '<h2 class="p-title">' + p.t1 + '<span class="hl">' + p.t2 + "</span></h2>" +
@@ -69,6 +73,7 @@
             '<div class="p-num">' + pad(i) + " / " + pad(TOTAL) + "</div>" +
           "</div>" +
         "</div>" +
+        '<div class="p-watermark" aria-hidden="true"><span>AGM</span></div>' +
       "</div>"
     );
   }

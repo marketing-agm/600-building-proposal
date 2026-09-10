@@ -74,9 +74,11 @@ html, body { margin:0; padding:0; background:#fff; }
   position:relative;
   overflow:hidden;
 }
-/* sideways AGM wordmark, as on screen */
+/* Sideways AGM wordmark, as on screen: laid over the full rail so it carries
+   through the colour break rather than stopping at it. Clipped by .p-rail, so it
+   bleeds off the rail edges and never reaches the content column. */
 .p-watermark{
-  position:absolute; inset:0; z-index:0; overflow:hidden; pointer-events:none;
+  position:absolute; inset:0; z-index:0; pointer-events:none;
   display:flex; align-items:center; justify-content:flex-start;
 }
 .p-watermark span{
@@ -85,10 +87,9 @@ html, body { margin:0; padding:0; background:#fff; }
   font-size:3.4in; line-height:.82; letter-spacing:.02em;
   color:rgba(255,255,255,0.10); margin-left:-.18em;
 }
-/* The watermark must stay out of flow: it is 3.4in of type and would set the
-   panel height if a blanket position:relative reached it. */
-.p-rail-navy > *:not(.p-watermark),
-.p-rail-blue  > *:not(.p-watermark) { position:relative; z-index:1; }
+/* Both panels are positioned but form no stacking context, so their contents,
+   lifted to z-index 1, sit above the wordmark that paints over both grounds. */
+.p-rail-navy > *, .p-rail-blue > * { position:relative; z-index:1; }
 
 .p-eyebrow{
   font-size:8pt; font-weight:600; letter-spacing:.2em; text-transform:uppercase;
