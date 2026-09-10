@@ -1,0 +1,405 @@
+/* ============================================================================
+ * PLAZA 600 — PRINT EDITION
+ * ----------------------------------------------------------------------------
+ * Landscape Letter (11in x 8.5in), one .sheet per PDF page. Layered on top of
+ * the site's own stylesheet so type, colour and components are identical to the
+ * digital proposal; this file only supplies page geometry, the per-page rail,
+ * continuation marking and folios.
+ *
+ * Pagination is performed by print/paginate.js against measured heights, not by
+ * the browser's own page breaking, so a section that overruns is cut between
+ * whole units and resumes on the next sheet.
+ * ========================================================================== */
+
+@page { size: 11in 8.5in; margin: 0; }
+
+html, body { margin:0; padding:0; background:#fff; }
+
+/* forced light theme: the print edition is one fixed look */
+:root { color-scheme: light; }
+
+/* everything the site fades in on scroll is simply visible here */
+.reveal, .cellgrid.reveal > .cell { opacity:1 !important; transform:none !important; }
+*, *::before, *::after { transition:none !important; animation:none !important; }
+
+/* ---------------------------------------------------------------- sheet ---- */
+:root{
+  --sheet-w: 11in;
+  --sheet-h: 8.5in;
+  --rail-print-w: 2.95in;
+  --pad-x: 0.46in;
+  --pad-y: 0.42in;
+}
+
+#source { display:none; }
+
+.sheet{
+  width:var(--sheet-w);
+  height:var(--sheet-h);
+  display:grid;
+  grid-template-columns:var(--rail-print-w) 1fr;
+  overflow:hidden;
+  position:relative;
+  background:var(--bg);
+  break-after:page;
+  page-break-after:always;
+}
+.sheet:last-child{ break-after:auto; page-break-after:auto; }
+
+/* ----------------------------------------------------------------- rail ---- */
+.p-rail{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  color:var(--on-navy);
+  overflow:hidden;
+}
+.p-rail-navy{
+  position:relative;
+  flex:1 1 auto;
+  min-height:56%;
+  background:linear-gradient(165deg, var(--navy-soft) 0%, var(--navy) 62%);
+  padding:0.5in 0.36in 0.3in;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.p-rail-blue{
+  flex:0 0 auto;
+  min-height:44%;
+  background:var(--rail-blue);
+  padding:0.34in 0.36in 0.3in;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+  overflow:hidden;
+}
+/* sideways AGM wordmark, as on screen */
+.p-watermark{
+  position:absolute; inset:0; z-index:0; overflow:hidden; pointer-events:none;
+  display:flex; align-items:center; justify-content:flex-start;
+}
+.p-watermark span{
+  writing-mode:vertical-lr; text-orientation:mixed;
+  font-family:'AGM Didot', var(--serif); font-weight:400;
+  font-size:3.4in; line-height:.82; letter-spacing:.02em;
+  color:rgba(255,255,255,0.10); margin-left:-.18em;
+}
+/* The watermark must stay out of flow: it is 3.4in of type and would set the
+   panel height if a blanket position:relative reached it. */
+.p-rail-navy > *:not(.p-watermark),
+.p-rail-blue  > *:not(.p-watermark) { position:relative; z-index:1; }
+
+.p-eyebrow{
+  font-size:8pt; font-weight:600; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--accent-2); margin:0 0 0.16in;
+}
+.p-title{
+  font-family:var(--serif); font-weight:600; font-size:23pt; line-height:1.1;
+  letter-spacing:-.018em; color:var(--on-navy); margin:0; hyphens:none;
+}
+.p-title .hl{ color:var(--accent-2); display:block; }
+.p-mark{ margin-top:auto; padding-top:0.2in; }
+.p-mark img{ display:block; height:0.3in; width:auto; }
+
+.p-lead{
+  font-size:8.6pt; line-height:1.62; color:#fff; margin:0;
+}
+.p-continued{
+  font-size:8pt; font-weight:700; letter-spacing:.2em; text-transform:uppercase;
+  color:#fff; margin:0; display:flex; align-items:center; gap:0.1in;
+}
+.p-continued::before{
+  content:""; width:0.34in; height:1.5px; background:rgba(255,255,255,0.75); flex:0 0 auto;
+}
+.p-rail-foot{ margin-top:auto; padding-top:0.24in; }
+.p-label{
+  font-size:7.5pt; font-weight:600; letter-spacing:.18em; text-transform:uppercase;
+  color:rgba(255,255,255,0.95); line-height:1.4;
+}
+.p-ticker{ display:flex; gap:2px; margin-top:0.12in; }
+.p-ticker i{ flex:1; height:2.5px; border-radius:2px; background:rgba(255,255,255,0.30); }
+.p-ticker i.done{ background:rgba(255,255,255,0.62); }
+.p-ticker i.cur{ background:#fff; height:4px; margin-top:-0.75px; }
+.p-num{
+  font-size:8pt; font-weight:600; letter-spacing:.1em; color:#fff;
+  font-variant-numeric:tabular-nums; margin-top:0.11in;
+}
+
+/* -------------------------------------------------------------- content ---- */
+.p-body{
+  position:relative;
+  padding:var(--pad-y) var(--pad-x) 0.52in;
+  overflow:hidden;
+  min-width:0;
+}
+.p-flow > *:first-child{ margin-top:0 !important; }
+.p-flow .block{ margin-bottom:0.24in; }
+.p-flow .block:last-child{ margin-bottom:0; }
+
+/* folio */
+.p-folio{
+  position:absolute; left:var(--pad-x); right:var(--pad-x); bottom:0.26in;
+  display:flex; align-items:baseline; justify-content:space-between;
+  font-size:7.5pt; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink-55);
+  border-top:1px solid var(--line);
+  padding-top:0.1in;
+}
+.p-folio .p-conf{ font-weight:700; color:var(--accent-text); }
+.p-folio .p-page{ font-weight:600; font-variant-numeric:tabular-nums; color:var(--ink-80); }
+
+/* print-scale typography: the screen sizes are px for a 1040px column, the
+   print column is ~7.1in, so the scale is nudged rather than inherited raw */
+.p-body{ font-size:9pt; }
+.p-body .lead{ font-size:9.4pt; line-height:1.62; max-width:none; margin:0 0 0.2in; }
+.p-body .sec-head{ margin:0 0 0.16in; padding-bottom:0.08in; }
+.p-body .sec-head h3{ font-size:13pt; }
+.p-body .sec-head .kick{ font-size:7.5pt; }
+.p-body .sec-head .pipe{ font-size:12pt; }
+.p-body .cell{ padding:0.19in 0.24in 0.2in; }
+.p-body .cellgrid.compact .cell{ padding:0.15in 0.24in 0.16in; }
+.p-body .kicker{ font-size:7pt; margin-bottom:0.08in; }
+.p-body .cell-title{ font-size:10pt; margin-bottom:0.08in; }
+.p-body .cell-desc{ font-size:8.6pt; line-height:1.6; }
+.p-body .role-title{ font-size:9.6pt; margin-bottom:0.07in; }
+.p-body .pills{ margin-top:0.13in; gap:4px; }
+.p-body .pill{ font-size:7.2pt; padding:3px 7px; }
+.p-body .sub-note{ font-size:8pt; margin-top:0.14in; padding-top:0.1in; }
+.p-body .highlight{ margin-top:0; padding:0.18in 0.22in; grid-template-columns:1.5in 1fr; gap:0.2in; }
+.p-body .highlight .h-label{ font-size:7pt; }
+.p-body .highlight .h-value{ font-size:9pt; line-height:1.5; }
+.p-body .metric{ padding:0.15in 0.17in; gap:0.05in; }
+.p-body .metric .m-label{ font-size:6.8pt; min-height:2.6em; }
+.p-body .metric .m-value{ font-size:17pt; }
+.p-body .metric .m-unit{ font-size:7.6pt; }
+.p-body .spec-table{ font-size:8.2pt; }
+.p-body .spec-table thead .colhead-row th{ font-size:6.8pt; padding:0.07in 0.1in; }
+.p-body .spec-table tbody td{ padding:0.1in 0.1in; line-height:1.5; }
+.p-body .spec-table tbody tr.band td{ padding:0.06in 0.1in; }
+.p-body .spec-table tbody tr.band .band-l{ font-size:7pt; }
+.p-body .freq{ font-size:7pt; padding:2px 6px; }
+.p-body .table-note{ font-size:7.4pt; margin-top:0.12in; max-width:none; }
+.p-body .funnel-stage{ padding:0.12in 0.14in; gap:0.1in; }
+.p-body .funnel-num{ font-size:15pt; }
+.p-body .funnel-stage-label{ font-size:7pt; }
+.p-body .funnel-stage-title{ font-size:8.4pt; }
+.p-body .funnel-col{ padding:0.15in 0.14in 0.17in; }
+.p-body .funnel-col .fn-desc{ font-size:8pt; margin-bottom:0.12in; }
+.p-body .feature-row .fcell{ padding:0.18in 0.24in 0.19in; }
+.p-body .feature-row .f-title{ font-size:11pt; margin-bottom:0.08in; }
+.p-body .feature-row .f-desc{ font-size:8.8pt; line-height:1.6; max-width:none; }
+.p-body .step{ padding:0.15in 0.22in 0.16in; grid-template-columns:0.42in 1.25in 1fr; gap:0 0.18in; }
+.p-body .step .st-num{ font-size:15pt; }
+.p-body .step .st-when{ font-size:7pt; }
+.p-body .step .st-title{ font-size:10pt; margin-bottom:0.07in; }
+.p-body .step .st-desc{ font-size:8.4pt; line-height:1.6; max-width:none; }
+.p-body .mp-list li{ font-size:8.6pt; line-height:1.6; margin-bottom:0.1in; max-width:none; padding-left:0.16in; }
+.p-body .mp-list li::before{ top:0.075in; }
+.p-body .mp-list.two-col{ columns:2; column-gap:0.3in; }
+.p-body .fee-card{ padding:0.22in 0.24in; gap:0.3in; }
+.p-body .fee-card .fc-label{ font-size:7pt; margin-bottom:0.09in; }
+.p-body .fee-card .fc-title{ font-size:11.5pt; margin-bottom:0.08in; }
+.p-body .fee-card .fc-desc{ font-size:8.6pt; line-height:1.6; max-width:none; }
+.p-body .fee-card .fc-amount{ font-size:19pt; }
+.p-body .fee-card .fc-amount.sm{ font-size:13pt; }
+.p-body .fee-card .fc-unit{ font-size:7.6pt; margin-top:0.06in; }
+.p-body .fee-card .fc-foot{ font-size:7.6pt; margin-top:0.1in; }
+.p-body .fee-compact-cell{ padding:0.15in 0.17in 0.16in; }
+.p-body .fee-compact-cell .fc-k{ font-size:6.8pt; margin-bottom:0.05in; }
+.p-body .fee-compact-cell .fc-n{ font-size:8.4pt; margin-bottom:0.08in; }
+.p-body .fee-compact-cell .fc-a{ font-size:16pt; margin-bottom:0.06in; }
+.p-body .fee-compact-cell .fc-a.sm{ font-size:11pt; }
+.p-body .fee-compact-cell .fc-nt{ font-size:7.6pt; line-height:1.45; }
+.p-body .fee-footnote{ font-size:7.4pt; margin-top:0.12in; }
+.p-body .footprint{ grid-template-columns:1.5in 1fr; gap:0.2in; padding-top:0.14in; margin-top:0.16in; }
+.p-body .footprint .fp-label{ font-size:7pt; }
+.p-body .footprint .fp-text{ font-size:8.6pt; line-height:1.6; }
+.p-body .snapshot{ margin-top:0.14in; }
+.p-body .snapshot-media{ min-height:2.1in; }
+.p-body .snapshot-facts .sf-label{ font-size:6.6pt; }
+.p-body .snapshot-facts .sf-value{ font-size:12pt; }
+.p-body .snapshot-facts .sf-note{ font-size:7.4pt; }
+.p-body .snapshot-facts .sfact{ padding:0.12in 0.14in; gap:0.04in; }
+.p-body .gallery{ gap:0.1in; margin-top:0.16in; }
+.p-body .gallery figcaption{ font-size:7.2pt; }
+.p-body .milestone{ padding:0.24in 0.12in 0 0; }
+.p-body .milestone-year{ font-size:6.8pt; margin-bottom:0.05in; }
+.p-body .milestone-title{ font-size:8.6pt; margin-bottom:0.06in; }
+.p-body .milestone-desc{ font-size:7.8pt; line-height:1.5; }
+.p-body .assets{ gap:0.09in; }
+.p-body .asset-loc{ font-size:7.2pt; }
+.p-body .feature-role{ padding:0.2in 0.24in; }
+.p-body .feature-role .role-title{ font-size:13pt; }
+.p-body .feature-role .cell-desc{ font-size:9pt; max-width:none; }
+.p-body .portal{ gap:0.24in; margin-top:0.14in; }
+.p-body .portal-shot figcaption{ font-size:6.8pt; padding:0.07in 0.12in; }
+.p-body .portal-feat .pf-title{ font-size:9.4pt; }
+.p-body .portal-feat .pf-desc{ font-size:8.2pt; line-height:1.55; }
+.p-body .portal-feats{ gap:0.16in; }
+
+/* hover-only affordances have no meaning on paper */
+.p-body .cell::before, .p-body .step::before, .p-body .feature-row .fcell::before{ display:none; }
+
+/* ------------------------------------------------------------ cover page --- */
+.sheet.cover{ grid-template-columns:1fr; grid-template-rows:var(--sheet-h); background:#fff; }
+.cover-inner{
+  position:relative; height:var(--sheet-h); min-height:0; overflow:hidden;
+  display:grid; grid-template-columns:1.15fr 1fr;
+}
+.cover-left{
+  background:linear-gradient(165deg, var(--navy-soft) 0%, var(--navy) 68%);
+  color:#fff; padding:0.85in 0.7in 0.6in; display:flex; flex-direction:column;
+  position:relative; overflow:hidden; min-height:0;
+}
+.cover-left > *:not(.p-watermark){ position:relative; z-index:1; }
+.cover-org{
+  font-size:8pt; font-weight:700; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--accent-2); margin:0 0 auto;
+}
+.cover-title{
+  font-family:var(--serif); font-weight:600; font-size:34pt; line-height:1.08;
+  letter-spacing:-.015em; margin:0 0 0.16in; color:var(--on-navy);
+}
+.cover-prop{
+  font-family:var(--serif); font-weight:500; font-size:17pt; line-height:1.2;
+  color:var(--accent-2); margin:0 0 0.3in;
+}
+.cover-meta{
+  font-size:8.6pt; line-height:1.7; color:rgba(255,255,255,0.82);
+  padding-top:0.2in; border-top:1px solid rgba(255,255,255,0.22);
+}
+.cover-right{
+  padding:0.85in 0.7in 0.6in; display:flex; flex-direction:column;
+  background:var(--bg); min-height:0; overflow:hidden;
+}
+.cover-right .cover-logo{ height:0.42in; width:auto; margin-bottom:0.62in; }
+.cover-toc-label{
+  font-size:7.5pt; font-weight:700; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--ink-45); margin:0 0 0.16in;
+}
+.cover-toc{ list-style:none; margin:0; padding:0; }
+.cover-toc li{
+  display:flex; align-items:baseline; gap:0.1in;
+  font-size:9pt; color:var(--ink-80);
+  padding:0.055in 0; border-bottom:1px solid var(--line-soft);
+}
+.cover-toc li .n{
+  font-size:7.4pt; font-weight:600; color:var(--accent-text);
+  font-variant-numeric:tabular-nums; flex:0 0 0.28in;
+}
+.cover-toc li .t{ flex:1 1 auto; }
+.cover-toc li .pg{
+  font-size:8pt; font-weight:600; color:var(--ink-55);
+  font-variant-numeric:tabular-nums; flex:0 0 auto;
+}
+.cover-foot{
+  margin-top:auto; padding-top:0.14in; border-top:1px solid var(--line);
+  font-size:7.5pt; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-55);
+  display:flex; justify-content:space-between; gap:0.2in;
+}
+.cover-foot .c{ font-weight:700; color:var(--accent-text); }
+
+/* ==========================================================================
+ * FLOW — spacing between the units the paginator places
+ * --------------------------------------------------------------------------
+ * On screen a .block wrapper carries 64px between topics. The paginator
+ * flattens those wrappers so their children can be paged independently, so
+ * the rhythm is restored here: .p-group marks the first unit of a new topic,
+ * and everything else takes a margin from what it is.
+ * ========================================================================== */
+.p-flow{ display:flow-root; }
+.p-flow > * { margin-top:0; margin-bottom:0; }
+
+.p-flow > .p-group           { margin-top:0.3in; }
+.p-flow > .sec-head          { margin-top:0.26in; margin-bottom:0.15in; }
+.p-flow > .lead              { margin-top:0.02in; margin-bottom:0.19in; }
+.p-flow > .highlight         { margin-top:0.22in; }
+.p-flow > .gallery,
+.p-flow > .snapshot,
+.p-flow > .portal            { margin-top:0.17in; }
+.p-flow > .table-note,
+.p-flow > .sub-note,
+.p-flow > .fee-footnote      { margin-top:0.13in; }
+.p-flow > .footprint         { margin-top:0.17in; }
+.p-flow > .feature-row       { margin-top:0.04in; }
+.p-flow > .funnel-grid       { margin-top:0; }
+.p-flow > .timeline          { margin-top:0.06in; }
+/* first unit on a sheet always sits on the top margin */
+.p-flow > *:first-child      { margin-top:0 !important; }
+
+/* rail glyph, matching the section icons in the site navigation */
+.p-icon{
+  display:block; width:0.3in; height:0.3in; color:var(--accent-2);
+  margin:0 0 0.22in;
+}
+.p-icon svg{ width:100%; height:100%; display:block; }
+
+.p-folio .p-sec{
+  flex:1 1 auto; text-align:center; color:var(--ink-42);
+  overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
+  padding:0 0.16in;
+}
+
+/* ==========================================================================
+ * COLUMN FIT
+ * --------------------------------------------------------------------------
+ * The sheet is 11in wide, so the site's own breakpoints see a 1056px viewport
+ * and hold the desktop layout — but the content column beside the rail is only
+ * ~7.1in. These rules set the measures and column counts for that width; the
+ * site stylesheet is otherwise inherited unchanged.
+ * ========================================================================== */
+.p-body .lead{ max-width:80ch; }
+.p-body .mp-list li{ max-width:80ch; }
+.p-body .mp-list.two-col li{ max-width:none; }
+.p-body .mp-list.two-col{ column-gap:0.3in; }
+.p-body .table-note{ max-width:84ch; }
+.p-body .sub-note{ max-width:84ch; }
+.p-body .fee-footnote{ max-width:84ch; }
+.p-body .cell-desc,
+.p-body .cellgrid.cols-1 .cell-desc{ max-width:none; }
+.p-body .feature-row .f-desc{ max-width:62ch; }
+.p-body .step .st-desc{ max-width:none; }
+.p-body .feature-role .cell-desc{ max-width:none; }
+
+/* card numerals sit clear of the narrower cell */
+.p-body .cell::after{ top:0.16in; right:0.17in; font-size:9.5pt; }
+.p-body .kicker{ padding-right:0.3in; }
+.p-body .role-title{ padding-right:0.34in; }
+.p-body .feature-role .role-title{ padding-right:0; }
+
+/* the horizontal timeline reads as complete on paper */
+.p-body .timeline-rule,
+.p-body .timeline-fill{ top:5px; height:1.2px; }
+.p-body .timeline-fill{ right:calc(20% - 7px); width:auto; }
+.p-body .milestone-dot{ width:11px; height:11px; border-width:1.5px; }
+.p-body .milestone.on .milestone-dot{ box-shadow:0 0 0 3.5px var(--accent-wash-2); }
+
+/* imagery: fixed bands so a photo never sets the page height on its own */
+.p-body .snapshot{ grid-template-columns:1.1fr 1fr; }
+.p-body .snapshot-media{ min-height:0; }
+.p-body .gallery{ grid-template-columns:repeat(4,1fr); }
+.p-body .assets{ grid-template-columns:repeat(5,1fr); }
+.p-body .portal{ grid-template-columns:1.3fr 1fr; gap:0.3in; }
+.p-body .portal-shot img{ max-height:3.1in; object-fit:cover; object-position:top left; }
+.p-body .portal-feats{ gap:0.17in; }
+.p-body .portal-feat{ padding-left:0.13in; }
+
+/* the funnel stage rail and the columns under it are one unit */
+.p-body .funnel-stage{ gap:0.09in; }
+.p-body .funnel-stage::after{ width:9px; height:9px; right:-5px; }
+.p-body .pills{ gap:3px; }
+
+/* register tables: the header repeats on every continuation sheet */
+.p-body .spec-wrap{ overflow:visible; }
+.p-body .spec-table{ margin-top:0; }
+.p-body .spec-table thead .colhead-row th{ white-space:normal; }
+
+/* screen-only furniture */
+.p-body .cell:hover, .p-body .step:hover, .p-body .metric:hover,
+.p-body .sfact:hover, .p-body tbody tr:hover{ background:transparent !important; }
+.p-body .fee-card:hover{ background:transparent !important; }
+
+/* the cover panel is wider and lighter than the rail, so the same wordmark
+   opacity reads as a blotch there */
+.cover-left .p-watermark span{ font-size:4.1in; color:rgba(255,255,255,0.055); }
