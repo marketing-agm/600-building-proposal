@@ -128,11 +128,14 @@ em{font-style:italic;}
    on desktop the topbar gives its whole width to the tabs — thirteen of them
    need it to stay on one row. Below 960px the tabs collapse into the
    hamburger menu and the name comes back for context. */
-.nav-links{display:flex; flex:1; min-width:0; align-items:center; justify-content:flex-end; gap:14px;}
-/* min-width:0 lets the tab row shrink below its single-line width, so between
-   the one-row fit (>=1180px) and the hamburger breakpoint (<=960px) it wraps
-   to two rows instead of pushing the page into horizontal scroll. */
-.nav-tabs{flex:0 1 auto; min-width:0; display:flex; flex-wrap:wrap; justify-content:flex-end; align-items:center; gap:3px;}
+.nav-links{display:flex; flex:1; min-width:0; align-items:center; gap:14px;}
+/* The tab row takes the remaining width and centres within it. padding-left
+   offsets the theme toggle that follows it, so the tabs centre on the page
+   rather than on the space left beside the toggle.
+   min-width:0 lets the row shrink below its single-line width, so between the
+   one-row fit and the hamburger breakpoint it wraps to two rows instead of
+   pushing the page into horizontal scroll. */
+.nav-tabs{flex:1 1 auto; min-width:0; display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:3px; padding-left:44px;}
 .nav-right{display:flex; align-items:center; gap:8px; flex:0 0 auto;}
 .topbar-prop{display:none; flex:0 0 auto; min-width:0; font-size:10px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .nav-link{position:relative; font-size:12px; font-weight:500; color:var(--ink-42); padding:8px 11px; border-radius:var(--radius-sm); cursor:pointer; background:none; border:none; font-family:var(--sans); letter-spacing:.01em; transition:color .15s var(--ease); white-space:nowrap;}
@@ -693,7 +696,7 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
   .nav-tabs,.nav-right{flex-direction:column; align-items:stretch; width:100%; gap:2px; flex:none;}
   .topbar-prop{display:block; flex:1 1 auto;}
   .nav-link{text-align:left; padding:12px;}
-  .nav-tabs{justify-content:flex-start;}
+  .nav-tabs{justify-content:flex-start; padding-left:0;}
   .hamburger{display:block; margin-left:auto;}
 }
 @media(max-width:560px){
@@ -804,7 +807,7 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
 
         <div class="block reveal">
           <div class="sec-head"><h3>The Assignment</h3><span class="pipe">|</span><span class="kick">Plaza 600 &middot; 600 Stewart Street</span></div>
-          <p class="lead">Plaza 600 is a twenty-story, 217,322-square-foot Class A office tower in Seattle&rsquo;s Denny Triangle, built in 1969 and repositioned through approximately $16.8&nbsp;million of capital investment since 2020. The asset carries a diversified roster of seventeen office tenants, ground-floor retail, and two levels of subterranean parking &mdash; with substantial vacancy to be leased and a 1969 building plant to be operated. This proposal is scoped to that combination.</p>
+          <p class="lead">Plaza 600 is a twenty-story, 217,322-square-foot Class A office tower in Seattle&rsquo;s Denny Triangle, built in 1969 and repositioned through approximately $16.8&nbsp;million of capital investment since 2020. The asset carries a diversified roster of office tenants, ground-floor retail and two levels of subterranean parking, with substantial vacancy to be leased and a building plant of 1969 vintage to be operated. This proposal is scoped to those requirements.</p>
           <div class="snapshot">
             <div class="snapshot-media">
               <img src="/assets/property/building-photo-dusk.jpg" alt="Plaza 600, 600 Stewart Street, Seattle" loading="lazy" />
@@ -824,13 +827,9 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
             <figure><div class="g-tile"><img src="/assets/property/showers-lockers.jpg" alt="Showers and lockers" loading="lazy" /></div><figcaption>Showers &amp; Lockers</figcaption></figure>
             <figure><div class="g-tile"><img src="/assets/property/building-entrance-retail.jpg" alt="Plaza-level retail entrance" loading="lazy" /></div><figcaption>Plaza-Level Retail</figcaption></figure>
           </div>
-          <div class="footprint">
-            <span class="fp-label">Existing Relationship</span>
-            <span class="fp-text"><strong>AGM Currently Manages Three Seattle Assets for Orton Development</strong> &mdash; approximately 300,000 square feet under management across the existing portfolio, run by the same team, on the same reporting stack and the same monthly calendar proposed here. Plaza 600 would be added to consolidated portfolio reporting rather than managed as a standalone account.</span>
-          </div>
         </div>
         <div class="block reveal">
-          <div class="sec-head"><h3>History</h3><span class="pipe">|</span><span class="kick">Key Milestones</span></div>
+          <div class="sec-head"><h3>AGM History</h3><span class="pipe">|</span><span class="kick">Key Milestones</span></div>
           <div class="timeline" id="timeline">
             <div class="timeline-rule"></div>
             <div class="timeline-fill" id="tlFill"></div>
@@ -878,7 +877,7 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
           </div>
           <div class="footprint">
             <span class="fp-label">Regional Footprint</span>
-            <span class="fp-text"><strong>Strong Presence Across Greater Seattle</strong> &mdash; Managed properties spanning Seattle, Bellevue, Kirkland, Redmond, and the broader Puget Sound, with additional assets in Oregon and Alaska. Deep local market knowledge supports our ability to anticipate market shifts, protect asset value, and drive consistent performance.</span>
+            <span class="fp-text"><strong>Strong Presence Across Greater Seattle</strong> &mdash; Managed properties spanning Seattle, Bellevue, Kirkland, Redmond, and the broader Puget Sound, with additional assets in Alaska. Deep local market knowledge supports our ability to anticipate market shifts, protect asset value, and drive consistent performance.</span>
           </div>
         </div>
       </div>
@@ -888,14 +887,14 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
 
         <div class="feature-role reveal">
           <div class="kicker">Primary Point of Contact</div>
-          <div class="role-title">Property Manager</div>
-          <div class="cell-desc">Oversight of investment performance and day-to-day operations, serving as the primary point of contact for Ownership.</div>
+          <div class="role-title">Senior Property Manager, reporting to Asset Manager of Investment Group</div>
+          <div class="cell-desc">Oversight of investment performance and day-to-day operations, serving as the primary point of contact for Investment Group.</div>
         </div>
 
-        <div class="sec-head reveal" style="margin-top:48px;"><h3>Supporting Team</h3><span class="pipe">|</span><span class="kick">Roles &amp; Responsibilities</span></div>
+        <div class="sec-head reveal" style="margin-top:48px;"><h3>Property Management Team</h3><span class="pipe">|</span><span class="kick">Roles &amp; Responsibilities</span></div>
         <div class="cellgrid reveal no-num">
-          <div class="cell"><div class="role-title">Chief Building Engineer <em>(on site)</em></div><div class="cell-desc">Owns the building systems and the recurring preventive maintenance program &mdash; mechanical, electrical, plumbing, fire and life safety &mdash; and is the first responder for any system event</div></div>
-          <div class="cell"><div class="role-title">Building Engineer <em>(coverage)</em></div><div class="cell-desc">Scheduled coverage for the daily and weekly rounds so the program does not depend on a single engineer being on site</div></div>
+          <div class="cell"><div class="role-title">Chief Building Engineer <em>(on site)</em></div><div class="cell-desc">Accountable for the operation and maintenance of all building systems, including mechanical, electrical, plumbing, and fire/life safety systems. Oversees the recurring preventive maintenance program and serves as the primary on-site lead for building system issues, failures, and emergencies.</div></div>
+          <div class="cell"><div class="role-title">Building Engineer <em>(Coverage)</em></div><div class="cell-desc">Provides scheduled coverage for daily and weekly building rounds, ensuring continuity of building operations, inspections, and preventive maintenance activities.</div></div>
           <div class="cell"><div class="role-title">Tenant Services Coordinator</div><div class="cell-desc">Tenant work orders, after-hours HVAC requests, access credentials, certificates of insurance, moves, and conference-center scheduling</div></div>
           <div class="cell"><div class="role-title">Property Operations Associate</div><div class="cell-desc">Day-to-day coordination and tenant relations</div></div>
           <div class="cell"><div class="role-title">Financial Analyst</div><div class="cell-desc">Budget development, forecasting, and ongoing financial performance analysis</div></div>
@@ -914,70 +913,70 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
         <div class="cellgrid reveal">
           <div class="cell">
             <div class="kicker">Objectives</div>
-            <div class="cell-title">Investment Objective</div>
-            <div class="cell-desc">Understand Ownership&rsquo;s investment goals, target returns, and overall strategy to align operating decisions with the broader investment plan</div>
+            <div class="cell-title">Investment Strategy Alignment</div>
+            <div class="cell-desc">Establish a clear understanding of Ownership&rsquo;s investment objectives, return expectations, hold period, and risk parameters to guide property-level operating and capital decisions.</div>
             <div class="pills"><span class="pill">Investment Goals</span><span class="pill">Target Returns</span><span class="pill">Hold Period</span><span class="pill">Risk Profile</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Proforma</div>
-            <div class="cell-title">Proforma Generation</div>
-            <div class="cell-desc">Generate proforma and develop operating strategy aligned with the investment objectives, providing a working financial framework for performance tracking</div>
+            <div class="cell-title">Proforma &amp; Operating Strategy</div>
+            <div class="cell-desc">AGM will prepare a comprehensive property-level proforma for Ownership&rsquo;s review and approval. Based on the approved pro forma, AGM will develop and execute an operating strategy aligned with Ownership&rsquo;s investment objectives, establishing defined financial and operating targets and a framework for budgeting, forecasting, performance measurement, and ongoing variance analysis.</div>
             <div class="pills"><span class="pill">Revenue Projections</span><span class="pill">Operating Assumptions</span><span class="pill">Capital Forecast</span><span class="pill">Return Modeling</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Distributions</div>
-            <div class="cell-title">Distribution Structure</div>
-            <div class="cell-desc">Establish a distribution schedule aligned with the investment proforma and overall return objectives, supporting predictable cash flow to Ownership</div>
-            <div class="pills"><span class="pill">Distribution Schedule</span><span class="pill">Reserve Alignment</span><span class="pill">Cash Flow Coordination</span></div>
+            <div class="cell-title">Cash Management &amp; Distribution Strategy</div>
+            <div class="cell-desc">Establish and manage a distribution strategy aligned with the approved proforma, reserve requirements, capital needs, and Ownership&rsquo;s return objectives, supported by ongoing cash flow forecasting and liquidity management.</div>
+            <div class="pills"><span class="pill">Distribution Schedule</span><span class="pill">Reserve Requirements</span><span class="pill">Liquidity Management</span><span class="pill">Cash Flow Forecasting</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Budget</div>
-            <div class="cell-title">Operating Budget</div>
-            <div class="cell-desc">Align the operating budget with performance targets and capital preservation priorities, ensuring day-to-day decisions support long-term return objectives</div>
-            <div class="pills"><span class="pill">Performance Targets</span><span class="pill">Capital Preservation</span><span class="pill">Expense Discipline</span><span class="pill">Forecast Accuracy</span></div>
+            <div class="cell-title">Operating Budget &amp; Expense Management</div>
+            <div class="cell-desc">Develop and manage the annual operating budget in alignment with the approved proforma and operating strategy, establishing performance targets and a framework for expense control, forecasting, and variance analysis.</div>
+            <div class="pills"><span class="pill">Performance Targets</span><span class="pill">Expense Discipline</span><span class="pill">Asset Preservation</span><span class="pill">Forecasting &amp; Variance Analysis</span></div>
           </div>
         </div>
         <div class="highlight reveal">
           <span class="h-label">Strategic Alignment</span>
-          <span class="h-value">Investment objectives, proforma, distributions, and operating budget integrated into a single execution plan</span>
+          <span class="h-value">Investment objectives translated into an integrated property-level strategy encompassing the proforma, cash management, distributions, and operating budget.</span>
         </div>
 
         <div class="block reveal" style="margin-top:60px;">
           <div class="sec-head"><h3>Plaza 600 Operating Priorities</h3><span class="pipe">|</span><span class="kick">Lease-Up Hold</span></div>
-          <p class="lead">The asset is acquired substantially below stabilized occupancy. That single fact sets the operating priorities: the building must present and perform as fully occupied Class A space while carrying the expense base of a partially leased tower, and the plant must be reliable enough that no system event interrupts a tour, a build-out, or a rent commencement.</p>
+          <p class="lead">Property-level operations will be focused on supporting occupancy recovery, preserving Class A positioning, maintaining expense discipline, and ensuring building reliability, with expenses, staffing, and service levels aligned with current occupancy and the broader investment plan.</p>
           <div class="cellgrid reveal no-num">
             <div class="cell">
               <div class="kicker">Priority 01</div>
               <div class="cell-title">Operate to a Leasing Standard</div>
-              <div class="cell-desc">Lobby, elevators, corridors, restrooms, amenity spaces, and vacant suites maintained to tour-ready condition at all times &mdash; the building is its own leasing collateral throughout the lease-up period</div>
-              <div class="pills"><span class="pill">Tour-Ready Vacancy</span><span class="pill">Common Area Standard</span><span class="pill">Amenity Presentation</span><span class="pill">Signage &amp; Wayfinding</span></div>
+              <div class="cell-desc">Maintain common areas, amenities, vacant suites, and building operations to a consistent standard that supports tours, buildouts, and leasing activity throughout the occupancy recovery period.</div>
+              <div class="pills"><span class="pill">Tour Presentation</span><span class="pill">Common Area Standards</span><span class="pill">Amenity Presentation</span><span class="pill">Vacancy Condition</span></div>
             </div>
             <div class="cell">
               <div class="kicker">Priority 02</div>
-              <div class="cell-title">Expense Discipline Through the Carry</div>
-              <div class="cell-desc">Operating expenses controlled against a budget built for actual occupancy rather than stabilized assumptions, with vendor scopes and staffing scaled as space is absorbed</div>
-              <div class="pills"><span class="pill">Occupancy-Scaled Scopes</span><span class="pill">Vendor Rebids</span><span class="pill">Utility Management</span><span class="pill">Variance Reporting</span></div>
+              <div class="cell-title">Expense Discipline &amp; Occupancy Alignment</div>
+              <div class="cell-desc">Control operating expenses in line with current occupancy, with vendor scopes and staffing scaled as space is absorbed while maintaining required building and service standards.</div>
+              <div class="pills"><span class="pill">Occupancy-Based Budgeting</span><span class="pill">Vendor Scope Optimization</span><span class="pill">Staffing Alignment</span><span class="pill">Variance Reporting</span></div>
             </div>
             <div class="cell">
               <div class="kicker">Priority 03</div>
-              <div class="cell-title">Systems Reliability as an Underwriting Input</div>
-              <div class="cell-desc">Preventive maintenance, equipment condition, and capital sequencing managed so that building system risk does not become a leasing or occupancy risk during the absorption period</div>
-              <div class="pills"><span class="pill">Preventive Program</span><span class="pill">Equipment Condition</span><span class="pill">Capital Sequencing</span><span class="pill">Downtime Avoidance</span></div>
+              <div class="cell-title">Building Reliability &amp; Capital Stewardship</div>
+              <div class="cell-desc">Maintain reliable building operations through disciplined preventive maintenance, condition monitoring, and capital sequencing to reduce operational risk and protect leasing and occupancy objectives.</div>
+              <div class="pills"><span class="pill">Preventive Maintenance</span><span class="pill">Asset Condition</span><span class="pill">Capital Sequencing</span><span class="pill">Operational Risk Mitigation</span></div>
             </div>
             <div class="cell">
               <div class="kicker">Priority 04</div>
-              <div class="cell-title">Retain the In-Place Roster</div>
-              <div class="cell-desc">Proactive renewal planning for tenants rolling inside the near term, with service quality and responsiveness managed as the primary retention lever on a diversified small-tenant roster</div>
-              <div class="pills"><span class="pill">Rollover Calendar</span><span class="pill">Early Renewal Outreach</span><span class="pill">Tenant Satisfaction</span><span class="pill">Expansion Tracking</span></div>
+              <div class="cell-title">In-Place Income Preservation</div>
+              <div class="cell-desc">Protect existing revenue through proactive renewal planning for near-term lease expirations, with service quality and responsiveness positioned as key retention drivers across a diversified tenant base.</div>
+              <div class="pills"><span class="pill">Renewal Planning</span><span class="pill">Lease Expiration Tracking</span><span class="pill">Tenant Service</span><span class="pill">Revenue Retention</span></div>
             </div>
           </div>
-          <div class="sub-note"><strong>Reporting Alignment:</strong> Operating performance is reported against the acquisition proforma from the first full month of management, so that variance is measured against the underwriting Ownership actually closed on</div>
+          <div class="sub-note"><strong>Reporting Alignment:</strong> Operating performance will be measured against the acquisition pro forma, providing consistent variance reporting against the underwriting assumptions supporting the investment.</div>
         </div>
       </div>
 
       <!-- ============ SLIDE 4 · BUILDING SYSTEMS & ENGINEERING ============ -->
       <div class="page" id="page-systems">
-        <p class="lead reveal">A 1969 high-rise carries its risk in the plant. AGM manages these systems as one documented program: a single equipment record, one preventive maintenance schedule, one compliance calendar, and one accountable engineer.</p>
+        <p class="lead reveal">Plaza 600 is served by a central chilled-water plant, district steam heat, a building automation system, five passenger elevators, an addressable fire alarm and emergency power. AGM will manage building systems through an integrated building engineering and maintenance program designed to support documentation, preventive maintenance, and compliance oversight.</p>
 
         <div class="metrics block reveal">
           <div class="metric">
@@ -1010,7 +1009,7 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
                 <tr class="colhead-row">
                   <th class="sys">System</th>
                   <th>Configuration at Plaza 600</th>
-                  <th>AGM Management Scope</th>
+                  <th>Scope of Maintenance</th>
                 </tr>
               </thead>
               <tbody>
@@ -1022,7 +1021,7 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
                 </tr>
                 <tr>
                   <td class="sys">Cooling</td>
-                  <td>Water-cooled centrifugal chillers in the mechanical penthouse with paired cooling towers</td>
+                  <td>Water-cooled chillers in the mechanical penthouse with paired cooling towers</td>
                   <td>Seasonal start-up and shutdown, water treatment, tube punching and eddy-current testing on cycle, refrigerant compliance</td>
                 </tr>
                 <tr>
@@ -1032,7 +1031,7 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
                 </tr>
                 <tr>
                   <td class="sys">Building Automation</td>
-                  <td>Automation system upgraded in 2025 &mdash; scheduling, zone setpoints, after-hours conditioning</td>
+                  <td>Automation system upgraded in 2025, controlling scheduling, zone setpoints and after-hours conditioning</td>
                   <td>Schedule and setpoint management, alarm response, trend review, monthly after-hours HVAC billing run</td>
                 </tr>
 
@@ -1049,7 +1048,7 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
                 </tr>
                 <tr>
                   <td class="sys">Vertical Transportation</td>
-                  <td>Five passenger cabs, interiors refinished 2023, plus a floor-20 accessibility lift installed 2024</td>
+                  <td>Five passenger cabs, interiors refinished in 2023, plus a floor-20 accessibility lift installed in 2024</td>
                   <td>Contract oversight, state operating permits, annual inspection, monthly recall and quarterly telephone testing, entrapment response</td>
                 </tr>
 
@@ -1082,34 +1081,34 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
               </tbody>
             </table>
           </div>
-          <p class="table-note">Configuration reflects the building information available at the time of this proposal. AGM verifies make, model and location on site for every major asset during onboarding.</p>
+          <p class="table-note">Systems under management and the associated scope of work are based on building information available and provided to AGM at the time of this proposal and are subject to review and verification during the onboarding process.</p>
         </div>
 
         <div class="block reveal">
           <div class="sec-head"><h3>Preventive Maintenance Program</h3><span class="pipe">|</span><span class="kick">Recurring &middot; Scheduled &middot; Documented</span></div>
-          <p class="lead">The building already runs on a recurring engineering task list. AGM does not rebuild it &mdash; it is loaded task for task on day one, so nothing lapses through the transition, then extended where coverage gaps exist.</p>
+          <p class="lead">The building currently operates under an established recurring engineering task list. During onboarding, AGM will review the existing program, confirm applicable maintenance requirements, and identify any gaps or recommended adjustments to support continuity of building operations.</p>
           <div class="funnel-rail stages-4">
             <div class="funnel-stage"><div class="funnel-num">01</div><div><div class="funnel-stage-label">Inventory</div><div class="funnel-stage-title">Equipment Record</div></div></div>
             <div class="funnel-stage"><div class="funnel-num">02</div><div><div class="funnel-stage-label">Schedule</div><div class="funnel-stage-title">Task &amp; Frequency Load</div></div></div>
-            <div class="funnel-stage"><div class="funnel-num">03</div><div><div class="funnel-stage-label">Execute</div><div class="funnel-stage-title">Rounds &amp; Service</div></div></div>
-            <div class="funnel-stage"><div class="funnel-num">04</div><div><div class="funnel-stage-label">Evidence</div><div class="funnel-stage-title">Documentation</div></div></div>
+            <div class="funnel-stage"><div class="funnel-num">03</div><div><div class="funnel-stage-label">Implement</div><div class="funnel-stage-title">Maintenance Execution</div></div></div>
+            <div class="funnel-stage"><div class="funnel-num">04</div><div><div class="funnel-stage-label">Document</div><div class="funnel-stage-title">Documentation</div></div></div>
           </div>
           <div class="funnel-grid stages-4">
             <div class="funnel-col">
-              <div class="fn-desc">Every chiller, tower, fan, pump and panel verified on site with make, model, location and service history.</div>
+              <div class="fn-desc">Review available equipment records and building system information, with updates made as appropriate to support ongoing maintenance planning and asset oversight.</div>
               <div class="pills"><span class="pill">Asset Tagging</span><span class="pill">Useful Life</span></div>
             </div>
             <div class="funnel-col">
-              <div class="fn-desc">Daily through multi-year tasks loaded with frequencies and next-due dates carried forward intact.</div>
+              <div class="fn-desc">Daily through multi-year maintenance tasks documented by frequency and next-due date.</div>
               <div class="pills"><span class="pill">Next-Due Continuity</span><span class="pill">Vendor Scope Mapping</span></div>
             </div>
             <div class="funnel-col">
-              <div class="fn-desc">Rounds performed on schedule in house; vendor work dispatched, supervised and verified against scope.</div>
+              <div class="fn-desc">Routine maintenance activities coordinated through on-site engineering and qualified third-party vendors, consistent with established maintenance requirements and applicable service scopes.</div>
               <div class="pills"><span class="pill">Engineering Rounds</span><span class="pill">Coverage Plan</span></div>
             </div>
             <div class="funnel-col">
-              <div class="fn-desc">Completion, findings and deferred items recorded against each asset and reported monthly.</div>
-              <div class="pills"><span class="pill">Deferred Item Log</span><span class="pill">Certificates on File</span></div>
+              <div class="fn-desc">Maintenance activities, findings, and deferred items documented as appropriate to support ongoing asset oversight and reporting.</div>
+              <div class="pills"><span class="pill">Deferred Item Tracking</span><span class="pill">Maintenance Records</span><span class="pill">Certificates on File</span></div>
             </div>
           </div>
         </div>
@@ -1120,37 +1119,37 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
             <div class="fcell">
               <div class="kicker">Staffing</div>
               <div class="f-title">On-Site Engineering &amp; Coverage</div>
-              <div class="f-desc">A chief building engineer accountable for the plant, supported by scheduled coverage so the daily rounds, the compliance calendar and emergency response never rest on one individual&rsquo;s availability.</div>
+              <div class="f-desc">A Chief Building Engineer provides primary oversight of building systems, supported by scheduled engineering coverage to maintain continuity of routine maintenance, compliance activities, and incident response.</div>
             </div>
             <div class="fcell">
               <div class="kicker">Response</div>
               <div class="f-title">24/7 System Event Response</div>
-              <div class="f-desc">After-hours alarms, elevator entrapments, water intrusion, HVAC failures and power events routed to on-call engineering for immediate assessment, vendor dispatch and Ownership notification.</div>
+              <div class="f-desc">After-hours system events, including alarms, elevator entrapments, water intrusion, HVAC issues, and power disruptions, are routed through established on-call protocols for assessment, vendor coordination, and escalation as appropriate.</div>
             </div>
           </div>
           <div class="cellgrid compact no-num has-feature reveal">
             <div class="cell">
-              <div class="kicker">Revenue</div>
+              <div class="kicker">Operations</div>
               <div class="cell-title">After-Hours HVAC</div>
-              <div class="cell-desc">Conditioning requests captured through the automation system, billed monthly against lease terms, and reconciled to the ledger &mdash; a managed revenue line rather than an unbilled cost.</div>
+              <div class="cell-desc">After-hours HVAC requests are administered through the building automation system and billed in accordance with applicable lease terms, with activity reconciled through property accounting.</div>
               <div class="pills"><span class="pill">BAS Run Reports</span><span class="pill">Ledger Reconciliation</span></div>
             </div>
             <div class="cell">
               <div class="kicker">Utilities</div>
               <div class="cell-title">Energy &amp; Utility Management</div>
-              <div class="cell-desc">The largest category in the operating budget, and the one most responsive to schedule and setpoint discipline. District steam is single-source; AGM tracks rate movement against budget.</div>
+              <div class="cell-desc">Utility consumption, rates, and operating trends are monitored against budget, with schedule and setpoint management used to support operating efficiency and variance reporting to Ownership.</div>
               <div class="pills"><span class="pill">Consumption Tracking</span><span class="pill">Invoice Audit</span><span class="pill">Benchmarking</span></div>
             </div>
             <div class="cell">
               <div class="kicker">Vendors</div>
               <div class="cell-title">Service Contract Oversight</div>
-              <div class="cell-desc">Each recurring task mapped to the agreement or in-house scope that performs it. Tasks with no agreement behind them are identified and placed under contract.</div>
+              <div class="cell-desc">Maintenance responsibilities are allocated between on-site engineering and qualified third-party service providers based on system requirements and technical expertise, with vendor scopes competitively procured and managed as appropriate.</div>
               <div class="pills"><span class="pill">Coverage Gaps</span><span class="pill">Competitive Rebid</span></div>
             </div>
             <div class="cell">
               <div class="kicker">Records</div>
               <div class="cell-title">Warranties &amp; Permits</div>
-              <div class="cell-desc">Warranties from the recent capital program, operating permits and inspection certificates filed by system and tracked against expiration &mdash; so coverage is used before it lapses.</div>
+              <div class="cell-desc">Available warranties, operating permits, and inspection records are maintained and monitored as appropriate to support regulatory compliance and asset protection.</div>
               <div class="pills"><span class="pill">Warranty Register</span><span class="pill">Permit Currency</span></div>
             </div>
           </div>
@@ -1158,7 +1157,7 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
 
         <div class="highlight reveal">
           <span class="h-label">Operating Objective</span>
-          <span class="h-value">Building systems managed as a documented program &mdash; every asset inventoried, every task scheduled, every compliance test evidenced &mdash; so plant reliability supports leasing execution rather than threatening it</span>
+          <span class="h-value">Building systems are managed through a structured engineering program focused on preventive maintenance, documentation, compliance oversight, and system reliability in support of ongoing building operations and leasing activity.</span>
         </div>
       </div>
 
@@ -1168,44 +1167,44 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
           <div class="cell">
             <div class="kicker">Ongoing</div>
             <div class="cell-title">Repairs &amp; Maintenance</div>
-            <div class="cell-desc">Coordination of routine maintenance and repairs with budget-aligned execution, owner approval for overages, and preventive scheduling to minimize emergency repairs and unplanned expenses</div>
+            <div class="cell-desc">Coordinate routine maintenance and repairs within approved budgets, with preventive planning used to support asset condition, operating continuity, and cost control.</div>
             <div class="pills"><span class="pill">Maintenance Coordination</span><span class="pill">Service Request</span><span class="pill">Preventative Planning</span><span class="pill">Maintenance Records</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Inspection</div>
             <div class="cell-title">Inspections &amp; Documentation</div>
-            <div class="cell-desc">Regular property inspections, documentation, and systems review to identify maintenance needs and support preventative planning</div>
+            <div class="cell-desc">Conduct periodic property inspections and systems reviews to identify maintenance needs, document conditions, and inform preventive maintenance and capital planning.</div>
             <div class="pills"><span class="pill">Monthly Inspections</span><span class="pill">Photographic Records</span><span class="pill">Systems Verification</span><span class="pill">Work Order Recommendations</span></div>
             <div class="sub-note"><strong>Performed By:</strong> AGM Building Engineer</div>
           </div>
           <div class="cell">
             <div class="kicker">Response</div>
-            <div class="cell-title">24/7 Emergency Response</div>
-            <div class="cell-desc">After-hours emergencies routed to an on-call facilities representative for immediate assessment, vendor dispatch, and property manager notification under authorized protocols</div>
+            <div class="cell-title">24/7 Facilities Response</div>
+            <div class="cell-desc">After-hours property incidents requiring facilities support are routed through established on-call protocols for assessment, vendor coordination, and appropriate escalation.</div>
             <div class="pills"><span class="pill">On-Call Facilities Representative</span><span class="pill">Immediate Assessment</span><span class="pill">Vendor Dispatch</span><span class="pill">Authorization Protocols</span><span class="pill">Owner Call Tree</span></div>
             <div class="sub-note"><strong>Authorization:</strong> Aligned with management agreement scope · Owner call tree for major incidents</div>
           </div>
           <div class="cell">
             <div class="kicker">Capital</div>
-            <div class="cell-title">Capital Project Planning</div>
-            <div class="cell-desc">Multi-year capital forecasting aligned with ownership strategy and CapEx prioritization based on risk, ROI, and operational impact, paired with bid procurement, vendor compliance review, and performance oversight from bid through scope verification at completion</div>
-            <div class="pills"><span class="pill">Multi-Year Forecasting</span><span class="pill">Useful Life Analysis</span><span class="pill">CapEx Prioritization</span><span class="pill">Bid Package Preparation</span></div>
+            <div class="cell-title">Capital Planning &amp; Project Oversight</div>
+            <div class="cell-desc">Develop multi-year capital forecasts aligned with Ownership&rsquo;s investment strategy, with projects prioritized based on asset condition, risk, operational impact, and investment objectives, and supported by competitive procurement and project oversight through completion.</div>
+            <div class="pills"><span class="pill">Multi-Year Forecasting</span><span class="pill">Useful Life Analysis</span><span class="pill">Capital Expense Prioritization</span><span class="pill">Bid Package Preparation</span></div>
           </div>
         </div>
         <div class="highlight reveal">
           <span class="h-label">Asset Protection</span>
-          <span class="h-value">Proactive maintenance and capital planning aligned with ownership strategy to preserve asset condition and long-term value</span>
+          <span class="h-value">Proactive maintenance and disciplined capital planning aligned with Ownership&rsquo;s investment strategy to preserve asset condition, manage operational risk, and support long-term value.</span>
         </div>
 
         <div class="block reveal" style="margin-top:60px;">
           <div class="sec-head"><h3>Capital Program in Context</h3><span class="pipe">|</span><span class="kick">Completed &amp; Outstanding</span></div>
-          <p class="lead">Approximately $16.8 million &mdash; about $77 per square foot &mdash; has been invested in the asset since 2020, across the lobby reposition, a chiller replacement, standpipe installation, building automation controls, corridor and restroom upgrades, an accessibility lift, a cooling tower rebuild, parking and security equipment, and tenant improvement capital. That program materially reduces near-term base building requirements. It does not eliminate them, and AGM&rsquo;s first capital deliverable is to separate what has been completed from what remains.</p>
+          <p class="lead">Approximately $16.8 million, or about $77 per square foot, has been invested in the asset since 2020, across the lobby reposition, a chiller replacement, standpipe installation, building automation controls, corridor and restroom upgrades, an accessibility lift, a cooling tower rebuild, parking and security equipment, and tenant improvement capital. That program materially reduces near-term base building requirements without eliminating them. AGM&rsquo;s first capital deliverable is to separate completed work from work outstanding.</p>
           <ul class="mp-list reveal">
-            <li><strong>Completed Capital Verification:</strong> Each project line reconciled against invoices, permits, closeout documents, and warranties, so Ownership holds evidence of what was actually delivered and what remains under warranty.</li>
-            <li><strong>Remaining Base Building Scope:</strong> Chilled-water plant remaining life, elevator modernization horizon, curtain wall and sealant condition, roof membrane remaining life, riser and standpipe completion, and electrical capacity for planned tenant loads &mdash; each scoped, priced, and sequenced rather than deferred.</li>
-            <li><strong>Tenant Improvement Delivery:</strong> With substantial vacancy to absorb, tenant improvement and spec suite delivery is the dominant capital activity of the hold period; AGM manages it as a construction program with budgets, schedules, and rent commencement dates that carry consequences.</li>
-            <li><strong>Five-Year Capital Plan:</strong> A single forward plan with annual cost, priority, and the reserve it requires &mdash; reviewed with Ownership at budget and updated as condition assessments and system performance data accumulate.</li>
-            <li><strong>Reserve Adequacy:</strong> The capital reserve tested against the plan rather than set by convention, so the schedule is funded on the timeline it assumes.</li>
+            <li><strong>Completed Capital Verification:</strong> Each project line is reconciled against invoices, permits, closeout documents and warranties, so that Ownership holds evidence of the work delivered and of what remains under warranty.</li>
+            <li><strong>Remaining Base Building Scope:</strong> Chilled-water plant remaining life, elevator modernization horizon, curtain wall and sealant condition, roof membrane remaining life, riser and standpipe completion, and electrical capacity for planned tenant loads. Each item is scoped, priced and sequenced.</li>
+            <li><strong>Tenant Improvement Delivery:</strong> With substantial vacancies to absorb, tenant improvement and spec suite delivery is the dominant capital activity of the hold period. AGM manages it as a construction program with defined budgets, schedules and rent commencement dates.</li>
+            <li><strong>Five-Year Capital Plan:</strong> A single forward plan stating annual cost, priority and the reserve required, reviewed with Ownership at budget and updated as condition assessments and system performance data accumulate.</li>
+            <li><strong>Reserve Adequacy:</strong> The capital reserve is tested against the plan so that the schedule is funded on the timeline it assumes.</li>
           </ul>
           <div class="gallery reveal">
             <figure><div class="g-tile"><img src="/assets/property/lobby-elevator-bank.jpg" alt="Elevator lobby" loading="lazy" /></div><figcaption>Elevator Lobby</figcaption></figure>
@@ -1219,7 +1218,7 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
 
       <!-- ============ SLIDE 6 · COMPLIANCE, LIFE SAFETY & RISK ============ -->
       <div class="page" id="page-compliance">
-        <p class="lead reveal">A 1969 downtown high-rise carries a compliance calendar a newer asset does not. AGM runs it as a dated, owned calendar &mdash; each requirement paired with the test or filing that satisfies it, the date it is due, and the certificate that evidences it.</p>
+        <p class="lead reveal">A building of this vintage carries compliance obligations that a newer asset does not. AGM maintains these as a dated calendar in which each requirement is paired with the test or filing that satisfies it, the date it falls due and the certificate that evidences completion.</p>
 
         <div class="sec-head reveal"><h3>Compliance Calendar</h3><span class="pipe">|</span><span class="kick">Requirement, Frequency &amp; Evidence</span></div>
         <div class="spec-wrap reveal">
@@ -1247,130 +1246,130 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
               <tr><td class="sys">Plumbing</td><td>Backflow preventer testing and certification</td><td class="num"><span class="freq freq-mid">Annual</span></td><td>Certified tester report</td></tr>
 
               <tr class="band b-neutral"><td colspan="4"><div class="band-l">Building &amp; Regulatory <span class="band-n">4 requirements</span></div></td></tr>
-              <tr><td class="sys">Energy</td><td>Washington Clean Buildings Performance Standard &mdash; benchmarking, energy management plan and performance compliance</td><td class="num"><span class="freq freq-low">Per statute</span></td><td>Filings &amp; benchmarking reports</td></tr>
+              <tr><td class="sys">Energy</td><td>Washington Clean Buildings Performance Standard: benchmarking, energy management plan and performance compliance</td><td class="num"><span class="freq freq-low">Per statute</span></td><td>Filings &amp; benchmarking reports</td></tr>
               <tr><td class="sys">Accessibility</td><td>Path of travel, entries, restrooms and elevator accessibility</td><td class="num"><span class="freq freq-low">Ongoing</span></td><td>Review &amp; barrier-removal list</td></tr>
               <tr><td class="sys">Hazardous Materials</td><td>Asbestos-containing material register and O&amp;M plan; PCB ballast survey</td><td class="num"><span class="freq freq-low">Ongoing</span></td><td>Register &amp; O&amp;M plan</td></tr>
               <tr><td class="sys">Permits &amp; Citations</td><td>Open citation, violation and permit register against city and state records</td><td class="num"><span class="freq freq-low">Ongoing</span></td><td>Agency search results</td></tr>
             </tbody>
           </table>
         </div>
-        <p class="table-note reveal">Cadence reflects the recurring program in place at the building and applicable regulatory requirements. AGM confirms current certification against each line at onboarding and reports any lapse with a remediation date.</p>
+        <p class="table-note reveal">Cadence reflects the recurring program in place at the building and applicable regulatory requirements. AGM confirms current certification against each line at onboarding and reports on any lapse with a remediation date.</p>
 
         <div class="sec-head reveal" style="margin-top:56px;"><h3>Risk Management</h3><span class="pipe">|</span><span class="kick">Regulatory, Physical &amp; Operational</span></div>
         <div class="cellgrid reveal">
           <div class="cell">
             <div class="kicker">Energy</div>
             <div class="cell-title">Clean Buildings Performance Standard</div>
-            <div class="cell-desc">Washington&rsquo;s Clean Buildings Performance Standard applies to covered commercial buildings of this size. AGM establishes which requirements and deadlines apply, benchmarks current performance, and prices the path to compliance so the obligation is budgeted rather than discovered</div>
+            <div class="cell-desc">Washington&rsquo;s Clean Buildings Performance Standard applies to covered commercial buildings of this size. AGM establishes which requirements and deadlines apply, benchmarks current performance and prices the path to compliance, so that the obligation is identified and budgeted in advance</div>
             <div class="pills"><span class="pill">Applicability Review</span><span class="pill">Energy Benchmarking</span><span class="pill">Energy Management Plan</span><span class="pill">Compliance Cost &amp; Deadline</span></div>
-            <div class="sub-note"><strong>Priority:</strong> Treated as the most urgent compliance item at onboarding, with a confirmed status, owner, and date</div>
+            <div class="sub-note"><strong>Priority:</strong> Addressed as the first compliance item at onboarding, with a confirmed status, assigned owner and date</div>
           </div>
           <div class="cell">
             <div class="kicker">Building Era</div>
             <div class="cell-title">Hazardous Material Management</div>
-            <div class="cell-desc">A 1969 building requires a documented position on asbestos-containing materials before any disturbance. AGM maintains the register and the operations and maintenance plan, and enforces it against every tenant improvement, repair, and vendor scope</div>
+            <div class="cell-desc">A building of this vintage requires a documented position on asbestos-containing materials before any disturbance. AGM maintains the register and the operations and maintenance plan, and applies it to every tenant improvement, repair and vendor scope</div>
             <div class="pills"><span class="pill">ACM Register</span><span class="pill">O&amp;M Plan</span><span class="pill">Contractor Protocols</span><span class="pill">Disturbance Review</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Vendors</div>
             <div class="cell-title">Vendor Compliance &amp; Insurance</div>
-            <div class="cell-desc">No vendor works in the building without current insurance, licensing and an executed agreement on file. Certificates tracked to expiration.</div>
+            <div class="cell-desc">Vendors are required to hold current insurance, licensing and an executed agreement on file before performing work. Certificates are tracked to expiration and coverage is verified against the scope performed.</div>
             <div class="pills"><span class="pill">Certificate Tracking</span><span class="pill">License Verification</span><span class="pill">Additional Insured</span><span class="pill">Scope-Appropriate Limits</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Tenants</div>
             <div class="cell-title">Tenant Insurance &amp; Lease Compliance</div>
-            <div class="cell-desc">Certificates collected, verified against lease requirements and tracked to renewal &mdash; alongside enforcement of use, alteration and building rule provisions.</div>
+            <div class="cell-desc">Certificates are collected, verified against lease requirements and tracked to renewal, alongside enforcement of use, alteration and building rule provisions.</div>
             <div class="pills"><span class="pill">COI Collection</span><span class="pill">Lease Requirement Match</span><span class="pill">Renewal Tracking</span><span class="pill">Rules Enforcement</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Emergency</div>
             <div class="cell-title">Emergency Preparedness</div>
-            <div class="cell-desc">A current emergency response plan for a twenty-story tower &mdash; evacuation and shelter procedures, floor warden structure, tenant contact tree, and coordinated drills &mdash; maintained and distributed to the tenant roster</div>
+            <div class="cell-desc">A current emergency response plan covering evacuation and shelter procedures, floor warden structure, tenant contact tree and coordinated drills, maintained and distributed to the tenant roster</div>
             <div class="pills"><span class="pill">Response Plan</span><span class="pill">Floor Wardens</span><span class="pill">Tenant Drills</span><span class="pill">Contact Tree</span><span class="pill">First Responder Coordination</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Structural</div>
             <div class="cell-title">Seismic, Envelope &amp; Water Intrusion</div>
-            <div class="cell-desc">Water-intrusion events investigated to source and documented rather than patched, with findings carried into the capital plan.</div>
+            <div class="cell-desc">Condition is monitored across structure, curtain wall, sealant and roof. Water-intrusion events are investigated to source and documented, with findings carried into the capital plan.</div>
             <div class="pills"><span class="pill">Condition Monitoring</span><span class="pill">Envelope Tracking</span><span class="pill">Intrusion Investigation</span><span class="pill">Capital Plan Feed</span></div>
           </div>
         </div>
         <div class="highlight reveal">
           <span class="h-label">Compliance Posture</span>
-          <span class="h-value">Every regulatory obligation carries a date, an owner, and a certificate on file &mdash; reported to Ownership monthly, so compliance status is known rather than assumed</span>
+          <span class="h-value">Every regulatory obligation carries a due date, an assigned owner and a certificate on file, with current status reported to Ownership monthly</span>
         </div>
       </div>
 
       <!-- ============ SLIDE 7 · TENANT EXPERIENCE & BUILDING OPERATIONS ============ -->
       <div class="page" id="page-tenants">
-        <p class="lead reveal">A roster of smaller tenants is retained on service, not on rent alone. The repositioned lobby, conference center, bike room and showers only produce retention if they are staffed, scheduled and maintained &mdash; so AGM runs the tenant-facing side of the building as a defined service program with standards Ownership can hold us to.</p>
+        <p class="lead reveal">Tenant retention on a roster of smaller tenants depends substantially on service quality. The repositioned lobby, conference center, bike room and shower facilities require staffing, scheduling and maintenance to deliver that result. AGM administers tenant-facing operations as a defined service program with stated response standards and monthly reporting against them.</p>
 
         <div class="sec-head reveal"><h3>Tenant Service Program</h3><span class="pipe">|</span><span class="kick">Daily Operations</span></div>
         <div class="feature-row reveal">
           <div class="fcell">
             <div class="kicker">Requests</div>
             <div class="f-title">Work Orders &amp; Service Requests</div>
-            <div class="f-desc">Submitted through the tenant portal, acknowledged and triaged on a defined standard, assigned to engineering or a vendor, and closed with the tenant notified &mdash; full history retained against the suite.</div>
+            <div class="f-desc">Requests are submitted through the tenant portal, acknowledged and triaged against a defined standard, assigned to engineering or a vendor, and closed with the tenant notified. Full request history is retained against the suite.</div>
           </div>
           <div class="fcell">
             <div class="kicker">Retention</div>
             <div class="f-title">Tenant Relations &amp; Retention</div>
-            <div class="f-desc">Regular contact with each tenant independent of a service issue, expansion and contraction intentions tracked well ahead of expiration, and satisfaction treated as the leading indicator of renewal probability.</div>
+            <div class="f-desc">AGM maintains regular contact with each tenant independent of any service issue, tracks expansion and contraction intentions ahead of expiration, and reports tenant satisfaction as an indicator of renewal probability.</div>
           </div>
         </div>
         <div class="cellgrid compact no-num has-feature reveal">
           <div class="cell">
             <div class="kicker">Access</div>
             <div class="cell-title">Access Control &amp; Security</div>
-            <div class="cell-desc">Credentials issued, modified and revoked on tenant instruction with an auditable record. After-hours access, visitor procedures and patrol coverage administered against building rules.</div>
+            <div class="cell-desc">Credentials are issued, modified and revoked on tenant instruction with an auditable record. After-hours access, visitor procedures and patrol coverage are administered against building rules and lease terms.</div>
             <div class="pills"><span class="pill">Credential Administration</span><span class="pill">Audit Trail</span><span class="pill">Patrol Coordination</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Amenities</div>
             <div class="cell-title">Conference Center &amp; Amenities</div>
-            <div class="cell-desc">The conference center, bike room and shower facilities scheduled, cleaned, stocked and maintained &mdash; presented to prospective tenants as a working amenity rather than a photograph.</div>
+            <div class="cell-desc">The conference center, bike room and shower facilities are scheduled, cleaned, stocked and maintained, and are available for demonstration to prospective tenants.</div>
             <div class="pills"><span class="pill">Conference Scheduling</span><span class="pill">Amenity Standard</span><span class="pill">Tour Readiness</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Comfort</div>
             <div class="cell-title">HVAC Comfort &amp; After-Hours</div>
-            <div class="cell-desc">Zone complaints investigated at the system rather than the thermostat. After-hours requests processed through the automation system and billed against lease terms.</div>
+            <div class="cell-desc">Zone comfort complaints are investigated at the system level. After-hours requests are processed through the automation system and billed against lease terms.</div>
             <div class="pills"><span class="pill">Zone Diagnosis</span><span class="pill">Billing Accuracy</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Moves</div>
             <div class="cell-title">Moves &amp; Build-Out Support</div>
-            <div class="cell-desc">Freight scheduling, contractor access, building protection and insurance verification &mdash; so occupancy events do not disrupt the building.</div>
+            <div class="cell-desc">Freight scheduling, contractor access, building protection and insurance verification are coordinated so that occupancy events do not disrupt building operations.</div>
             <div class="pills"><span class="pill">Freight Scheduling</span><span class="pill">Contractor Access</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Housekeeping</div>
             <div class="cell-title">Janitorial &amp; Common Areas</div>
-            <div class="cell-desc">Scope, day porter coverage, window washing and waste managed to a written standard and inspected, scaled as the building absorbs vacancy.</div>
+            <div class="cell-desc">Janitorial scope, day porter coverage, window washing and waste removal are managed to a written standard and inspected, with scope scaled as the building absorbs vacancy.</div>
             <div class="pills"><span class="pill">Written Scope</span><span class="pill">Inspection Program</span><span class="pill">Occupancy Scaling</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Communication</div>
             <div class="cell-title">Tenant Communication</div>
-            <div class="cell-desc">Scheduled notices for maintenance, testing and construction activity, with a single point of contact for the roster.</div>
+            <div class="cell-desc">Scheduled notices are issued for maintenance, testing and construction activity, with a single point of contact maintained for the roster.</div>
             <div class="pills"><span class="pill">Advance Notices</span><span class="pill">Single Point of Contact</span></div>
           </div>
         </div>
         <div class="highlight reveal">
           <span class="h-label">Retention Logic</span>
-          <span class="h-value">On a roster of smaller tenants, service responsiveness is the primary retention lever &mdash; every request, credential, and notice handled on a defined standard and reported to Ownership</span>
+          <span class="h-value">Service responsiveness is the primary determinant of retention on a roster of this composition. Every request, credential and notice is handled against a defined standard and reported to Ownership</span>
         </div>
 
         <div class="block reveal" style="margin-top:60px;">
           <div class="sec-head"><h3>Plaza-Level Retail Operations</h3><span class="pipe">|</span><span class="kick">Mixed-Use Coordination</span></div>
-          <p class="lead">Ground-floor retail runs on different hours, service needs and lease economics than the office floors above it. AGM manages that interface deliberately.</p>
+          <p class="lead">Ground-floor retail operates on different hours, service requirements and lease economics than the office floors above it. AGM administers the operational interface between the two uses.</p>
           <ul class="mp-list two-col reveal">
-            <li><strong>Operating Interface:</strong> Hours of operation, plaza and lobby access, delivery routing, waste and grease handling, and venting or exhaust obligations administered against the retail lease and building rules.</li>
-            <li><strong>Shared Systems:</strong> Clear allocation of responsibility for shared mechanical, plumbing, electrical, and life-safety systems serving both retail and office use, so repair responsibility is settled before an event rather than after it.</li>
-            <li><strong>Lease Economics:</strong> Triple-net retail administration alongside full-service office leases &mdash; separate recovery mechanics, separate reconciliation, and sales reporting and percentage rent collection where the lease provides for it.</li>
+            <li><strong>Operating Interface:</strong> Hours of operation, plaza and lobby access, routing deliveries, waste and grease handling, and venting or exhaust obligations administered against the retail lease and building rules.</li>
+            <li><strong>Shared Systems:</strong> Responsibility is allocated for shared mechanical, plumbing, electrical and life-safety systems serving both retail and office use, so that repair responsibility is established in advance of any event.</li>
+            <li><strong>Lease Economics:</strong> Triple-net retail administration alongside full-service office leases, with separate recovery mechanics, separate reconciliation, and sales reporting and percentage rent collection where the lease provides for it.</li>
             <li><strong>Tenant Mix:</strong> Retail positioned as an amenity to the office roster and to plaza traffic, with vacant retail merchandised toward uses that serve the building&rsquo;s daytime population.</li>
-            <li><strong>Presentation:</strong> Storefront, signage, and plaza condition maintained to the standard of the repositioned lobby, since the plaza level is the first thing every prospective office tenant sees.</li>
+            <li><strong>Presentation:</strong> Storefront, signage and plaza condition are maintained to the standard of the repositioned lobby. The plaza level is the point of arrival for prospective office tenants.</li>
           </ul>
           <div class="gallery reveal">
             <figure><div class="g-tile"><img src="/assets/property/retail-coffee-detail.jpg" alt="Plaza-level retail" loading="lazy" /></div><figcaption>Plaza-Level Retail</figcaption></figure>
@@ -1383,7 +1382,7 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
 
       <!-- ============ SLIDE 8 · OFFICE & RETAIL LEASING SUPPORT ============ -->
       <div class="page" id="page-leasing">
-        <p class="lead reveal">Leasing is executed by the brokerage team Ownership appoints. AGM&rsquo;s role is to make their deals close faster &mdash; a building that shows well, accurate information in every prospect&rsquo;s hands, and build-outs delivered on the schedule the lease commits to. With substantial vacancy to absorb, that is a primary management deliverable, not an ancillary one.</p>
+        <p class="lead reveal">Leasing is executed by the brokerage team as appointed by Ownership. AGM&rsquo;s role is to support that team by maintaining the building in showing condition, supplying accurate and current information to prospective tenants, and delivering build-outs on the schedule each lease commits to. With substantial vacancy to absorb, this support is a primary management deliverable.</p>
 
         <div class="sec-head reveal"><h3>Leasing Support Cycle</h3><span class="pipe">|</span><span class="kick">Prospect to Rent Commencement</span></div>
         <div class="funnel-rail reveal">
@@ -1397,8 +1396,8 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
             <div class="pills"><span class="pill">Vacant Suite Standard</span><span class="pill">Amenity Presentation</span><span class="pill">Broker Access</span></div>
           </div>
           <div class="funnel-col">
-            <div class="fn-desc">Accurate stacking plans, availability, and operating expense information supplied to the brokerage team, with prospect diligence questions answered from the operating record</div>
-            <div class="pills"><span class="pill">Stacking Plan Currency</span><span class="pill">OpEx &amp; Base Year Data</span><span class="pill">Prospect Diligence</span></div>
+            <div class="fn-desc">Current stacking plans, availability and operating expense information are supplied to the brokerage team, with prospect diligence questions answered from the operating record</div>
+            <div class="pills"><span class="pill">Stacking Plan Currency</span><span class="pill">Operating Expense &amp; Base Year Data</span><span class="pill">Prospect Diligence</span></div>
           </div>
           <div class="funnel-col">
             <div class="fn-desc">Tenant improvements bid, contracted, and managed to the delivery date the lease commits to, with allowance draws documented and rent commencement confirmed</div>
@@ -1411,31 +1410,31 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
           <div class="cell">
             <div class="kicker">Segment</div>
             <div class="cell-title">Small-Tenant Office Demand</div>
-            <div class="cell-desc">The Seattle CBD leasing market is dominated by requirements under 10,000 square feet, and the building&rsquo;s floor plate and existing roster are already matched to that segment. AGM supports a strategy built for that demand rather than for full-floor users alone</div>
+            <div class="cell-desc">The Seattle CBD leasing market is dominated by requirements under 10,000 square feet, and the building&rsquo;s floor plate and existing roster are matched to that segment. AGM supports a leasing strategy directed at that demand</div>
             <div class="pills"><span class="pill">Sub-10,000 SF Requirements</span><span class="pill">Divisible Floor Plates</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Product</div>
             <div class="cell-title">Spec Suite Program</div>
-            <div class="cell-desc">Pre-built suites in the sizes the market is actually transacting &mdash; removing the build-out delay that loses smaller tenants to move-in-ready alternatives.</div>
+            <div class="cell-desc">Pre-built suites in the sizes the market is transacting, reducing the build-out interval that directs smaller tenants toward move-in-ready alternatives.</div>
             <div class="pills"><span class="pill">Pre-Built Inventory</span><span class="pill">Time to Occupancy</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Retail</div>
             <div class="cell-title">Plaza-Level Retail Merchandising</div>
-            <div class="cell-desc">Vacant retail positioned by analyzing what the surrounding blocks and the building&rsquo;s own daytime population are underserved by, and developing a target operator profile from space specifications, foot traffic, and Ownership objectives</div>
+            <div class="cell-desc">Vacant retail is positioned by analyzing which uses are underserved in the surrounding blocks and among the building&rsquo;s daytime population, and by developing a target operator profile from space specifications, foot traffic and Ownership objectives</div>
             <div class="pills"><span class="pill">Neighborhood Gap Analysis</span><span class="pill">Operator Profile</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Retention</div>
             <div class="cell-title">Renewal &amp; Rollover Management</div>
-            <div class="cell-desc">A rollover calendar maintained tenant by tenant, with renewal outreach beginning well ahead of expiration and prioritized by the tenants rolling soonest &mdash; retention of in-place income being materially cheaper than replacing it</div>
+            <div class="cell-desc">A rollover calendar is maintained tenant by tenant, with renewal outreach beginning ahead of expiration and prioritized by the tenants rolling soonest. Retention of in-place income carries materially lower cost than replacement</div>
             <div class="pills"><span class="pill">Rollover Calendar</span><span class="pill">Early Outreach</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Digital</div>
             <div class="cell-title">Property Website &amp; Online Presence</div>
-            <div class="cell-desc">A branded property website carrying availability, floor plans, amenities, and building information, serving as the central destination for brokerage traffic and the access point for the tenant and owner portals</div>
+            <div class="cell-desc">A branded property website carrying availability, floor plans, amenities and building information, serving as the central destination for brokerage traffic and the access point for the tenant and owner portals</div>
             <div class="pills"><span class="pill">Branded Website</span><span class="pill">Availability &amp; Floor Plans</span><span class="pill">Google Business Profile</span></div>
           </div>
           <div class="cell">
@@ -1447,7 +1446,7 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
         </div>
         <div class="highlight reveal">
           <span class="h-label">Management Contribution</span>
-          <span class="h-value">A building that shows well, information that is accurate, and build-outs delivered on schedule &mdash; the three management inputs that shorten the path from tour to rent commencement</span>
+          <span class="h-value">Showing condition, accurate information and on-schedule build-out delivery are the three management inputs that affect the interval between tour and rent commencement</span>
         </div>
       </div>
 
@@ -1488,7 +1487,7 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
 
         <div class="block reveal" style="margin-top:60px;">
           <div class="sec-head"><h3>Expense Recovery Administration</h3><span class="pipe">|</span><span class="kick">Where the Reporting Complexity Sits</span></div>
-          <p class="lead">Plaza 600 does not have a single recovery structure. Office tenants are predominantly full-service gross, reimbursing their pro-rata share of expense increases over an individually negotiated base year; retail operates on a triple-net or modified basis with its own commencement trigger; some tenants reimburse amortized capital expenditures; and a prepaid local improvement district assessment is recovered from tenants over a multi-year period. Each of these is a separate calculation, and each one is a place where recoveries are commonly under-billed.</p>
+          <p class="lead">Plaza 600 does not operate under a single recovery structure. Office tenants are predominantly full-service gross, reimbursing their pro-rata share of expense increases over an individually negotiated base year. Retail operates on a triple-net or modified basis with its own commencement trigger. Some tenants reimburse amortized capital expenditures, and a prepaid local improvement district assessment is recovered from tenants over a multi-year period. Each is a separate calculation and each is a common source of under-billed recoveries.</p>
           <div class="spec-wrap reveal">
             <table class="spec-table">
               <thead>
@@ -1500,32 +1499,32 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
               </thead>
               <tbody>
                 <tr><td class="sys">Full-Service Gross</td><td>Tenant reimburses pro-rata share of operating expense increases above a negotiated base year</td><td>Base year abstracted per lease, expense pool defined, annual reconciliation prepared and issued with supporting detail</td></tr>
-                <tr><td class="sys">Triple Net &amp; Modified</td><td>Retail tenancy reimbursing operating expenses, or taxes and insurance only, with a defined commencement month</td><td>Separate expense pool and reconciliation cycle, commencement date calendared, monthly estimates set and trued up annually</td></tr>
+                <tr><td class="sys">Triple Net &amp; Modified</td><td>Retail tenancy reimbursing operating expenses, or taxes and insurance only, with a defined commencement month</td><td>Separate expense pool and reconciliation cycle, commencement date calendared, monthly estimates set and reconciled annually</td></tr>
                 <tr><td class="sys">Amortized Capital</td><td>Capital expenditures recovered from tenants on the established methodology where leases permit</td><td>Eligible capital identified, amortization schedule built, recovery billed and disclosed in the reconciliation</td></tr>
                 <tr><td class="sys">Percentage Rent</td><td>Retail lease provisions requiring sales reporting above a breakpoint</td><td>Sales reports collected on schedule, breakpoint calculated, percentage rent billed and audited against reported sales</td></tr>
-                <tr><td class="sys">Assessment Recovery</td><td>Prepaid local improvement district assessments recovered from tenants over the assessment period</td><td>Recovery schedule maintained separately from the operating expense pool so it neither lapses nor double-recovers</td></tr>
+                <tr><td class="sys">Assessment Recovery</td><td>Prepaid local improvement district assessments recovered from tenants over the assessment period</td><td>Recovery schedule maintained separately from the operating expense pool to prevent both lapse and duplicate recovery</td></tr>
                 <tr><td class="sys">Tenant Services</td><td>After-hours HVAC, submetered or separately metered utilities, storage, and parking</td><td>Usage captured at source, billed monthly at lease rates, and reconciled to the general ledger</td></tr>
                 <tr><td class="sys">Parking &amp; Telecom</td><td>Monthly parking licenses across owned and licensed stalls, plus telecom and riser agreements</td><td>Stall roster and rate schedule maintained, third-party license obligations tracked, revenue reconciled monthly</td></tr>
               </tbody>
             </table>
           </div>
-          <div class="sub-note"><strong>Why It Matters:</strong> On a building of this size and lease mix, recovery accuracy moves net operating income by more than most expense-side savings. AGM abstracts every lease to its recovery terms at onboarding and reconciles annually with the calculation shown, not summarized</div>
+          <div class="sub-note"><strong>Recovery Accuracy:</strong> On a building of this size and lease mix, recovery accuracy affects net operating income more than most expense-side savings. AGM abstracts every lease to its recovery terms at onboarding and reconciles annually, with the supporting calculation provided</div>
         </div>
 
         <div class="block reveal">
           <div class="sec-head"><h3>Reporting Package</h3><span class="pipe">|</span><span class="kick">Monthly, Fixed Calendar</span></div>
           <ul class="mp-list reveal">
             <li><strong>Financial Statements:</strong> Balance sheet, income statement, general ledger, bank reconciliation, and paid invoice detail at the line level the operating budget is built on.</li>
-            <li><strong>Budget to Actual:</strong> Every variance explained in writing rather than presented as a number, with year-end reforecast where the variance is structural.</li>
+            <li><strong>Budget to Actual:</strong> Every variance explained in writing, with year-end reforecast where the variance is structural.</li>
             <li><strong>Rent Roll &amp; Expirations:</strong> Current rent roll, occupancy, and a forward lease expiration schedule with renewal status against each tenant.</li>
             <li><strong>Accounts Receivable:</strong> Aged receivables reported against a stated collection threshold, with the action taken on each delinquency.</li>
             <li><strong>Operations Summary:</strong> Work order volume and closure, preventive maintenance completion, compliance status, capital progress, and any open building system finding.</li>
             <li><strong>Leasing Activity:</strong> Tours, proposals, executed leases, absorption against plan, and leasing cost per square foot.</li>
-            <li><strong>Consolidated Portfolio View:</strong> Plaza 600 reported alongside the other Seattle assets AGM manages for Ownership, on one set of KPIs.</li>
+            <li><strong>KPI Summary:</strong> A defined set of operating and financial indicators reported on the same cadence as the financial package.</li>
           </ul>
           <div class="highlight reveal">
             <span class="h-label">Customization</span>
-            <span class="h-value">AGM&rsquo;s platform allows for full customization of all financial reporting to align with Ownership preferences, including reporting formats already in use across the existing portfolio</span>
+            <span class="h-value">AGM&rsquo;s platform allows for full customization of all financial reporting to align with Ownership preferences</span>
           </div>
         </div>
       </div>
@@ -1564,15 +1563,15 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
         </div>
 
         <div class="block reveal" style="margin-top:60px;">
-          <div class="sec-head"><h3>Placement Considerations &mdash; High-Rise Office</h3><span class="pipe">|</span><span class="kick">Plaza 600</span></div>
-          <p class="lead">A twenty-story Seattle tower of this vintage places differently than the balance of a portfolio. Earthquake limits and deductibles, the schedule of values, boiler and machinery coverage for a central plant, and business interruption assumptions on a partially leased building all require deliberate positions before binding. AGM works these with Ownership and the broker rather than accepting a renewal as issued.</p>
+          <div class="sec-head"><h3>Placement Considerations for High-Rise Office</h3><span class="pipe">|</span><span class="kick">Plaza 600</span></div>
+          <p class="lead">A twenty-story tower of this vintage places differently than the balance of a portfolio. Earthquake limits and deductibles, the schedule of values, boiler and machinery coverage for a central plant, and business interruption assumptions on a partially leased building each require a defined position before binding. AGM reviews these with Ownership and the broker in advance of each renewal.</p>
           <ul class="mp-list reveal">
-            <li><strong>Schedule of Values:</strong> Insured square footage and total insured value reconciled against rentable area and the replacement cost basis, so the schedule matches the asset and the premium is not built on a mismatch.</li>
-            <li><strong>Earthquake:</strong> Limits and deductibles set deliberately against lender requirements and Ownership&rsquo;s risk tolerance &mdash; a material line item for a Seattle high-rise and one where the difference between options is significant.</li>
-            <li><strong>Equipment Breakdown:</strong> Boiler and machinery coverage confirmed against the central chilled-water plant, district steam interface, elevators, and emergency generator.</li>
-            <li><strong>Business Interruption:</strong> Rental value and business interruption assumptions built on actual in-place income and the lease-up plan, not on stabilized projections.</li>
-            <li><strong>Tenant &amp; Vendor Coverage:</strong> Tenant and vendor certificates verified against lease and contract requirements, with the landlord named as required and limits appropriate to the work performed.</li>
-            <li><strong>Claims Administration:</strong> Incident documentation from the operating record, claims filed and tracked to resolution, and loss history maintained to support future placement.</li>
+            <li><strong>Schedule of Values:</strong> Insured square footage and total insured value are reconciled against rentable area and the replacement cost basis, so that the schedule matches the asset and the premium is calculated on accurate figures.</li>
+            <li><strong>Earthquake:</strong> Limits and deductibles are set against lender requirements and Ownership&rsquo;s risk tolerance. This is a material line item for a Seattle high-rise, with significant variance between the available options.</li>
+            <li><strong>Equipment Breakdown:</strong> Boiler and machinery coverage is confirmed against the central chilled-water plant, district steam interface, elevators and emergency generator.</li>
+            <li><strong>Business Interruption:</strong> Rental value and business interruption assumptions are based on in-place income and the lease-up plan rather than stabilized projections.</li>
+            <li><strong>Tenant and Vendor Coverage:</strong> Tenant and vendor certificates are verified against lease and contract requirements, with the landlord named as required and limits appropriate to the work performed.</li>
+            <li><strong>Claims Administration:</strong> Incidents are documented from the operating record, claims are filed and tracked to resolution, and loss history is maintained to support future placement.</li>
           </ul>
           <div class="sub-note"><strong>Program Conditions:</strong> Availability, pricing, and coverage terms remain subject to underwriting review, property eligibility, and carrier approval</div>
         </div>
@@ -1671,37 +1670,37 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
         <!-- Purpose-built platforms -->
         <div class="block reveal">
           <div class="sec-head"><h3>Purpose-Built Platforms</h3><span class="pipe">|</span><span class="kick">Built for This Engagement</span></div>
-          <p class="lead">Where a standard portal does not fit the work, AGM builds the tool. The Plaza 600 due diligence platform already delivered to Ownership is an example: every verification item carrying a workstream, a status, an owner, and the document that closes it &mdash; with the offering memorandum, the rent roll, the lease register, the vendor register, and the recurring engineering program loaded and searchable in one place. It was built and delivered inside the feasibility window.</p>
+          <p class="lead">AGM develops purpose-built platforms where a standard portal does not meet the requirements of an assignment. The Plaza 600 due diligence platform delivered to Ownership carries every verification item with a workstream, a status, an owner and the document that closes it. The offering memorandum, rent roll, lease register, vendor register and recurring engineering program are loaded and searchable in a single location. It was delivered within the feasibility window.</p>
           <div class="cellgrid cols-1 reveal no-num">
             <div class="cell">
               <div class="kicker">Delivered</div>
               <div class="cell-title">Plaza 600 Due Diligence Platform</div>
-              <div class="cell-desc">A live, access-controlled platform organizing the acquisition: five diligence workstreams, every item with a status and an owner, the lease and contract registers, the recurring engineering task and equipment register, a document request tracker, and a digital file room &mdash; findings separated from assumptions and missing information stated as missing</div>
+              <div class="cell-desc">An access-controlled platform organizing the acquisition: five diligence workstreams with a status and an owner recorded against every item, the lease and contract registers, the recurring engineering task and equipment register, a document request tracker and a digital file room. Findings are recorded separately from assumptions, and outstanding information is identified as outstanding</div>
               <div class="pills"><span class="pill">Diligence Register</span><span class="pill">Lease &amp; Contract Registers</span><span class="pill">Engineering Task Register</span><span class="pill">Document Request Tracker</span><span class="pill">Digital File Room</span><span class="pill">Access Controlled</span></div>
             </div>
             <div class="cell">
               <div class="kicker">At Transition</div>
               <div class="cell-title">Operating Continuity of the Same Platform</div>
-              <div class="cell-desc">The registers built during diligence are the registers the building is operated from &mdash; the equipment record, the preventive maintenance schedule, the vendor and contract calendar, and the lease abstracts carry directly into operations rather than being rebuilt after closing</div>
+              <div class="cell-desc">The registers assembled during diligence become the operating registers. The equipment record, preventive maintenance schedule, vendor and contract calendar and lease abstracts carry directly into operations and are not rebuilt after closing</div>
               <div class="pills"><span class="pill">No Rebuild at Closing</span><span class="pill">Continuous Equipment Record</span><span class="pill">Contract Calendar</span><span class="pill">Lease Abstracts</span></div>
             </div>
             <div class="cell">
               <div class="kicker">Capability</div>
               <div class="cell-title">In-House Development</div>
-              <div class="cell-desc">AGM builds and maintains these platforms internally, which is why they can be produced in days against a specific assignment rather than requested as a feature from a software vendor &mdash; the same capability behind the property website, the reporting dashboards, and the consolidated portfolio view</div>
-              <div class="pills"><span class="pill">Built In-House</span><span class="pill">Days, Not Quarters</span><span class="pill">Assignment-Specific</span><span class="pill">Maintained by AGM</span></div>
+              <div class="cell-desc">AGM builds and maintains these platforms internally. Development is scoped to a specific assignment and delivered on short timelines. The same capability supports the property website, the reporting dashboards and the consolidated portfolio view</div>
+              <div class="pills"><span class="pill">Built In-House</span><span class="pill">Short Delivery Timelines</span><span class="pill">Assignment-Specific</span><span class="pill">Maintained by AGM</span></div>
             </div>
           </div>
           <div class="highlight reveal">
             <span class="h-label">Why It Matters</span>
-            <span class="h-value">Management transitions and diligence windows fail on information handling. AGM&rsquo;s answer is to build the platform the assignment needs and operate from it &mdash; already demonstrated on this asset, before an agreement is in place</span>
+            <span class="h-value">Information handling determines the outcome of management transitions and diligence periods. AGM builds the platform an assignment requires and operates from it, as already demonstrated on this asset</span>
           </div>
         </div>
       </div>
 
       <!-- ============ SLIDE 12 · MANAGEMENT TRANSITION ============ -->
       <div class="page" id="page-transition">
-        <p class="lead reveal">Transitions fail in predictable ways: a maintenance interval lapses, a contract auto-renews on bad terms, a certificate expires unnoticed, a receivable goes unreconciled. AGM treats transition as a scheduled program with named deliverables &mdash; and on this asset much of the underlying work is already complete.</p>
+        <p class="lead reveal">Management Transitions carry recurring failure points: a lapsed maintenance interval, an unfavorable automatic renewal, an expired certificate, an unreconciled receivable. AGM administers transition as a scheduled program with named deliverables at fixed intervals. On this asset, a substantial portion of the underlying work is already complete.</p>
 
         <div class="sec-head reveal"><h3>Transition Schedule</h3><span class="pipe">|</span><span class="kick">From Closing Forward</span></div>
         <div class="steps reveal">
@@ -1710,7 +1709,7 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
             <div class="st-when">Before Closing</div>
             <div>
               <div class="st-title">Preparation Against the Diligence Record</div>
-              <div class="st-desc">Lease abstracts, the vendor register, the equipment record and the recurring engineering program are already assembled. Banking, accounting setup, insurance, tenant notices and the emergency response plan are prepared ahead of the closing date rather than after it.</div>
+              <div class="st-desc">Lease abstracts, vendor register, equipment record, and recurring engineering program are already assembled. Banking, accounting setup, insurance placement, tenant notice packages and the emergency response plan are prepared in advance of the closing date.</div>
             </div>
           </div>
           <div class="step">
@@ -1718,7 +1717,7 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
             <div class="st-when">Day 1</div>
             <div>
               <div class="st-title">Operational Takeover</div>
-              <div class="st-desc">Vendor introductions, tenant notices with new points of contact, utility and access transfers, banking and receivables live, and 24/7 emergency response in place at close.</div>
+              <div class="st-desc">Vendor introductions, tenant notices issued with the new points of contact, utility and access control transfers, banking and accounts receivable operational, and 24/7 emergency response in place at closing.</div>
             </div>
           </div>
           <div class="step">
@@ -1726,7 +1725,7 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
             <div class="st-when">First 30 Days</div>
             <div>
               <div class="st-title">Contracts, Leases &amp; Receivables</div>
-              <div class="st-desc">Every service agreement reviewed against the register and cancellation windows calendared so nothing auto-renews into Ownership&rsquo;s tenure. Lease files abstracted with recovery terms captured; opening balances reconciled.</div>
+              <div class="st-desc">Every service agreement is reviewed against the register and cancellation windows are calendared so that no agreement renews automatically after closing. Lease files are abstracted with recovery terms captured, and opening receivable balances are reconciled.</div>
             </div>
           </div>
           <div class="step">
@@ -1734,7 +1733,7 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
             <div class="st-when">First 60 Days</div>
             <div>
               <div class="st-title">Systems, Compliance &amp; Maintenance</div>
-              <div class="st-desc">Preventive maintenance stood up from the equipment record with next-due dates carried forward, every major asset verified on site, the compliance calendar confirmed certificate by certificate, and the Clean Buildings path established with a cost and a deadline.</div>
+              <div class="st-desc">The preventive maintenance schedule is established from the equipment record with next-due dates carried forward, every major asset is verified on site, the compliance calendar is confirmed certificate by certificate, and the Clean Buildings compliance path is established with a cost and a deadline.</div>
             </div>
           </div>
           <div class="step">
@@ -1742,7 +1741,7 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
             <div class="st-when">First 90 Days</div>
             <div>
               <div class="st-title">Leasing and Capital in Motion</div>
-              <div class="st-desc">Brokerage team supported with current availability and operating expense data, vacant suites brought to tour standard, renewal outreach underway, and the first-pass five-year capital plan delivered.</div>
+              <div class="st-desc">The brokerage team is supported with current availability and operating expense data, vacant suites are brought to tour standard, renewal outreach is initiated, and the first five-year capital plan and reserve recommendation are delivered.</div>
             </div>
           </div>
           <div class="step">
@@ -1750,7 +1749,7 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
             <div class="st-when">Monthly</div>
             <div>
               <div class="st-title">Owner Reporting on a Fixed Calendar</div>
-              <div class="st-desc">Financial package, operations summary, compliance status, capital progress and leasing activity, with every variance explained and consolidated with the other Seattle assets.</div>
+              <div class="st-desc">Financial package, operations summary, compliance status, capital progress and leasing activity are delivered on a fixed monthly calendar, with every variance explained.</div>
             </div>
           </div>
         </div>
@@ -1760,68 +1759,52 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
           <div class="cell">
             <div class="kicker">Head Start</div>
             <div class="cell-title">Diligence Already Performed</div>
-            <div class="cell-desc">AGM has already worked this asset &mdash; the offering memorandum, the rent roll, the lease register, the vendor register, and the recurring engineering program are loaded and reconciled. Transition begins from a built record rather than an empty file</div>
-            <div class="pills"><span class="pill">Registers Built</span><span class="pill">Findings Logged</span><span class="pill">Documents Filed</span><span class="pill">No Restart</span></div>
+            <div class="cell-desc">AGM has already performed diligence on this asset. The offering memorandum, rent roll, lease register, vendor register and recurring engineering program are loaded and reconciled, and transition proceeds from that record</div>
+            <div class="pills"><span class="pill">Registers Built</span><span class="pill">Findings Logged</span><span class="pill">Documents Filed</span><span class="pill">Reconciled Record</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Continuity</div>
-            <div class="cell-title">Existing Ownership Relationship</div>
-            <div class="cell-desc">AGM currently manages three Seattle assets for Ownership on the same team, platform, and reporting calendar. Approvals, banking protocols, reporting formats, and escalation paths are established and do not need to be negotiated</div>
-            <div class="pills"><span class="pill">Established Protocols</span><span class="pill">Known Reporting Formats</span><span class="pill">Same Team</span><span class="pill">Consolidated Reporting</span></div>
+            <div class="cell-title">Service Agreements Mapped Before Closing</div>
+            <div class="cell-desc">Every active vendor agreement is identified during diligence and mapped to the recurring task program it supports, so that no service lapses at changeover and no agreement will renew before it has been reviewed</div>
+            <div class="pills"><span class="pill">Contract Register</span><span class="pill">Notice Windows</span><span class="pill">Service Continuity</span><span class="pill">Rebid Candidates</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Program</div>
             <div class="cell-title">Maintenance Program Carried Forward</div>
-            <div class="cell-desc">The incumbent task program is adopted task for task with frequencies and next-due dates intact &mdash; so no interval resets and no test falls into a gap at changeover.</div>
-            <div class="pills"><span class="pill">Task-for-Task Migration</span><span class="pill">Next-Due Continuity</span><span class="pill">Gap Extension</span><span class="pill">No Lapse</span></div>
+            <div class="cell-desc">The incumbent task program is adopted in full with frequencies and next-due dates retained, so that no interval resets and no compliance test falls outside its schedule at changeover.</div>
+            <div class="pills"><span class="pill">Task-for-Task Migration</span><span class="pill">Next-Due Continuity</span><span class="pill">Gap Extension</span><span class="pill">Interval Continuity</span></div>
           </div>
           <div class="cell">
             <div class="kicker">Local</div>
             <div class="cell-title">Local Team and Vendor Market</div>
-            <div class="cell-desc">Headquartered in Bellevue, with a current read on downtown vendor pricing and fit-out cost. Principals on site rather than an account team in another market.</div>
+            <div class="cell-desc">Puget Sound property and asset management headquartered in Bellevue, with current knowledge of downtown vendor pricing, fit-out cost and leasing conditions. Principals are available on site.</div>
             <div class="pills"><span class="pill">Bellevue Headquarters</span><span class="pill">Local Vendor Market</span><span class="pill">On-Site Principals</span><span class="pill">Current Cost Data</span></div>
           </div>
         </div>
         <div class="highlight reveal">
           <span class="h-label">Transition Objective</span>
-          <span class="h-value">No lapsed maintenance interval, no unfavorable auto-renewal, no expired certificate, and no unreconciled balance &mdash; with a full reporting package delivered on the first scheduled date after closing</span>
+          <span class="h-value">No lapsed maintenance interval, no unfavorable automatic renewal, no expired certificate and no unreconciled balance, with a full reporting package delivered on the first scheduled date after closing</span>
         </div>
       </div>
 
       <!-- ============ SLIDE 13 · MANAGEMENT FEES ============ -->
       <div class="page" id="page-fees">
-        <p class="lead reveal">AGM offers two service options to fit different ownership needs. Both include a one-time onboarding fee and ongoing monthly fees. The schedule below is structured for a multi-tenant office tower of this size &mdash; on-site engineering, capital and tenant improvement coordination, and expense recovery administration are identified as distinct scopes rather than absorbed into a single percentage.</p>
+        <p class="lead reveal">AGM offers two service options to fit different ownership needs. Both include a one-time onboarding fee and ongoing monthly fees. The schedule below is structured for a multi-tenant office tower of this size, identifying on-site engineering, capital and tenant improvement coordination and expense recovery administration as distinct scopes.</p>
         <div class="fee-cards reveal">
           <div class="fee-card">
             <div>
               <div class="fc-label">Service Option &middot; Full Management</div>
               <div class="fc-title">Full-Service Management</div>
-              <div class="fc-desc">Day-to-day operations, including accounting, financial management, building systems and preventive maintenance oversight, vendor and contract administration, tenant relations, expense recovery reconciliation, compliance calendar management, and ongoing reporting.</div>
+              <div class="fc-desc">Day-to-day operations, including accounting, financial management, building systems and preventive maintenance oversight, vendor and contract administration, tenant relations, expense recovery reconciliation, compliance calendar management and ongoing reporting.</div>
             </div>
             <div class="fc-price">
-              <div class="fc-amount">X%<sup>*</sup></div>
+              <div class="fc-amount">3%<sup>*</sup></div>
               <div class="fc-unit">of gross revenues</div>
               <div class="fc-unit">Minimum $X / month</div>
               <div class="fc-sec">
                 <div class="fc-sec-label">Onboarding &middot; One-Time</div>
                 <div class="fc-amount sm">$X</div>
                 <div class="fc-unit">Transition, setup &amp; website</div>
-              </div>
-            </div>
-          </div>
-          <div class="fee-card">
-            <div>
-              <div class="fc-label">Service Option &middot; Accounting Only</div>
-              <div class="fc-title">Accounting &amp; Reporting</div>
-              <div class="fc-desc">Property-level accounting and financial reporting, including A/P, A/R, bank reconciliations, expense recovery reconciliation, and monthly financial statements.</div>
-            </div>
-            <div class="fc-price">
-              <div class="fc-amount">$X</div>
-              <div class="fc-unit">per month</div>
-              <div class="fc-sec">
-                <div class="fc-sec-label">Onboarding &middot; One-Time</div>
-                <div class="fc-amount sm">$X</div>
-                <div class="fc-unit">Accounting setup &amp; integration</div>
               </div>
             </div>
           </div>
@@ -1839,7 +1822,7 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
         </div>
 
         <div class="sec-head reveal" style="margin-top:52px;"><h3>Property-Level Staffing &amp; Operating Costs</h3><span class="pipe">|</span><span class="kick">Charged as Property Operating Expense</span></div>
-        <p class="lead reveal">A 217,322-square-foot tower with a central plant requires dedicated on-site personnel. These positions and costs are carried as property operating expenses rather than as management fees, consistent with the building&rsquo;s existing operating budget and standard practice for commercial office assets.</p>
+        <p class="lead reveal">A 217,322-square-foot tower with a central plant requires dedicated on-site personnel. These positions and costs are carried as property operating expenses rather than as management fees, consistent with the building&rsquo;s existing operating budget and with standard practice for commercial office assets.</p>
         <div class="fee-compact-grid reveal">
           <div class="fee-compact-cell left">
             <div class="fc-k">On-Site &middot; Operating Expense</div>
@@ -1851,31 +1834,31 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
             <div class="fc-k">Coverage &middot; Operating Expense</div>
             <div class="fc-n">Engineering Coverage</div>
             <div class="fc-a sm">At Cost</div>
-            <div class="fc-nt">Scheduled relief and secondary coverage so the preventive maintenance and compliance program does not rest on one individual</div>
+            <div class="fc-nt">Scheduled relief and secondary coverage so that the preventive maintenance and compliance program does not depend on one individual</div>
           </div>
           <div class="fee-compact-cell left">
             <div class="fc-k">Monthly</div>
             <div class="fc-n">Technology Fee</div>
             <div class="fc-a">$X<span class="u">/ month</span></div>
-            <div class="fc-nt">Website hosting, software licensing, platform maintenance, and the purpose-built registers &mdash; charged as a property operating expense</div>
+            <div class="fc-nt">Website hosting, software licensing, platform maintenance and the purpose-built registers, charged as a property operating expense</div>
           </div>
           <div class="fee-compact-cell">
             <div class="fc-k">Per Engagement</div>
             <div class="fc-n">Specialized Role Fees</div>
             <div class="fc-a sm">Tailored per scope</div>
-            <div class="fc-nt">Tenant services coordinator, project manager, and marketing associate &mdash; priced to the building&rsquo;s needs and scope, determined during the proposal process</div>
+            <div class="fc-nt">Tenant services coordinator, project manager and marketing associate, priced to the building&rsquo;s requirements and scope and determined during the proposal process</div>
           </div>
           <div class="fee-compact-cell left no-bottom">
             <div class="fc-k">Annual</div>
             <div class="fc-n">Expense Recovery Reconciliation</div>
             <div class="fc-a sm">Included</div>
-            <div class="fc-nt">Base year, triple-net, amortized capital, percentage rent, and assessment recovery reconciliation prepared annually and issued to tenants with supporting detail</div>
+            <div class="fc-nt">Base year, triple-net, amortized capital, percentage rent and assessment recovery reconciliation prepared annually and issued to tenants with supporting detail</div>
           </div>
           <div class="fee-compact-cell no-bottom">
             <div class="fc-k">As Incurred</div>
             <div class="fc-n">Third-Party Reports &amp; Compliance Filings</div>
             <div class="fc-a sm">At Cost</div>
-            <div class="fc-nt">Condition assessments, energy benchmarking and Clean Buildings filings, hazardous-material surveys, and required agency filings, approved in advance</div>
+            <div class="fc-nt">Condition assessments, energy benchmarking and Clean Buildings filings, hazardous-material surveys and required agency filings, approved in advance</div>
           </div>
         </div>
         <p class="fee-footnote reveal">* Percentage applied to gross revenues. Figures shown (X% / $X) are placeholders &mdash; replace with the negotiated amounts per engagement. Property-level staffing and third-party costs shown &ldquo;at cost&rdquo; are property operating expenses, not management fees, and are budgeted and approved with the annual operating budget.</p>
@@ -1915,27 +1898,27 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
     {route:"about",      nav:"about",      eyebrow:"01 \u00b7 About",       t1:"About",           t2:"AGM",                    label:"About AGM",
       lead:"Established in 1998, AGM Real Estate Group has grown into a full-service real estate firm providing institutional-grade management, investment, and development services across the Pacific Northwest."},
     {route:"management", nav:"management", eyebrow:"02 \u00b7 Management",  t1:"Property",        t2:"Management Team",        label:"Property Management Team",
-      lead:"Supporting your property \u2014 led by the Property Manager \u2014 is a dedicated team working together to drive performance and execution."},
+      lead:"Supporting your property \u2014 led by the Senior Property Manager \u2014 is a dedicated team working together to drive performance and execution."},
     {route:"investment", nav:"investment", eyebrow:"03 \u00b7 Investment",  t1:"Investment",      t2:"Strategy",               label:"Investment Strategy",
       lead:"Each engagement begins with a defined investment strategy and clearly articulated performance objectives, which directly drive the operating plan and long-term capital strategy."},
     {route:"systems",    nav:"systems",    eyebrow:"04 \u00b7 Systems",     t1:"Building",        t2:"Systems & Engineering",  label:"Building Systems & Engineering",
-      lead:"Plaza 600 is served by a central chilled-water plant, district steam heat, a building automation system, five passenger elevators, an addressable fire alarm, and emergency power \u2014 managed as a single documented program with one equipment record, one maintenance schedule, and one accountable engineer."},
+      lead:"Plaza 600 is served by a central chilled-water plant, district steam heat, a building automation system, five passenger elevators, an addressable fire alarm and emergency power. AGM manages these as a single documented program with one equipment record, one maintenance schedule and one accountable engineer."},
     {route:"maintenance",nav:"maintenance",eyebrow:"05 \u00b7 Capital",     t1:"Construction &",  t2:"Facilities",             label:"Construction, Facilities & Capital Projects",
-      lead:"AGM\u2019s Construction & Facilities team protects asset value through proactive maintenance, vendor oversight, and capital planning \u2014 preserving asset condition, reducing deferred costs, and aligning long-term investment with ownership strategy."},
+      lead:"AGM\u2019s Construction & Facilities team supports asset performance through proactive maintenance, vendor oversight, and capital planning\u2014preserving property condition, limiting deferred maintenance exposure, and aligning capital decisions with Ownership\u2019s investment strategy."},
     {route:"compliance", nav:"compliance", eyebrow:"06 \u00b7 Compliance",  t1:"Compliance,",     t2:"Life Safety & Risk",     label:"Compliance, Life Safety & Risk",
-      lead:"A downtown high-rise of this vintage carries a compliance calendar a newer asset does not. AGM runs it as a dated, owned calendar \u2014 each requirement with the test or filing that satisfies it, the date it is due, and the certificate that evidences it."},
+      lead:"A building of this vintage carries compliance obligations that a newer asset does not. AGM maintains these as a dated calendar recording the test or filing that satisfies each requirement, the date it falls due and the certificate that evidences completion."},
     {route:"tenants",    nav:"tenants",    eyebrow:"07 \u00b7 Tenants",     t1:"Tenant",          t2:"Experience & Operations", label:"Tenant Experience & Building Operations",
-      lead:"A multi-tenant office tower with a diversified roster of smaller tenants is retained on service. AGM operates the tenant-facing side of the building as a defined service program with response standards Ownership can hold us to."},
+      lead:"Tenant retention on a roster of smaller tenants depends substantially on service quality. AGM administers tenant-facing operations as a defined service program with stated response standards and monthly reporting against them."},
     {route:"leasing",    nav:"leasing",    eyebrow:"08 \u00b7 Leasing",     t1:"Office & Retail", t2:"Leasing Support",        label:"Office & Retail Leasing Support",
-      lead:"Leasing is executed by the brokerage team Ownership appoints. AGM\u2019s role is a building that shows well, information that is accurate, and build-outs delivered on schedule \u2014 the management inputs that shorten the path from tour to rent commencement."},
+      lead:"Leasing is executed by the brokerage team as appointed by Ownership. AGM supports that team by maintaining the building in showing condition, supplying accurate and current information, and delivering build-outs on the schedule each lease commits to."},
     {route:"reporting",  nav:"reporting",  eyebrow:"09 \u00b7 Reporting",   t1:"Financial",       t2:"Management & Reporting", label:"Financial Management & Reporting",
       lead:"AGM\u2019s platform provides complete financial transparency, with detailed reporting delivered by the 15th of each month, customizable reporting options, and real-time access through the owner portal."},
     {route:"insurance",  nav:"insurance",  eyebrow:"10 \u00b7 Insurance",   t1:"AGM Master",      t2:"Insurance Program",      label:"AGM Master Insurance Program",
       lead:"AGM can assist Ownership in evaluating property insurance solutions, including participation in AGM\u2019s Master Insurance Program \u2014 a grouped placement structure designed to deliver more efficient coverage and meaningful cost savings relative to standalone policies."},
     {route:"technology", nav:"technology", eyebrow:"11 \u00b7 Technology",  t1:"Tools &",         t2:"Technology",             label:"Tools & Technology",
-      lead:"The AGM platform provides Ownership and tenants with secure, 24/7 access to property information, real-time financial reporting, payment history, work order submission, and integrated communication tools \u2014 alongside platforms AGM builds for a specific assignment."},
+      lead:"The AGM platform provides Ownership and tenants with secure, 24/7 access to property information, real-time financial reporting, payment history, work order submission, and integrated communication tools. AGM also develops purpose-built platforms for a specific assignment."},
     {route:"transition", nav:"transition", eyebrow:"12 \u00b7 Transition",  t1:"Management",      t2:"Transition",             label:"Management Transition",
-      lead:"Management transitions fail in predictable ways. AGM treats transition as a scheduled program with named deliverables at fixed intervals \u2014 and on this asset, much of the underlying work is already complete."},
+      lead:"Management transitions carry recurring points of failure. AGM administers transition as a scheduled program with named deliverables at fixed intervals. On this asset, a substantial portion of the underlying work is already complete."},
     {route:"fees",       nav:"fees",       eyebrow:"13 \u00b7 Fees",        t1:"Management",      t2:"Fees",                   label:"Management Fees",
       lead:"AGM offers two service options to fit different ownership needs \u2014 Full Management and Accounting Only. Both include a one-time onboarding fee and ongoing monthly fees."}
   ];

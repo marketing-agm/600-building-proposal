@@ -29,10 +29,13 @@
   // Cloudflare default. Set false once a custom domain is attached.
   "workers_dev": true,
 
-  // Per-version Preview URLs are OFF. The gate applies to them, but a
-  // confidential proposal should not accumulate additional live endpoints.
-  // Set true if you want a reviewable URL per deployed version.
-  "preview_urls": false
+  // Per-version Preview URLs are ON. This is the Workers equivalent of a Pages
+  // branch preview: `wrangler versions upload` creates a version that is NOT
+  // serving production traffic and gives it its own URL to review.
+  // The gate applies to preview URLs exactly as it does to production, because
+  // run_worker_first makes the Worker handle every request on every hostname.
+  // Set false to stop issuing them.
+  "preview_urls": true
 
   // Secrets are NOT set here — they are encrypted Cloudflare secrets.
   //   npx wrangler secret put SITE_PASSWORD

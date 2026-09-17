@@ -57,6 +57,13 @@ public/            the static site, served through the Worker
   index.html       the proposal (all 13 sections)
   _headers         edge headers
   assets/          AGM brand assets + Plaza 600 photography
+print/             landscape PDF print edition (see below)
+  build-print.mjs  build script — reads public/index.html, writes the PDF
+  paginate.js      measurement-based paginator (runs in the browser)
+  optimize-images.js  resamples photography for print resolution
+  print.css        page geometry, per-page rail, folios
+  fonts.css        Playfair Display + Inter, latin subsets, embedded
+  plaza600-proposal.pdf   the built PDF, committed for download
 ```
 
 ## Local preview
@@ -68,6 +75,61 @@ Opening `public/index.html` directly in a browser also works for layout checks, 
 gate and the analytics injection. Deep-link a section with the URL hash, e.g. `#systems`. (As in
 the source templates, the hash is read on load only — there is no `hashchange` listener, so
 editing the hash in an already-open tab requires a reload.)
+
+## PDF print edition
+A landscape Letter (11in x 8.5in) PDF of the whole proposal is built from the same
+`public/index.html`, so the site is the only place copy is edited.
+
+```bash
+cd print
+npm install                 # playwright-core only; Chromium must already be present
+npm run build               # writes print/plaza600-proposal.pdf
+npm run build:debug         # also keeps print/.print-build.html to open in a browser
+```
+
+The build needs a Chromium binary. It looks in `$CHROME_PATH`, then under
+`$PLAYWRIGHT_BROWSERS_PATH` (default `/opt/pw-browsers`). On a machine with none, install one
+with `npx playwright install chromium` and point `CHROME_PATH` at it.
+
+`print/package.json` deliberately sits in `print/`, not the repository root. Cloudflare Workers
+Builds installs dependencies when it finds a manifest at the root, and the deploy has no need of
+any.
+
+### How pagination works
+Chromium's own page breaking is not used: it cannot repeat a table header, cannot mark a panel as
+continued, and it splits a two-column card grid mid-row, which leaves a half-empty band at the
+foot of the page. `paginate.js` instead decomposes each section into the smallest pieces that may
+stand alone, measures real laid-out heights, and fills each sheet unit by unit.
+
+- Register tables, card grids, step lists, bullet lists and fee cards are **splittable** and are
+  cut on unit boundaries — whole rows, whole grid rows (never one cell of a pair), whole steps.
+  A table header repeats on every continuation sheet.
+- Metric strips, photo bands, callouts, the timeline and the funnel rail are **atomic** and move
+  whole.
+- A continuation sheet carries **CONTINUED** on the left rail in place of the section summary.
+- A heading, or a heading and the paragraph introducing it, is never left at the foot of a page
+  with its content overleaf.
+- Each section is laid out several times against progressively lower ceilings and the layout that
+  wastes the least paper is kept, so a section does not end on a lone callout.
+- Whatever slack is left on a sheet is spent on the joints between units rather than pooling in
+  one void at the bottom.
+- Folios are stamped after pagination, once the total is known. The cover is page 1 and carries
+  no folio.
+
+The build fails (exit 1) if any single unit is taller than one sheet, since that is the one case
+where content would be silently clipped.
+
+### Print-specific notes
+- The sheet is 11in wide, so the site's own breakpoints see a 1056px viewport and hold the desktop
+  layout, but the content column beside the rail is only ~7.1in. `print.css` sets the measures and
+  column counts for that width and inherits the rest of the site stylesheet unchanged.
+- Fonts are embedded as latin woff2 subsets so the PDF renders identically offline. Regenerate
+  them only if the site's font stack changes.
+- Photography is resampled through a canvas to roughly 300dpi for its printed size. Without that
+  step the PDF is about 10MB; with it, under 4MB, with no visible difference on paper.
+- Interactive affordances (hover states, the scroll-reveal fade, buttons) are neutralised for
+  print. The scroll-reveal fade in particular must stay neutralised — sections print blank
+  otherwise.
 
 ## Deploy — Cloudflare Workers
 This project uses Workers, not Pages. The other AGM proposal repos are Pages projects; this one
@@ -94,6 +156,39 @@ Either field can carry `npx wrangler deploy` and the deploy will succeed; what m
 deploy has already completed — e.g. a leftover `/` produces `/bin/sh: 1: /: Permission denied` and
 marks the build failed even though the Worker went live. Check the log for
 `Deployed <name> triggers` and a Version ID before believing a red build badge.
+
+### Previewing a branch before it reaches production
+Pages gives every branch an automatic preview URL. Workers does not; it uses
+**versions** instead, and the distinction matters:
+
+| | What it does |
+|---|---|
+| `npx wrangler versions upload` | Uploads a new **version** and returns its own preview URL. Production traffic is untouched. This is the branch-preview equivalent. |
+| `npx wrangler deploy` | Uploads a version **and** points production traffic at it. |
+
+To preview any branch locally:
+```bash
+git checkout <branch>
+npx wrangler versions upload      # prints a preview URL
+```
+
+`preview_urls` must be `true` in `wrangler.jsonc` for those URLs to be issued.
+The gate applies to them exactly as it does to production, because
+`run_worker_first` makes the Worker handle every request on every hostname.
+
+#### Build settings for automatic branch previews
+Workers Builds runs a different command depending on the branch. Both must be
+set correctly, or non-production branches deploy to production:
+
+| Field | Value | Runs on |
+|-------|-------|---------|
+| Build command | *(empty)* | every build |
+| Deploy command | `npx wrangler deploy` | the production branch only |
+| Version command | `npx wrangler versions upload` | non-production branches |
+
+**Do not put `npx wrangler deploy` in the Build command.** The build command runs
+on every branch, so a deploy there publishes any pushed branch straight to
+production and the version command never gets the chance to make a preview.
 
 ### `run_worker_first` is load-bearing
 `wrangler.jsonc` sets `assets.run_worker_first: true`. This is what makes the Worker see every
@@ -240,6 +335,8 @@ page) so you can filter gate traffic from in-proposal activity.
 - [ ] Confirm named team members for the Management page, if Ownership expects names
 - [ ] Set `SITE_PASSWORD` and `GATE_SECRET` as Worker secrets
 - [ ] Set `POSTHOG_KEY` if engagement tracking is wanted for this proposal
+- [ ] Rebuild the PDF (`cd print && npm run build`) after any copy change, and commit it — the
+      committed PDF is what gets emailed, and it does not update itself
 - [ ] **Confirm the gate holds on the deployed URL**: in a private window, `/` must return the cover
       page, not the proposal. If the proposal loads with no password prompt, `run_worker_first` is
       not in effect — treat the URL as public until fixed.
