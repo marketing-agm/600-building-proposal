@@ -2,10 +2,11 @@
   "name": "plaza600-print",
   "private": true,
   "type": "module",
-  "description": "Landscape PDF print edition of the Plaza 600 management proposal. Kept out of the repository root so the Cloudflare Workers build never sees a package manifest it might try to install.",
+  "description": "PDF builds for the Plaza 600 management proposal: the landscape print edition (build) and the plain-text outline (build:outline). Kept out of the repository root so the Cloudflare Workers build never sees a package manifest it might try to install.",
   "scripts": {
     "build": "node build-print.mjs --out print/plaza600-proposal.pdf",
-    "build:debug": "node build-print.mjs --keep-html"
+    "build:debug": "node build-print.mjs --keep-html",
+    "build:outline": "node build-outline.mjs --out docs/plaza600-proposal-outline.pdf"
   },
   "devDependencies": {
     "playwright-core": "^1.62.1"
