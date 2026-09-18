@@ -1,7 +1,11 @@
 .DS_Store
 node_modules/
+node_modules
 
 # Cloudflare local dev secrets — never commit real passwords
 .dev.vars
 .wrangler/
 package-lock.json
+
+# PDF print edition — intermediate document only; the PDF itself is committed
+print/.print-build.html
