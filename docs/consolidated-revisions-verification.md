@@ -1,8 +1,7 @@
 # Consolidated Revisions: verification record
 
 Byte-exact comparison between Plaza-600-Consolidated-Revisions.docx and the language now live in
-`public/index.html`. Generated, not written by hand: the .docx was parsed to JSON, the edit script
-read from it, and the live text was extracted from the rendered page and diffed against the source.
+`public/index.html`. Generated, not written by hand.
 
 ---
 
@@ -12,11 +11,13 @@ Based on the C.S. Notes branch (PR #4), so this builds on that work rather than 
 
 ## How to verify this
 
-Every block below shows the **REVISED text from your document** next to the **text now live in the proposal**, both quoted verbatim. Neither was retyped: the .docx was parsed to JSON and the edit script read from it, then the live text was pulled back out of the rendered page and diffed against the source.
+Every block below shows the **REVISED text from your document** next to the **text now live in the proposal**, both quoted verbatim, in the document's own order. Neither side was retyped: the .docx was parsed to JSON and the edit script read from it, then the live text was pulled back out of the rendered page and diffed against the source.
 
-**Result: 32 of 32 blocks carry the document's revised language exactly**, after normalising curly quotes and dashes. Three blocks show a difference, all explained in place: two retain a pre-existing tag row the document did not restate, and one is a single joining space.
+**32 of 32 blocks carry the document's revised language exactly**, after normalising curly quotes and dashes. Three show a difference, each annotated in place: two retain a tag row the document did not restate, one is a single joining space. A fourth drops a closing sentence that is editorial instruction rather than copy.
 
-Where a block's revised text opens with a title (for example `Retention Logic.`), that title became the heading or label on the page and the remainder became the body text. Where it ends with a tag list in brackets, that became the tag row. Reassembled, they match the document.
+Where a revised block opens with a title (`Retention Logic.`), that title became the heading or label on the page and the rest became body text. Where it ends with a bracketed list, that became the tag row. Reassembled, they match.
+
+A byte-exact copy of this comparison is committed to the branch at `docs/consolidated-revisions-verification.md`, so it can be diffed rather than trusted.
 
 ---
 
@@ -136,7 +137,7 @@ Where a block's revised text opens with a title (for example `Retention Logic.`)
 
 # 04. Building Systems & Engineering
 
-### 10. Source & Scope Disclosure &nbsp;·&nbsp; verbatim
+### 10. Source & Scope Disclosure &nbsp;·&nbsp; verbatim, see note
 
 *Section 04, the note under the systems table*
 
@@ -323,9 +324,21 @@ Where a block's revised text opens with a title (for example `Retention Logic.`)
 
 > Recovery Strategy & Accuracy. On a building of this size and lease mix, both the structure of future lease recoveries and accurate administration of existing lease provisions materially affect net operating income. AGM will abstract and administer existing recovery provisions, track the financial impact of unrecovered operating expenses, reconcile recoveries in accordance with applicable lease terms, and support the transition toward improved recovery structures as leases roll.
 
+### 24. Monthly Reporting &nbsp;·&nbsp; verbatim
+
+*Section 09, the left-panel section summary*
+
+**Document, REVISED:**
+
+> AGM’s platform is designed to provide transparent property-level financial and operating reporting, with the monthly financial package targeted for delivery by the 15th of each month, subject to timely receipt of required banking, vendor, tenant and third-party information. Reporting may be customized to align with Ownership and asset-manager requirements, with portal access to available property information.
+
+**Live in the proposal:**
+
+> AGM’s platform is designed to provide transparent property-level financial and operating reporting, with the monthly financial package targeted for delivery by the 15th of each month, subject to timely receipt of required banking, vendor, tenant and third-party information. Reporting may be customized to align with Ownership and asset-manager requirements, with portal access to available property information.
+
 # 10. AGM Master Insurance Program
 
-### 24. Coverage Recommendations &nbsp;·&nbsp; verbatim
+### 25. Coverage Recommendations &nbsp;·&nbsp; verbatim
 
 *Section 10, NEW opening paragraph. Its first sentence also replaces the left-panel summary.*
 
@@ -339,7 +352,7 @@ Where a block's revised text opens with a title (for example `Retention Logic.`)
 
 # 11. Tools & Technology
 
-### 25. Asset Manager Reporting &nbsp;·&nbsp; verbatim
+### 26. Asset Manager Reporting &nbsp;·&nbsp; verbatim
 
 *Section 11, heading changed from "Investor Portal" + overview paragraph*
 
@@ -353,7 +366,7 @@ Where a block's revised text opens with a title (for example `Retention Logic.`)
 
 # 12. Management Transition
 
-### 26. First 30 Days &nbsp;·&nbsp; verbatim
+### 27. First 30 Days &nbsp;·&nbsp; verbatim
 
 *Section 12, the First 30 Days step*
 
@@ -365,7 +378,7 @@ Where a block's revised text opens with a title (for example `Retention Logic.`)
 
 > First 30 Days: Contracts, Leases & Receivables. AGM will review available service agreements against the vendor register and calendar identified renewal, termination and notice dates, with recommendations regarding continuation, rebid, modification or termination presented to Ownership and its designated asset manager as appropriate. Lease files will be abstracted with recovery terms captured, and opening receivable balances will be reviewed and reconciled based on available records.
 
-### 27. First 60 Days &nbsp;·&nbsp; verbatim
+### 28. First 60 Days &nbsp;·&nbsp; verbatim
 
 *Section 12, the First 60 Days step. Title gained "& Coverage Assessment".*
 
@@ -377,7 +390,7 @@ Where a block's revised text opens with a title (for example `Retention Logic.`)
 
 > First 60 Days: Systems, Compliance, Maintenance & Coverage Assessment. AGM will review the preventive maintenance schedule and available equipment records, carry forward verified next-due dates, review major building systems to the extent reasonably practicable, and assess available compliance documentation. Based on the initial operating period, AGM will also present recommendations regarding the existing two-engineer staffing structure, front-of-building security coverage, third-party vendor services and other property-level staffing or service requirements. Clean Buildings and other material compliance matters will be coordinated with appropriate professionals and presented with recommended next steps, estimated costs and applicable deadlines as information becomes available.
 
-### 28. Transition Objective &nbsp;·&nbsp; verbatim
+### 29. Transition Objective &nbsp;·&nbsp; verbatim
 
 *Section 12, the closing callout*
 
@@ -391,7 +404,7 @@ Where a block's revised text opens with a title (for example `Retention Logic.`)
 
 # 13. Management Fees
 
-### 29. On-Site Engineering &nbsp;·&nbsp; verbatim
+### 30. On-Site Engineering &nbsp;·&nbsp; verbatim
 
 *Section 13, replaces the two cells "Chief Building Engineer" and "Engineering Coverage" with one*
 
@@ -403,7 +416,7 @@ Where a block's revised text opens with a title (for example `Retention Logic.`)
 
 > On-Site Engineering · Operating Expense. The building is currently staffed with two full-time building engineers. Salary, benefits, uniforms, tools and other approved employment costs will be carried as property operating expenses consistent with the approved operating budget. AGM will evaluate the existing engineering structure during the initial operating period and make recommendations to Ownership and its designated asset manager regarding appropriate ongoing staffing and coverage.
 
-### 30. Security & Vendor Services &nbsp;·&nbsp; verbatim, see note
+### 31. Security & Vendor Services &nbsp;·&nbsp; verbatim, see note
 
 *Section 13, TWO NEW cells*
 
@@ -418,7 +431,7 @@ Where a block's revised text opens with a title (for example `Retention Logic.`)
 > [!NOTE]
 > The document runs the two paragraphs together; they are split into two cells, which is the only difference (a single joining space).
 
-### 31. Scope & Authority &nbsp;·&nbsp; verbatim
+### 32. Scope & Authority &nbsp;·&nbsp; verbatim
 
 *Section 13, NEW qualification closing the section*
 
@@ -430,19 +443,6 @@ Where a block's revised text opens with a title (for example `Retention Logic.`)
 
 > Scope & Authority. The services and operating initiatives described in this proposal reflect AGM’s anticipated management approach and are subject to the final Property Management Agreement, approved annual operating and capital budgets, applicable leases and contracts, and the authority levels established by Ownership. AGM will manage the investment in accordance with Ownership’s approved investment strategy and will coordinate material operating, leasing, capital and financial recommendations with Ownership and its designated asset manager. Third-party brokerage, legal, engineering, insurance and other professional services remain subject to their respective engagements and scopes of responsibility.
 
-# 09. Financial Management & Reporting
-
-### 32. Monthly Reporting &nbsp;·&nbsp; verbatim
-
-*Section 09, the left-panel section summary*
-
-**Document, REVISED:**
-
-> AGM’s platform is designed to provide transparent property-level financial and operating reporting, with the monthly financial package targeted for delivery by the 15th of each month, subject to timely receipt of required banking, vendor, tenant and third-party information. Reporting may be customized to align with Ownership and asset-manager requirements, with portal access to available property information.
-
-**Live in the proposal:**
-
-> AGM’s platform is designed to provide transparent property-level financial and operating reporting, with the monthly financial package targeted for delivery by the 15th of each month, subject to timely receipt of required banking, vendor, tenant and third-party information. Reporting may be customized to align with Ownership and asset-manager requirements, with portal access to available property information.
 ---
 
 # Not from a CURRENT/REVISED block
