@@ -196,10 +196,12 @@ em{font-style:italic;}
 @media(prefers-reduced-motion:reduce){.page.active{animation:none;}}
 
 /* page intro / leads */
-/* Reading measure. Was max-width:none, which at the 1040px content width put
-   ~130 characters on a line — roughly double a comfortable measure. */
-.lead{font-size:14.5px; line-height:1.72; color:var(--ink-80); max-width:74ch; margin:0 0 34px;}
-.lead.wide{max-width:none;}
+/* Body copy runs the full content column. The measure was previously capped at
+   74ch, which left a third of the column empty to the right of every section
+   opener; the client asked for the full width instead. The .lead.wide modifier
+   that used to opt out of the cap is gone with it — it was never applied in the
+   markup, and every lead is now full width by default. */
+.lead{font-size:14.5px; line-height:1.72; color:var(--ink-80); margin:0 0 34px;}
 .lead.with-statute{margin-bottom:20px;}
 /* tabular figures for all numeric content */
 .m-value, .fc-amount, .fc-amt, .fee-card .fc-amount, .rail-num{font-variant-numeric:tabular-nums;}
@@ -325,7 +327,7 @@ em{font-style:italic;}
 .fee-card:hover{background:var(--surface-2);}
 .fee-card .fc-label{font-size:11px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--accent-text); margin-bottom:16px;}
 .fee-card .fc-title{font-family:var(--sans); font-size:19px; font-weight:600; color:var(--ink); line-height:1.3; margin-bottom:14px; letter-spacing:-.01em;}
-.fee-card .fc-desc{font-size:13px; line-height:1.7; color:var(--ink-72); max-width:540px;}
+.fee-card .fc-desc{font-size:13px; line-height:1.7; color:var(--ink-72);}
 .fee-card .fc-foot{font-style:italic; font-size:12px; color:var(--ink-55); margin-top:18px;}
 .fee-card .fc-price{text-align:right; padding-top:4px; white-space:nowrap;}
 .fee-card .fc-amount{font-family:var(--serif); font-size:31px; font-weight:600; color:var(--ink); line-height:1.05; letter-spacing:-.01em;}
@@ -365,7 +367,7 @@ em{font-style:italic;}
 
 /* Bullet list — statements of scope */
 .mp-list{margin:0 0 8px; padding:0; list-style:none;}
-.mp-list li{position:relative; padding-left:22px; margin-bottom:16px; font-size:13.5px; line-height:1.7; color:var(--ink-80); max-width:80ch;}
+.mp-list li{position:relative; padding-left:22px; margin-bottom:16px; font-size:13.5px; line-height:1.7; color:var(--ink-80);}
 .mp-list li::before{content:""; position:absolute; left:3px; top:9px; width:5px; height:5px; border-radius:50%; background:var(--accent);}
 .mp-list li strong{color:var(--ink); font-weight:600;}
 
@@ -384,7 +386,7 @@ em{font-style:italic;}
 .spec-table .grp-b{color:var(--ink-55);}
 .spec-table .tint-a{background:var(--accent-wash);}
 .spec-table .tint-b{background:var(--surface-2);}
-.table-note{font-size:11.5px; font-style:italic; line-height:1.65; color:var(--ink-65); max-width:82ch; margin:20px 0 0;}
+.table-note{font-size:11.5px; font-style:italic; line-height:1.65; color:var(--ink-65); margin:20px 0 0;}
 
 /* Compact fee grid (detailed fee schedule) */
 .fee-compact-grid{display:grid; grid-template-columns:1fr 1fr; border-top:1px solid var(--line-strong); border-bottom:1px solid var(--line-strong);}
@@ -431,7 +433,7 @@ em{font-style:italic;}
 .step:hover::before{transform:scaleY(1);}
 .step .st-when{font-size:11px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--accent-text); padding-top:3px;}
 .step .st-title{font-family:var(--sans); font-size:15.5px; font-weight:600; color:var(--ink); margin-bottom:14px; line-height:1.32; letter-spacing:-.01em;}
-.step .st-desc{font-size:13px; line-height:1.72; color:var(--ink-72); max-width:76ch;}
+.step .st-desc{font-size:13px; line-height:1.72; color:var(--ink-72);}
 @media(max-width:820px){.step{grid-template-columns:1fr; gap:14px; padding:26px 24px 28px;}}
 
 /* single-column card grid (e.g. technology platforms) — no right hairline */
@@ -499,7 +501,7 @@ em{font-style:italic;}
   font-family:var(--sans); font-size:17px; font-weight:600; color:var(--ink);
   margin-bottom:12px; line-height:1.3; letter-spacing:-.012em;
 }
-.feature-row .f-desc{font-size:13.5px; line-height:1.72; color:var(--ink-72); max-width:54ch;}
+.feature-row .f-desc{font-size:13.5px; line-height:1.72; color:var(--ink-72);}
 @media(max-width:820px){
   .feature-row{grid-template-columns:1fr;}
   .feature-row .fcell{border-right:none; border-bottom:1px solid var(--line-soft); padding:26px 24px 28px;}
@@ -529,12 +531,13 @@ em{font-style:italic;}
   .step > div:last-child{grid-column:1 / -1;}
 }
 
-/* Measure caps so single-column card text does not run to full width */
-.cellgrid.cols-1 .cell-desc{max-width:88ch;}
+/* Two-column scope list. Body copy elsewhere is uncapped and runs the full
+   content column; splitting this list into columns is what keeps its lines to a
+   readable length. */
 .mp-list.two-col{
   columns:2; column-gap:56px; max-width:none;
 }
-.mp-list.two-col li{break-inside:avoid; max-width:none;}
+.mp-list.two-col li{break-inside:avoid;}
 @media(max-width:900px){.mp-list.two-col{columns:1;}}
 
 /* fee footnote */
