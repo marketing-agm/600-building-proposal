@@ -44,8 +44,11 @@ described qualitatively rather than stated — see *Editorial rules* below.
   capability document, not a diligence document.
 - **Occupancy is described, not quantified.** The proposal refers to "substantial vacancy" rather
   than a percentage, so it does not go stale and does not restate the seller's confidential position.
-- **Fees remain placeholders.** All amounts are `X%` / `$X` per template convention and must be
-  replaced with negotiated figures before release.
+- **Fees are set except the capital and tenant improvement coordination rate.** The management fee
+  (3% of gross revenues, minimum $12,500 / month), the $12,500 one-time onboarding fee and the $150
+  monthly technology fee are negotiated figures. The Capital Project & Tenant Improvement
+  Coordination card still reads `Hourly Rate / % of Project Cost` and must be priced before release.
+  Note it was never written as `$X`, so grepping for the placeholder tokens will not find it.
 
 ## Repository layout
 This deploys as a **Cloudflare Worker with static assets** (not Pages).
@@ -321,8 +324,9 @@ page) so you can filter gate traffic from in-proposal activity.
   referenced directly in `index.html`.
 - Featured-asset tiles in the *About* portfolio grid still point at the shared AGM portfolio imagery
   (`public/assets/bellevue.png` and siblings).
-- **Fee figures on the Fees page are placeholders (`X%` / `$X`) and must be replaced with the
-  negotiated amounts before this is sent to Orton.** Property-level staffing and third-party costs
+- **One fee figure on the Fees page is still unpriced: the Capital Project & Tenant Improvement
+  Coordination rate, which reads `Hourly Rate / % of Project Cost`.** It must be set before this is
+  sent to Orton. Every other amount is negotiated. Property-level staffing and third-party costs
   are marked *At Cost* / *Included* by design — these are operating expenses, not management fees.
 - The `topbar-prop` label in `public/index.html` and the `prop-name` on the cover page are already
   set to Plaza 600.
@@ -330,7 +334,10 @@ page) so you can filter gate traffic from in-proposal activity.
   or removed, update `coverHTML()` in `src/index.js` to match.
 
 ## Review checklist before release
-- [ ] Replace every `X%` / `$X` fee placeholder with negotiated figures
+- [ ] Price the Capital Project & Tenant Improvement Coordination rate. Do not verify this by
+      grepping `X%` / `$X` — that returns nothing, because the card states a basis rather than a
+      placeholder token. Read the card, and check the fee footnote names nothing still outstanding
+- [ ] Confirm whether Specialized Role Fees (*Tailored per scope*) needs a figure before release
 - [ ] Confirm the property-level staffing treatment (operating expense vs. fee) with leadership
 - [ ] Confirm named team members for the Management page, if Ownership expects names
 - [ ] Set `SITE_PASSWORD` and `GATE_SECRET` as Worker secrets
