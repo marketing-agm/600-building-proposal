@@ -378,3 +378,63 @@ source says.
 > A dedicated management team, led by the Senior Property Manager, supports the property and works together to drive performance and execution.
 
 ---
+
+# Subsequent changes to this record
+
+The records above are the state as of the fee schedule and instruction-set pass.
+Later changes to the same copy are recorded here in order, so that this file
+stays the single record of the fee-schedule language rather than going stale
+against what ships.
+
+---
+
+## T1 — 13. Management Fees · monthly technology fee
+
+**Instruction:** Ownership set the monthly technology fee at $150.
+**Location:** `public/index.html` · `page-fees` → `.fee-compact-cell` → `.fc-a`
+**Rendered check:** confirmed visible — reads `$150/ month` in the DOM; the
+visible space comes from `margin-left:8px` on `.fc-a .u`, not from the markup.
+
+**Before**
+
+> $X / month
+
+**After**
+
+> $150 / month
+
+---
+
+## T2 — 13. Management Fees · fee footnote
+
+**Supersedes:** record **A3** above, whose *After* text is the string this
+change replaces. A3 remains accurate as the record of that earlier pass.
+**Reason:** the footnote named two outstanding figures. With the technology fee
+set, only the capital and tenant improvement coordination rate is open, so the
+sentence would otherwise have implied the technology fee was also unresolved.
+**Location:** `public/index.html` · `page-fees` → `.fee-footnote`
+**Rendered check:** confirmed visible
+
+**Before**
+
+> * Percentage applied to gross revenues. The capital and tenant improvement coordination rate and the monthly technology fee are shown as placeholders and remain to be finalized. Property-level staffing and third-party costs shown “at cost” are property operating expenses, not management fees, and are budgeted and approved with the annual operating budget.
+
+**After**
+
+> * Percentage applied to gross revenues. The capital and tenant improvement coordination rate is shown as a placeholder and remains to be finalized. Property-level staffing and third-party costs shown “at cost” are property operating expenses, not management fees, and are budgeted and approved with the annual operating budget.
+
+---
+
+## Fee schedule state after T1 and T2
+
+| Item | Figure | Status |
+|---|---|---|
+| Management fee | 3% of gross revenues, minimum $12,500 / month | set |
+| Onboarding | $12,500 one-time | set |
+| Monthly technology fee | $150 / month | set |
+| Capital / TI coordination | `Hourly Rate / % of Project Cost` | **open** |
+| Specialized Role Fees | `Tailored per scope` | basis only, no figure |
+
+No `$X` remains in `public/index.html`. Note that neither open item was ever
+written as `$X`, so grepping for the placeholder tokens will not surface them —
+read the cards and the footnote instead.
