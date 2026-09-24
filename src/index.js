@@ -93,9 +93,72 @@ async function sign(secret, msg) {
 }
 
 /* the cookie value a valid session must carry */
+function gateSecret(env) { return env.GATE_SECRET || env.SITE_PASSWORD || ""; }
+
+/* Legacy cookie: one shared session, no recipient in it. Still accepted so a
+ * session issued before per-recipient codes existed is not force-logged-out. */
 function expectedToken(env) {
-  const secret = env.GATE_SECRET || env.SITE_PASSWORD || "";
-  return sign(secret, "authenticated:" + TOKEN_VERSION);
+  return sign(gateSecret(env), "authenticated:" + TOKEN_VERSION);
+}
+
+/* ── Per-recipient access codes ────────────────────────────────────────────
+ * ACCESS_CODES is a JSON object mapping each password to a recipient label:
+ *
+ *   {"Plaza600-ABC12-DEF34":"orton-development","Plaza600-XYZ98-GHI76":"agm-internal"}
+ *
+ * The label is what reaches PostHog as the person's distinct_id, so "did the
+ * client open it" stops being a guess. SITE_PASSWORD still works and resolves
+ * to "shared", which keeps every link already sent out valid.
+ *
+ * A label is an identity, so it is signed into the cookie rather than merely
+ * stored in it — otherwise a visitor could edit the cookie and attribute their
+ * reading to someone else. The charset is deliberately narrow: the label is
+ * interpolated into a cookie and into a JS string literal on the page.
+ * ------------------------------------------------------------------------- */
+const LABEL_OK = /^[a-z0-9][a-z0-9-]{0,39}$/;
+const SHARED_LABEL = "shared";
+
+function accessCodes(env) {
+  const out = [];
+  if (env.ACCESS_CODES) {
+    let parsed = null;
+    try { parsed = JSON.parse(String(env.ACCESS_CODES)); } catch (e) { parsed = null; }
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+      for (const [pw, label] of Object.entries(parsed)) {
+        const l = String(label).trim().toLowerCase();
+        if (pw && LABEL_OK.test(l)) out.push([String(pw), l]);
+      }
+    }
+  }
+  if (env.SITE_PASSWORD) out.push([String(env.SITE_PASSWORD), SHARED_LABEL]);
+  return out;
+}
+
+/* Which recipient does this password belong to? Every candidate is compared,
+ * without short-circuiting, so the reply time does not reveal how far down the
+ * list a match sat. */
+function matchRecipient(env, pw) {
+  let hit = null;
+  for (const [candidate, label] of accessCodes(env)) {
+    if (safeEqual(pw, candidate) && !hit) hit = label;
+  }
+  return hit;
+}
+
+function labelledToken(env, label) {
+  return sign(gateSecret(env), "authenticated:" + TOKEN_VERSION + ":" + label);
+}
+
+/* Returns the recipient label a cookie proves, or null. */
+async function sessionLabel(env, cookie) {
+  if (!cookie) return null;
+  const dot = cookie.lastIndexOf(".");
+  if (dot > 0) {
+    const label = cookie.slice(0, dot), sig = cookie.slice(dot + 1);
+    if (!LABEL_OK.test(label)) return null;
+    return safeEqual(sig, await labelledToken(env, label)) ? label : null;
+  }
+  return safeEqual(cookie, await expectedToken(env)) ? SHARED_LABEL : null;
 }
 
 /* constant-time string compare (avoids timing leaks on the password/cookie) */
@@ -150,11 +213,12 @@ function posthogHost(env) { return env.POSTHOG_HOST || "https://us.i.posthog.com
 
 /* Standard PostHog loader + init, used on the cover page. `surface` tags events
  * so you can tell gate visits apart from in-proposal activity. */
-function posthogSnippet(key, host, surface) {
+function posthogSnippet(key, host, surface, denied) {
   if (!key) return "";
   const k = String(key).replace(/[<'\\]/g, "");
   const h = String(host).replace(/[<'\\]/g, "");
   const s = String(surface).replace(/[<'\\]/g, "");
+  const d = denied ? "true" : "false";
   return `<script>
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug getPageViewId captureTraceFeedback captureTraceMetric".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
   posthog.init('${k}', {
@@ -164,22 +228,32 @@ function posthogSnippet(key, host, surface) {
     capture_pageview: true,
     capture_pageleave: true,
     enable_heatmaps: true,
-    disable_session_recording: false,
+    // Replay is off by decision: this records a named client reading a
+    // proposal. maskAllInputs stays as defence in depth if it is ever re-enabled.
+    disable_session_recording: true,
     session_recording: { maskAllInputs: true }
   });
   posthog.register({ proposal: 'plaza600-microsite', surface: '${s}' });
-  posthog.capture('gate_viewed');
+  posthog.capture('gate_viewed', { denied: ${d} });
 </script>`;
 }
 
 /* Activate the proposal's own inline PostHog by filling in the env key/host as
  * the static index.html streams through the gate. Untouched when no key. */
-async function withProposalAnalytics(res, env) {
+async function withProposalAnalytics(res, env, recipient) {
   if (!env.POSTHOG_KEY) return res;
   const ct = res.headers.get("content-type") || "";
   if (!ct.includes("text/html")) return res;
   let body = await res.text();
   body = body.split(POSTHOG_PLACEHOLDER).join(String(env.POSTHOG_KEY));
+  // The recipient label the signed session cookie proved. The page calls
+  // posthog.identify() with it, so section times, tab clicks and the sign-in
+  // event all attach to a named person instead of an anonymous id. Re-checked
+  // against LABEL_OK here because this is interpolated into a JS string.
+  if (recipient && LABEL_OK.test(recipient)) {
+    body = body.split("window.AGM_RECIPIENT = '';")
+               .join("window.AGM_RECIPIENT = '" + recipient + "';");
+  }
   if (env.POSTHOG_HOST) {
     body = body.split("window.AGM_POSTHOG_HOST = 'https://us.i.posthog.com';")
                .join("window.AGM_POSTHOG_HOST = '" + String(env.POSTHOG_HOST) + "';");
@@ -228,9 +302,14 @@ async function handle(request, env) {
   if (request.method === "POST" && url.pathname === "/__access") {
     let pw = "";
     try { pw = String((await request.formData()).get("password") || ""); } catch (e) {}
-    if (safeEqual(pw, env.SITE_PASSWORD)) {
-      const token = await expectedToken(env);
-      const headers = new Headers({ Location: "/" });
+    const label = matchRecipient(env, pw);
+    if (label) {
+      const token = label + "." + (await labelledToken(env, label));
+      // ?welcome=1 is the one-time sign-in signal the proposal turns into a
+      // gate_unlocked event and then strips from the URL. It grants nothing:
+      // the signed cookie below is the only thing that authenticates, so the
+      // parameter is safe to forge and useless on its own.
+      const headers = new Headers({ Location: "/?welcome=1" });
       headers.append(
         "Set-Cookie",
         `${COOKIE}=${token}; ${cookieAttrs(env, MAX_AGE)}`
@@ -243,8 +322,9 @@ async function handle(request, env) {
   // Authenticated? Serve the requested asset (the real site), with analytics
   // switched on if a PostHog key is configured.
   const token = readCookie(request.headers.get("Cookie"), COOKIE);
-  if (token && safeEqual(token, await expectedToken(env))) {
-    return withSecurityHeaders(await withProposalAnalytics(await asset(), env));
+  const who = await sessionLabel(env, token);
+  if (who) {
+    return withSecurityHeaders(await withProposalAnalytics(await asset(), env, who));
   }
 
   // Otherwise, show the cover/login screen for any path.
@@ -252,7 +332,7 @@ async function handle(request, env) {
   return new Response(
     coverHTML({
       error: denied ? "Incorrect password. Please try again." : "",
-      analytics: posthogSnippet(env.POSTHOG_KEY, posthogHost(env), "gate")
+      analytics: posthogSnippet(env.POSTHOG_KEY, posthogHost(env), "gate", denied)
     }),
     { status: denied ? 401 : 200, headers: htmlHeaders() }
   );

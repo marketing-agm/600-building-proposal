@@ -392,6 +392,53 @@ What it tracks once the key is set:
 All events are tagged with `proposal: plaza600-microsite` (and `surface: gate` on the cover
 page) so you can filter gate traffic from in-proposal activity.
 
+### Knowing who opened it — per-recipient access codes
+`ACCESS_CODES` is an optional Cloudflare variable holding a JSON object that maps each password to a
+recipient label:
+
+```json
+{"Plaza600-AAA11-BBB22":"orton-development","Plaza600-CCC33-DDD44":"agm-internal"}
+```
+
+The label becomes the person's `distinct_id` in PostHog, so every section time, tab click and
+sign-in attaches to a named recipient rather than an anonymous id. Without it AGM's own testing is
+indistinguishable from the client reading the proposal, which is the whole question the analytics
+are meant to answer.
+
+- **`SITE_PASSWORD` keeps working** and resolves to the label `shared`, so links already sent out
+  stay valid. Set `ACCESS_CODES` alongside it, not instead of it.
+- A label is an identity, so it is **signed into the session cookie**, not merely stored in it —
+  otherwise a visitor could edit the cookie and attribute their reading to someone else. Labels are
+  `[a-z0-9-]`, 40 characters max, and are re-validated before being written into the page.
+- One label covers **everyone who shares that code**. The unit is the recipient, not the human. Give
+  each party its own code if you need to tell them apart.
+- A malformed `ACCESS_CODES` (bad JSON, an array, an empty or illegal label) is ignored rather than
+  treated as an open gate. `test/gate.test.mjs` asserts each of those cases.
+
+Rotating one recipient's access is editing one entry; it does not disturb anyone else's link.
+
+### Events
+| Event | Surface | When |
+|---|---|---|
+| `gate_viewed` | gate | the cover page renders. Carries `denied: true` when a password was refused |
+| `gate_unlocked` | proposal | a correct password was just entered. Fires once per sign-in, not on a returning visit that skips the gate |
+| `$pageview` | proposal | one per section, with `section`, `section_label`, `section_index`, `from_section`, `nav_trigger` |
+| `section_time` | proposal | leaving a section, with `seconds` and `reason` |
+| `tab_click` | proposal | nav, pager, rail or brand navigation, with `to`, `from`, `method` |
+
+Every event carries `proposal` and `surface` super properties, plus `recipient` once identified.
+
+`gate_unlocked` exists because a correct password returns a bare redirect with no HTML, so nothing
+can fire at the moment of success. The gate redirects to `/?welcome=1` instead; the page turns that
+into the event and strips the parameter, so a refresh cannot double-count it and the URL stays
+clean. The parameter grants nothing — the signed cookie is the only thing that authenticates it.
+
+### Session replay is off
+`disable_session_recording: true` on both surfaces. This would record a named client reading a
+proposal, which is a different proposition from counting page views, and the site carries no notice
+that would make it expected. `maskAllInputs` stays configured as defence in depth if it is ever
+turned back on. If you do turn it on, add a notice to the cover page first.
+
 ## Operational notes
 - `public/_headers` enforces `noindex` and security headers at the edge. The Worker also sets them
   on every response it returns (`withSecurityHeaders`), so the guarantee does not depend on
