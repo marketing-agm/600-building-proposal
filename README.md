@@ -278,6 +278,65 @@ allowlist in `src/index.js` (`PUBLIC_PATHS`), **not** a `/assets/*` prefix rule 
 building photography under `/assets/property/` stays behind the password. If you add an image the
 cover page needs, add its exact path to `PUBLIC_PATHS`; do not widen it to a prefix.
 
+### Embedding the proposal in another site
+
+**The proposal must be served from a subdomain of the site that embeds it.** Embedding it from a
+`*.workers.dev` URL does not work and cannot be made to work.
+
+This is not a preference. `workers.dev` is on the
+[Public Suffix List](https://publicsuffix.org/), which makes every `*.workers.dev` subdomain its own
+registrable site. An `<iframe>` of one on `agmrealestategroup.com` is therefore **cross-site**, and
+the session cookie the gate issues is a **third-party cookie**. Safari blocks those outright, Chrome
+blocks them in Incognito, and Chrome is retiring them generally.
+
+#### The failure is silent, which is what makes it expensive
+A blocked cookie does **not** look like a blocked cookie. The password is accepted, the gate issues
+the session, the browser discards it, and the redirect to `/` lands back on the cover page with no
+error. To the visitor the screen just flickers and nothing happens — indistinguishable from a wrong
+password, except that a wrong password redirects to `/?e=denied` and renders "Incorrect password.
+Please try again." with a `401`. **If someone reports the password not working and there is no error
+message on screen, it is this, not the password.** Do not rotate `SITE_PASSWORD`: it is not the
+cause, and rotating it invalidates whatever link has already gone out.
+
+This is how it presented in September 2026, embedded on the Wix page at
+`www.agmrealestategroup.com/plaza600proposal`.
+
+#### The fix
+Serve the Worker from a subdomain of the embedding site — `proposal.agmrealestategroup.com` inside a
+page on `www.agmrealestategroup.com`. Both are `agmrealestategroup.com`, so the iframe is *same-site*
+and the cookie is not third-party. Nothing blocks it, in any browser.
+
+| Step | Where | Why it is in this order |
+|---|---|---|
+| 1. Attach `proposal.agmrealestategroup.com` | Worker → Domains, then the DNS record | |
+| 2. Confirm it serves the cover page | browser | Before anything is switched off |
+| 3. Deploy `workers_dev: false` | this repo | **Only now.** Earlier and the proposal is offline |
+| 4. Point the Wix embed at the new hostname | Wix | |
+
+Deploying step 3 before step 1 removes the only hostname the Worker answers on.
+
+#### `COOKIE_SAMESITE`
+The session cookie is `SameSite=Lax`, which is correct for a first-party site and for a same-site
+subdomain iframe. Set the optional `COOKIE_SAMESITE` Cloudflare variable to `None` to go back to the
+old cross-site behaviour while DNS propagates — it is a plain variable, so it takes effect without a
+code change or a redeploy. Any value other than `Lax`, `Strict` or `None` falls back to `Lax` rather
+than emitting a malformed cookie.
+
+`None` is a stopgap, not a fix: it *permits* a third-party cookie, it does not stop browsers blocking
+one. On a cross-site embed it will keep failing in Safari and in Incognito however it is set.
+
+#### Regression test
+`node test/gate.test.mjs` drives real requests through the Worker's own fetch handler with a stubbed
+assets binding. No dependencies and no root `package.json`, so the Cloudflare build never sees a
+manifest. It asserts the cookie attributes, that a dropped cookie and a wrong password stay
+distinguishable, and that neither the proposal body nor the building photography is ever served
+without a valid session.
+
+#### If you cannot use a subdomain
+Link out instead of embedding — a button that opens the proposal in a new tab. Opened top-level the
+cookie is first-party and works everywhere. This is also the fastest way to unblock a recipient who
+is stuck right now, without waiting for DNS.
+
 ### Note on Zero Trust
 This shared-password gate is intentionally simple and needs no per-user setup. If you ever need
 **per-person access with an audit trail** (who opened it, when), use Cloudflare Zero Trust Access
@@ -341,6 +400,8 @@ page) so you can filter gate traffic from in-proposal activity.
 - [ ] Confirm the property-level staffing treatment (operating expense vs. fee) with leadership
 - [ ] Confirm named team members for the Management page, if Ownership expects names
 - [ ] Set `SITE_PASSWORD` and `GATE_SECRET` as Worker secrets
+- [ ] If the proposal will be embedded, attach the custom subdomain FIRST, confirm it serves, and
+      only then deploy `workers_dev: false` — see "Embedding the proposal in another site"
 - [ ] Set `POSTHOG_KEY` if engagement tracking is wanted for this proposal
 - [ ] Rebuild the PDF (`cd print && npm run build`) after any copy change, and commit it — the
       committed PDF is what gets emailed, and it does not update itself

@@ -25,9 +25,21 @@
     "enabled": true
   },
 
-  // The *.workers.dev URL. Explicit so the deployment does not depend on a
-  // Cloudflare default. Set false once a custom domain is attached.
-  "workers_dev": true,
+  // The *.workers.dev URL, now OFF.
+  //
+  // ⚠️  DEPLOY ORDER IS LOAD-BEARING. Turning this off removes the only
+  //     hostname the Worker answers on until a custom domain is attached.
+  //     Attach proposal.agmrealestategroup.com FIRST (Worker → Domains, then
+  //     the DNS record), confirm it serves the cover page, and only then
+  //     deploy this. Deploying it first takes the proposal offline.
+  //
+  // It is off because workers.dev is on the Public Suffix List, which makes
+  // every *.workers.dev subdomain its own registrable site. An iframe of one
+  // on agmrealestategroup.com is cross-site, so the session cookie is a
+  // third-party cookie and browsers drop it — which is what broke the embed
+  // on the Wix page. A subdomain of agmrealestategroup.com is same-site and
+  // does not have that problem. See "Embedding" in README.md.
+  "workers_dev": false,
 
   // Per-version Preview URLs are ON. This is the Workers equivalent of a Pages
   // branch preview: `wrangler versions upload` creates a version that is NOT
