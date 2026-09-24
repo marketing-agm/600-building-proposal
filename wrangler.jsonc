@@ -25,8 +25,22 @@
     "enabled": true
   },
 
-  // The *.workers.dev URL. Explicit so the deployment does not depend on a
-  // Cloudflare default. Set false once a custom domain is attached.
+  // The *.workers.dev URL, deliberately ON.
+  //
+  // The proposal is reached through a branded Wix link
+  // (www.agmrealestategroup.com/plaza600proposal) that REDIRECTS here. It must
+  // not be reached through a Wix iframe or a masked/cloaked redirect: this
+  // Worker answers on workers.dev, workers.dev is on the Public Suffix List, so
+  // every *.workers.dev subdomain is its own registrable site. Framed on
+  // agmrealestategroup.com that is cross-site, the session cookie becomes a
+  // third-party cookie, and browsers drop it — the password is accepted and the
+  // visitor lands back on the cover page with no error. See "Embedding" in
+  // README.md.
+  //
+  // A plain redirect avoids all of that: the visitor arrives top-level, so the
+  // cookie is first-party. Turning this off would break that link. Only set it
+  // false after a real custom domain is attached and serving, which requires
+  // the zone to be on Cloudflare.
   "workers_dev": true,
 
   // Per-version Preview URLs are ON. This is the Workers equivalent of a Pages

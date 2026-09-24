@@ -278,6 +278,84 @@ allowlist in `src/index.js` (`PUBLIC_PATHS`), **not** a `/assets/*` prefix rule 
 building photography under `/assets/property/` stays behind the password. If you add an image the
 cover page needs, add its exact path to `PUBLIC_PATHS`; do not widen it to a prefix.
 
+### Linking the proposal from another site
+
+**Link to the proposal. Do not put it in an iframe.** A branded link on another site is fine and is
+what the Wix pages are for; framing the proposal inside one is what breaks it.
+
+An embed only works if the proposal is served from a subdomain of the site doing the embedding.
+Framed from a `*.workers.dev` URL it does not work and cannot be made to work.
+
+This is not a preference. `workers.dev` is on the
+[Public Suffix List](https://publicsuffix.org/), which makes every `*.workers.dev` subdomain its own
+registrable site. An `<iframe>` of one on `agmrealestategroup.com` is therefore **cross-site**, and
+the session cookie the gate issues is a **third-party cookie**. Safari blocks those outright, Chrome
+blocks them in Incognito, and Chrome is retiring them generally.
+
+#### The failure is silent, which is what makes it expensive
+A blocked cookie does **not** look like a blocked cookie. The password is accepted, the gate issues
+the session, the browser discards it, and the redirect to `/` lands back on the cover page with no
+error. To the visitor the screen just flickers and nothing happens — indistinguishable from a wrong
+password, except that a wrong password redirects to `/?e=denied` and renders "Incorrect password.
+Please try again." with a `401`. **If someone reports the password not working and there is no error
+message on screen, it is this, not the password.** Do not rotate `SITE_PASSWORD`: it is not the
+cause, and rotating it invalidates whatever link has already gone out.
+
+This is how it presented in September 2026, embedded on the Wix page at
+`www.agmrealestategroup.com/plaza600proposal`.
+
+#### The fix: link to it, do not frame it
+Point the branded Wix URL at the proposal with a plain **301/302 redirect** instead of an embed:
+
+```
+www.agmrealestategroup.com/plaza600proposal   --301-->   <worker>.workers.dev
+```
+
+The branded per-property link is the thing being handed out; it does not have to be the address in
+the bar. After a redirect the visitor is on the Worker **top-level**, so the session cookie is
+first-party and no browser blocks it — Safari and Incognito included. No DNS work, no code change.
+The trade-off is that the address bar then shows the `workers.dev` hostname.
+
+> **Do not use a masked or cloaked redirect.** Wix offers one on some plans, described as keeping
+> your URL in the address bar. It does that by loading the target in a frame, which is the same
+> cross-site iframe that caused this, and it will fail the same way.
+
+There is **no Wix-side cookie setting that fixes this.** The cookie is set by this Worker, not by
+Wix, and the decision to drop it is the visitor's browser applying its third-party cookie policy.
+Wix's cookie controls govern its own consent banner and its own analytics cookies; a consent banner
+can *block* an embed until consent is given, but nothing there can exempt a third-party cookie from
+Safari's or Chrome's policy.
+
+#### The other fix: a real custom domain
+Serving the Worker from `proposal.agmrealestategroup.com` makes an iframe on
+`www.agmrealestategroup.com` *same-site* — both are `agmrealestategroup.com` — so the cookie is not
+third-party and the embed works, with the branded URL kept in the address bar.
+
+This requires `agmrealestategroup.com` to be an active zone in Cloudflare, with its nameservers
+delegated there. A CNAME at an external DNS provider pointing at a `workers.dev` hostname does not
+work; Cloudflare will not serve a Worker for a Host header the account does not own as a zone. If
+the domain currently lives at Wix, this means migrating DNS, which is its own project.
+
+Order matters if you take this route: attach the domain and confirm it serves **before** setting
+`workers_dev: false`, because that removes the only hostname the Worker answers on.
+
+#### `COOKIE_SAMESITE`
+The session cookie is `SameSite=Lax`, which is correct for a first-party site and for a same-site
+subdomain iframe. Set the optional `COOKIE_SAMESITE` Cloudflare variable to `None` to go back to the
+old cross-site behaviour while DNS propagates — it is a plain variable, so it takes effect without a
+code change or a redeploy. Any value other than `Lax`, `Strict` or `None` falls back to `Lax` rather
+than emitting a malformed cookie.
+
+`None` is a stopgap, not a fix: it *permits* a third-party cookie, it does not stop browsers blocking
+one. On a cross-site embed it will keep failing in Safari and in Incognito however it is set.
+
+#### Regression test
+`node test/gate.test.mjs` drives real requests through the Worker's own fetch handler with a stubbed
+assets binding. No dependencies and no root `package.json`, so the Cloudflare build never sees a
+manifest. It asserts the cookie attributes, that a dropped cookie and a wrong password stay
+distinguishable, and that neither the proposal body nor the building photography is ever served
+without a valid session.
+
 ### Note on Zero Trust
 This shared-password gate is intentionally simple and needs no per-user setup. If you ever need
 **per-person access with an audit trail** (who opened it, when), use Cloudflare Zero Trust Access
@@ -341,6 +419,9 @@ page) so you can filter gate traffic from in-proposal activity.
 - [ ] Confirm the property-level staffing treatment (operating expense vs. fee) with leadership
 - [ ] Confirm named team members for the Management page, if Ownership expects names
 - [ ] Set `SITE_PASSWORD` and `GATE_SECRET` as Worker secrets
+- [ ] If the proposal is reached through a branded link on another site, confirm that link is a
+      plain redirect and NOT an iframe or a masked redirect — see "Embedding the proposal in
+      another site". An embed silently fails to log anyone in on Safari or in Incognito
 - [ ] Set `POSTHOG_KEY` if engagement tracking is wanted for this proposal
 - [ ] Rebuild the PDF (`cd print && npm run build`) after any copy change, and commit it — the
       committed PDF is what gets emailed, and it does not update itself

@@ -1,6 +1,13 @@
 /* ============================================================================
  * AGM PROPOSAL — PASSWORD GATE  (Cloudflare Worker + static assets)
  * ----------------------------------------------------------------------------
+ * LINK to this, do not IFRAME it. Framed on another domain the session cookie
+ * is third-party and browsers drop it, so the password is accepted and the
+ * visitor lands back on the cover page with no error — a flicker. That is not
+ * a password problem and rotating SITE_PASSWORD does not fix it. A branded
+ * link that REDIRECTS here is fine; a masked redirect is an iframe and is not.
+ * See "Linking the proposal from another site" in README.md.
+ * ----------------------------------------------------------------------------
  * Runs in front of every request to this Worker. Until a visitor submits the
  * correct password, they only ever receive the custom cover/login page below —
  * the real proposal (public/index.html) is never sent to the browser. The
@@ -41,6 +48,39 @@ const PUBLIC_PATHS = new Set([
 const TOKEN_VERSION = "v1";                 // bump to invalidate every session
 const MAX_AGE = 60 * 60 * 24 * 7;           // session length: 7 days
 const enc = new TextEncoder();
+
+/* ── Session cookie SameSite ───────────────────────────────────────────────
+ * Was hard-coded to None so the proposal would work inside an iframe on the
+ * AGM Wix site. That backfired: the Worker answers on a *.workers.dev host,
+ * workers.dev is on the Public Suffix List, so every *.workers.dev subdomain
+ * is its own registrable site. An iframe of it on agmrealestategroup.com is
+ * therefore CROSS-SITE, and the session cookie a THIRD-PARTY cookie — which
+ * Safari blocks outright, Chrome blocks in Incognito, and Chrome is retiring
+ * generally. The password was accepted, the cookie was dropped, and the gate
+ * re-rendered the cover page: a flicker with no error message.
+ *
+ * Lax is correct once the Worker answers on proposal.agmrealestategroup.com,
+ * because an iframe of that on www.agmrealestategroup.com is SAME-site (both
+ * are agmrealestategroup.com) and Lax cookies are sent on same-site requests.
+ *
+ * COOKIE_SAMESITE exists so the two can be sequenced independently: it is a
+ * plain Cloudflare variable, so reverting to None while DNS propagates needs
+ * no code change or redeploy. Anything other than the three legal values
+ * falls back to Lax rather than emitting a malformed cookie.
+ * ------------------------------------------------------------------------- */
+const SAMESITE_VALUES = new Set(["Lax", "Strict", "None"]);
+function sameSite(env) {
+  const v = String(env.COOKIE_SAMESITE || "").trim();
+  const match = [...SAMESITE_VALUES].find((s) => s.toLowerCase() === v.toLowerCase());
+  return match || "Lax";
+}
+
+/* Attributes shared by the session cookie and the logout tombstone, so the two
+ * can never drift — a logout cookie whose attributes differ from the one it is
+ * clearing does not clear it. */
+function cookieAttrs(env, maxAge) {
+  return `Path=/; HttpOnly; Secure; SameSite=${sameSite(env)}; Max-Age=${maxAge}`;
+}
 
 /* HMAC-SHA256 → URL-safe base64 */
 async function sign(secret, msg) {
@@ -180,7 +220,7 @@ async function handle(request, env) {
   // Log out.
   if (url.pathname === "/__logout") {
     const headers = new Headers({ Location: "/" });
-    headers.append("Set-Cookie", `${COOKIE}=; Path=/; HttpOnly; Secure; SameSite=None; Max-Age=0`);
+    headers.append("Set-Cookie", `${COOKIE}=; ${cookieAttrs(env, 0)}`);
     return new Response(null, { status: 303, headers });
   }
 
@@ -193,7 +233,7 @@ async function handle(request, env) {
       const headers = new Headers({ Location: "/" });
       headers.append(
         "Set-Cookie",
-        `${COOKIE}=${token}; Path=/; HttpOnly; Secure; SameSite=None; Max-Age=${MAX_AGE}`
+        `${COOKIE}=${token}; ${cookieAttrs(env, MAX_AGE)}`
       );
       return new Response(null, { status: 303, headers });  // → home, now authenticated
     }

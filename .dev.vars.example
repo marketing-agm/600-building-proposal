@@ -11,3 +11,11 @@ GATE_SECRET="paste-any-long-random-string-here-40-plus-characters"
 # Leave unset to keep analytics off.
 POSTHOG_KEY="phc_your_project_api_key"
 POSTHOG_HOST="https://us.i.posthog.com"   # or https://eu.i.posthog.com
+
+# Optional — session cookie SameSite. Lax (the default) is correct for the site
+# served on its own hostname, and for an iframe on a sibling subdomain of the
+# same registrable domain. Set None only as a stopgap for a cross-site embed;
+# browsers block third-party cookies regardless, so it will still fail in Safari
+# and in Incognito. Anything other than Lax / Strict / None falls back to Lax.
+# See "Embedding the proposal in another site" in README.md.
+COOKIE_SAMESITE="Lax"
