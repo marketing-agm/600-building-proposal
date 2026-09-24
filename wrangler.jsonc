@@ -25,21 +25,23 @@
     "enabled": true
   },
 
-  // The *.workers.dev URL, now OFF.
+  // The *.workers.dev URL, deliberately ON.
   //
-  // ⚠️  DEPLOY ORDER IS LOAD-BEARING. Turning this off removes the only
-  //     hostname the Worker answers on until a custom domain is attached.
-  //     Attach proposal.agmrealestategroup.com FIRST (Worker → Domains, then
-  //     the DNS record), confirm it serves the cover page, and only then
-  //     deploy this. Deploying it first takes the proposal offline.
+  // The proposal is reached through a branded Wix link
+  // (www.agmrealestategroup.com/plaza600proposal) that REDIRECTS here. It must
+  // not be reached through a Wix iframe or a masked/cloaked redirect: this
+  // Worker answers on workers.dev, workers.dev is on the Public Suffix List, so
+  // every *.workers.dev subdomain is its own registrable site. Framed on
+  // agmrealestategroup.com that is cross-site, the session cookie becomes a
+  // third-party cookie, and browsers drop it — the password is accepted and the
+  // visitor lands back on the cover page with no error. See "Embedding" in
+  // README.md.
   //
-  // It is off because workers.dev is on the Public Suffix List, which makes
-  // every *.workers.dev subdomain its own registrable site. An iframe of one
-  // on agmrealestategroup.com is cross-site, so the session cookie is a
-  // third-party cookie and browsers drop it — which is what broke the embed
-  // on the Wix page. A subdomain of agmrealestategroup.com is same-site and
-  // does not have that problem. See "Embedding" in README.md.
-  "workers_dev": false,
+  // A plain redirect avoids all of that: the visitor arrives top-level, so the
+  // cookie is first-party. Turning this off would break that link. Only set it
+  // false after a real custom domain is attached and serving, which requires
+  // the zone to be on Cloudflare.
+  "workers_dev": true,
 
   // Per-version Preview URLs are ON. This is the Workers equivalent of a Pages
   // branch preview: `wrangler versions upload` creates a version that is NOT

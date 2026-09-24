@@ -1,11 +1,12 @@
 /* ============================================================================
  * AGM PROPOSAL — PASSWORD GATE  (Cloudflare Worker + static assets)
  * ----------------------------------------------------------------------------
- * EMBEDDING: this must be served from a subdomain of whatever site embeds it.
- * From a *.workers.dev URL the session cookie is third-party and browsers drop
- * it, so the password is accepted and the visitor lands back on the cover page
- * with no error — a flicker. That is not a password problem and rotating
- * SITE_PASSWORD does not fix it. See "Embedding" in README.md.
+ * LINK to this, do not IFRAME it. Framed on another domain the session cookie
+ * is third-party and browsers drop it, so the password is accepted and the
+ * visitor lands back on the cover page with no error — a flicker. That is not
+ * a password problem and rotating SITE_PASSWORD does not fix it. A branded
+ * link that REDIRECTS here is fine; a masked redirect is an iframe and is not.
+ * See "Linking the proposal from another site" in README.md.
  * ----------------------------------------------------------------------------
  * Runs in front of every request to this Worker. Until a visitor submits the
  * correct password, they only ever receive the custom cover/login page below —

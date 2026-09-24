@@ -278,10 +278,13 @@ allowlist in `src/index.js` (`PUBLIC_PATHS`), **not** a `/assets/*` prefix rule 
 building photography under `/assets/property/` stays behind the password. If you add an image the
 cover page needs, add its exact path to `PUBLIC_PATHS`; do not widen it to a prefix.
 
-### Embedding the proposal in another site
+### Linking the proposal from another site
 
-**The proposal must be served from a subdomain of the site that embeds it.** Embedding it from a
-`*.workers.dev` URL does not work and cannot be made to work.
+**Link to the proposal. Do not put it in an iframe.** A branded link on another site is fine and is
+what the Wix pages are for; framing the proposal inside one is what breaks it.
+
+An embed only works if the proposal is served from a subdomain of the site doing the embedding.
+Framed from a `*.workers.dev` URL it does not work and cannot be made to work.
 
 This is not a preference. `workers.dev` is on the
 [Public Suffix List](https://publicsuffix.org/), which makes every `*.workers.dev` subdomain its own
@@ -301,19 +304,40 @@ cause, and rotating it invalidates whatever link has already gone out.
 This is how it presented in September 2026, embedded on the Wix page at
 `www.agmrealestategroup.com/plaza600proposal`.
 
-#### The fix
-Serve the Worker from a subdomain of the embedding site — `proposal.agmrealestategroup.com` inside a
-page on `www.agmrealestategroup.com`. Both are `agmrealestategroup.com`, so the iframe is *same-site*
-and the cookie is not third-party. Nothing blocks it, in any browser.
+#### The fix: link to it, do not frame it
+Point the branded Wix URL at the proposal with a plain **301/302 redirect** instead of an embed:
 
-| Step | Where | Why it is in this order |
-|---|---|---|
-| 1. Attach `proposal.agmrealestategroup.com` | Worker → Domains, then the DNS record | |
-| 2. Confirm it serves the cover page | browser | Before anything is switched off |
-| 3. Deploy `workers_dev: false` | this repo | **Only now.** Earlier and the proposal is offline |
-| 4. Point the Wix embed at the new hostname | Wix | |
+```
+www.agmrealestategroup.com/plaza600proposal   --301-->   <worker>.workers.dev
+```
 
-Deploying step 3 before step 1 removes the only hostname the Worker answers on.
+The branded per-property link is the thing being handed out; it does not have to be the address in
+the bar. After a redirect the visitor is on the Worker **top-level**, so the session cookie is
+first-party and no browser blocks it — Safari and Incognito included. No DNS work, no code change.
+The trade-off is that the address bar then shows the `workers.dev` hostname.
+
+> **Do not use a masked or cloaked redirect.** Wix offers one on some plans, described as keeping
+> your URL in the address bar. It does that by loading the target in a frame, which is the same
+> cross-site iframe that caused this, and it will fail the same way.
+
+There is **no Wix-side cookie setting that fixes this.** The cookie is set by this Worker, not by
+Wix, and the decision to drop it is the visitor's browser applying its third-party cookie policy.
+Wix's cookie controls govern its own consent banner and its own analytics cookies; a consent banner
+can *block* an embed until consent is given, but nothing there can exempt a third-party cookie from
+Safari's or Chrome's policy.
+
+#### The other fix: a real custom domain
+Serving the Worker from `proposal.agmrealestategroup.com` makes an iframe on
+`www.agmrealestategroup.com` *same-site* — both are `agmrealestategroup.com` — so the cookie is not
+third-party and the embed works, with the branded URL kept in the address bar.
+
+This requires `agmrealestategroup.com` to be an active zone in Cloudflare, with its nameservers
+delegated there. A CNAME at an external DNS provider pointing at a `workers.dev` hostname does not
+work; Cloudflare will not serve a Worker for a Host header the account does not own as a zone. If
+the domain currently lives at Wix, this means migrating DNS, which is its own project.
+
+Order matters if you take this route: attach the domain and confirm it serves **before** setting
+`workers_dev: false`, because that removes the only hostname the Worker answers on.
 
 #### `COOKIE_SAMESITE`
 The session cookie is `SameSite=Lax`, which is correct for a first-party site and for a same-site
@@ -331,11 +355,6 @@ assets binding. No dependencies and no root `package.json`, so the Cloudflare bu
 manifest. It asserts the cookie attributes, that a dropped cookie and a wrong password stay
 distinguishable, and that neither the proposal body nor the building photography is ever served
 without a valid session.
-
-#### If you cannot use a subdomain
-Link out instead of embedding — a button that opens the proposal in a new tab. Opened top-level the
-cookie is first-party and works everywhere. This is also the fastest way to unblock a recipient who
-is stuck right now, without waiting for DNS.
 
 ### Note on Zero Trust
 This shared-password gate is intentionally simple and needs no per-user setup. If you ever need
@@ -400,8 +419,9 @@ page) so you can filter gate traffic from in-proposal activity.
 - [ ] Confirm the property-level staffing treatment (operating expense vs. fee) with leadership
 - [ ] Confirm named team members for the Management page, if Ownership expects names
 - [ ] Set `SITE_PASSWORD` and `GATE_SECRET` as Worker secrets
-- [ ] If the proposal will be embedded, attach the custom subdomain FIRST, confirm it serves, and
-      only then deploy `workers_dev: false` — see "Embedding the proposal in another site"
+- [ ] If the proposal is reached through a branded link on another site, confirm that link is a
+      plain redirect and NOT an iframe or a masked redirect — see "Embedding the proposal in
+      another site". An embed silently fails to log anyone in on Safari or in Incognito
 - [ ] Set `POSTHOG_KEY` if engagement tracking is wanted for this proposal
 - [ ] Rebuild the PDF (`cd print && npm run build`) after any copy change, and commit it — the
       committed PDF is what gets emailed, and it does not update itself
