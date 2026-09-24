@@ -722,6 +722,9 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
   /* ▼▼▼  PASTE YOUR POSTHOG PROJECT API KEY HERE  ▼▼▼ */
   window.AGM_POSTHOG_KEY  = 'phc_REPLACE_WITH_YOUR_PROJECT_API_KEY';
   window.AGM_POSTHOG_HOST = 'https://us.i.posthog.com';   /* US: us.i.posthog.com  ·  EU: eu.i.posthog.com */
+  /* Filled in by the Worker from the signed session cookie: which recipient's
+     access code opened this. Stays empty when the gate is bypassed locally. */
+  window.AGM_RECIPIENT = '';
   /* ▲▲▲  (everything else is already wired up — no other edits needed)  ▲▲▲ */
 
   if (window.AGM_POSTHOG_KEY && window.AGM_POSTHOG_KEY.indexOf('REPLACE') === -1) {
@@ -732,10 +735,33 @@ html{scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
       capture_pageview: false,           // single-page app: we fire one $pageview per section in app code
       capture_pageleave: true,           // exit + time-on-section
       enable_heatmaps: true,             // click + scroll heatmaps
-      disable_session_recording: false,  // session replays
-      session_recording: { maskAllInputs: true }   // confidential: mask any input fields
+      /* Replay is off by decision: this would record a named client reading a
+         proposal. maskAllInputs stays as defence in depth if it is re-enabled. */
+      disable_session_recording: true,
+      session_recording: { maskAllInputs: true }
     });
-    posthog.register({ proposal: 'plaza600-microsite' });  // tag all events (handy if this project hosts more than one site)
+    posthog.register({ proposal: 'plaza600-microsite', surface: 'proposal' });
+
+    /* Attribute everything that follows to the recipient whose access code
+       opened this — section times, tab clicks, the sign-in event. Without it
+       every visitor is an anonymous id and AGM's own testing is
+       indistinguishable from the client reading it.
+       One label covers everyone sharing that code: the unit is the recipient,
+       not the human. */
+    if (window.AGM_RECIPIENT) {
+      posthog.identify(window.AGM_RECIPIENT, { recipient: window.AGM_RECIPIENT });
+      posthog.register({ recipient: window.AGM_RECIPIENT });
+    }
+
+    /* One-time sign-in signal. The gate redirects to /?welcome=1 on a correct
+       password, so this fires once per sign-in — distinguishing a fresh login
+       from a returning visitor whose 7-day cookie skips the gate entirely. The
+       parameter is stripped either way, so a refresh cannot double-count it and
+       the URL the client sees stays clean. */
+    if (location.search.indexOf('welcome=1') > -1) {
+      try { posthog.capture('gate_unlocked', { recipient: window.AGM_RECIPIENT || null }); } catch (e) {}
+      try { history.replaceState(null, '', location.pathname + location.hash); } catch (e) {}
+    }
   }
 </script>
 <!-- =================== /PostHog product analytics ===================== -->

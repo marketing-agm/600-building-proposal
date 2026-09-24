@@ -19,3 +19,9 @@ POSTHOG_HOST="https://us.i.posthog.com"   # or https://eu.i.posthog.com
 # and in Incognito. Anything other than Lax / Strict / None falls back to Lax.
 # See "Embedding the proposal in another site" in README.md.
 COOKIE_SAMESITE="Lax"
+
+# Optional — per-recipient access codes. JSON mapping each password to a label;
+# the label becomes the distinct_id in PostHog, so you can tell who opened the
+# proposal. SITE_PASSWORD keeps working alongside this and resolves to "shared".
+# See "Knowing who opened it" in README.md.
+ACCESS_CODES='{"Plaza600-AAA11-BBB22":"orton-development","Plaza600-CCC33-DDD44":"agm-internal"}'
